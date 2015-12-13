@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This C# library simplify all SQL Queries to external database. An implementation for SQL Server is included.
+This C# library simplify all SQL Queries to external databases. An implementation for SQL Server is included.
 
     int count = cmd.ExecuteScalar<int>();
     var emps = cmd.ExecuteTable<Employee>();

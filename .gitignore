@@ -9,3 +9,9 @@
 /Tests/TestsSqlServer/obj/Debug
 /Tests/UnitTests/bin/Debug
 /Tests/UnitTests/obj/Debug
+/Source/obj/Release
+/Tests/TestsSqlServer/bin/Release
+/Tests/TestsSqlServer/obj/Release
+/Tests/UnitTests/bin/Release
+/Tests/UnitTests/obj/Release
+/.vs/config/applicationhost.config
