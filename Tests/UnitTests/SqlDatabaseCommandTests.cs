@@ -33,7 +33,11 @@ namespace Apps72.Dev.Data.Tests
         {
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(CONNECTION_STRING, string.Empty, -1))
             {
-                cmd.Log = Console.WriteLine;
+                cmd.Log = (message) => 
+                {
+                    Console.WriteLine(message);
+                };
+
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
                 DataTable data = cmd.ExecuteTable();
 
@@ -288,20 +292,20 @@ namespace Apps72.Dev.Data.Tests
         [TestMethod]
         public void ExecuteNonQuery_TransactionForTwoIncludedCommands_Test()
         {
-            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            using (SqlDatabaseCommand cmd1 = new SqlDatabaseCommand(_connection))
             {
-                cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" DELETE FROM EMP ");
-                cmd.TransactionBegin();
-                cmd.ExecuteNonQuery();
+                cmd1.Log = Console.WriteLine;
+                cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
+                cmd1.TransactionBegin();
+                cmd1.ExecuteNonQuery();
 
-                using (SqlDatabaseCommand cmd2 = new SqlDatabaseCommand(_connection, cmd.Transaction))
+                using (SqlDatabaseCommand cmd2 = new SqlDatabaseCommand(_connection, cmd1.Transaction))
                 {
                     cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
                     int count = cmd2.ExecuteScalar<int>();
                 }
 
-                cmd.TransactionRollback();
+                cmd1.TransactionRollback();
             }
         }
 
@@ -394,7 +398,7 @@ namespace Apps72.Dev.Data.Tests
                         });
 
                         System.Threading.Thread.Sleep(1000);
-
+                        
                         cmd2.Clear();
                         cmd2.CommandText.AppendLine(" UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ");
                         cmd2.ExecuteNonQuery();
