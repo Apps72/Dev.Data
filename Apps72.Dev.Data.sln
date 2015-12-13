@@ -13,6 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dev.Data.TestsSqlServer", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A5D1F903-B497-40D7-BEF9-92EA06B4B50F}"
 	ProjectSection(SolutionItems) = preProject
+		Logo.png = Logo.png
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
