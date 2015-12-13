@@ -14,7 +14,7 @@ namespace Apps72.Dev.Data.Tests
     {
         #region INITIALIZATION
 
-        public const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;User ID=sa;Pwd=denis;";
+        public const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
         private SqlConnection _connection;
 
         [TestInitialize]
