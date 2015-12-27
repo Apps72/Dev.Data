@@ -54,8 +54,22 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
         EMP emp = cmd.ExecuteRow<EMP>();
+    }
+    
+    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    {
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
+        EMP emp = cmd.ExecuteRow<EMP>((row) =>
+        {
+            return new EMP()
+            {
+                EmpNo = 1000 + Convert.ToInt32(row["EMPNO"]
+            };
+        });
+
+        Assert.AreEqual(emp.EmpNo, 7369);
     }
 
 #### <a name="ExecuteScalar"></a>ExecuteScalar
