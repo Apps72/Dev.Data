@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using System.Linq;
 
 namespace Apps72.Dev.Data
 {
@@ -41,6 +42,39 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Add all properties / values to the end of the System.Data.SqlClient.SqlParameterCollection.
+        /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
+        public static void AddValues<T>(this SqlParameterCollection parameters, T values)
+        {
+            IEnumerable<IDataParameter> properties = DataTypedConvertor.ToParameterCollection(values);
+
+            // Remove existing parameters found in Values properties
+            for (int i = parameters.Count - 1; i >= 0; i--)
+            {
+                string parameterName = parameters[i].ParameterName;
+                if (properties.Any(p => String.Compare(p.ParameterName, parameterName, true) == 0 || String.Compare($"@{p.ParameterName}", parameterName, true) == 0))
+                {
+                    parameters.RemoveAt(i);
+                }
+            }
+
+            // Add parameters found in Values properties
+            parameters.AddRange(properties
+                        .Select(p => new SqlParameter()
+                        {
+                            ParameterName = p.ParameterName,
+                            Value = p.Value,
+                            IsNullable = p.IsNullable,
+                            SqlDbType = DataTypedConvertor.ToSqlDbType(p.DbType)
+                        })
+                        .ToArray());
+        }
+
+        /// <summary>
         /// Appends a copy of the specified string followed by the default line terminator
         /// to the end of the current System.Text.StringBuilder object.
         /// </summary>
@@ -62,13 +96,13 @@ namespace Apps72.Dev.Data
                 else
                 {
                     return builder.AppendLine(String.Format(format, args));
-                } 
+                }
             }
             else
             {
                 return null;
             }
         }
-       
+
     }
 }

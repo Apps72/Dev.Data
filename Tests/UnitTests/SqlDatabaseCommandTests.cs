@@ -33,7 +33,7 @@ namespace Apps72.Dev.Data.Tests
         {
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(CONNECTION_STRING, string.Empty, -1))
             {
-                cmd.Log = (message) => 
+                cmd.Log = (message) =>
                 {
                     Console.WriteLine(message);
                 };
@@ -161,6 +161,84 @@ namespace Apps72.Dev.Data.Tests
                 object data = cmd.ExecuteScalar();
 
                 Assert.AreEqual(data, "SMITH");
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithAnonymousParameters_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ")
+                               .AppendLine("   AND HIREDATE = @HireDate ")
+                               .AppendLine("   AND JOB = @Job ")
+                               .AppendLine("   AND 1 = @NotDeleted ");
+
+                cmd.Parameters.AddWithValue("@EMPNO", 1234);                            // Parameter in Upper Case
+                cmd.Parameters.AddWithValue("HireDate", new DateTime(1980, 1, 1));      // Parameter without @
+                cmd.Parameters.AddWithValue("@Job", "FAKE");                            // Parameter in normal mode
+                cmd.Parameters.AddWithValue("@NotDeleted", true);                       // Parameter not replaced by .AddValues
+
+                // Replace previous values wiht these new propery values
+                cmd.Parameters.AddValues(new
+                {
+                    EmpNo = 7369,
+                    HireDate = new DateTime(1980, 12, 17),
+                    Job = "CLERK"
+                });
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual(data, "SMITH");
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithAnonymousOnlyParameters_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ")
+                               .AppendLine("   AND HIREDATE = @HireDate ")
+                               .AppendLine("   AND JOB = @Job ");
+
+                // Replace previous values wiht these new propery values
+                cmd.Parameters.AddValues(new
+                {
+                    EmpNo = 7369,
+                    HireDate = new DateTime(1980, 12, 17),
+                    Job = "CLERK"
+                });
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual(data, "SMITH");
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ExecuteScalarWithSimpleParameters_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ");
+                               
+
+                // Simple value are not autorized
+                cmd.Parameters.AddValues(123);
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.Fail();
             }
         }
 
@@ -398,7 +476,7 @@ namespace Apps72.Dev.Data.Tests
                         });
 
                         System.Threading.Thread.Sleep(1000);
-                        
+
                         cmd2.Clear();
                         cmd2.CommandText.AppendLine(" UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ");
                         cmd2.ExecuteNonQuery();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,6 +13,13 @@ namespace Apps72.Dev.Data
     /// </summary>
     public class DataTypedConvertor
     {
+        private static readonly ArrayList _dbTypeList = new ArrayList();
+
+        static DataTypedConvertor()
+        {
+            FillDbTypeList();
+        }
+
         /// <summary>
         /// Creates a new instance of T type and sets all row values to the new T properties.
         /// </summary>
@@ -194,6 +202,55 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Creates a new instance of IDataParameter[] with ParameterName, Value and IsNullable properties 
+        /// sets to value's properties.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static IEnumerable<IDataParameter> ToParameterCollection<T>(T value)
+        {
+            if (IsPrimitive(typeof(T)))
+            {
+                throw new ArgumentException("The value can not be a simple type (string, int, ...), but an object with simple properties.", "value");
+            }
+            else
+            {
+                List<DataParameter> parameters = new List<DataParameter>();
+                foreach (PropertyInfo property in typeof(T).GetProperties())
+                {
+                    if (IsPrimitive(property.PropertyType))
+                    {
+                        // Data type
+                        Type propType = GetNullableType(property.PropertyType);
+
+                        // Value
+                        DataParameter parameter = new DataParameter();
+                        parameter.Value = typeof(T).GetProperty(property.Name).GetValue(value, null);
+                        parameter.IsNullable = IsNullable(propType);
+                        parameter.DbType = DataTypedConvertor.ToDbType(propType);
+
+                        // Parameter name
+                        string attribute = Annotations.ColumnAttribute.GetColumnAttributeName(property);
+                        if (string.IsNullOrEmpty(attribute))
+                        {
+                            parameter.ParameterName = property.Name;
+                        }
+                        else
+                        {
+                            parameter.ParameterName = attribute;
+                        }
+
+                        parameters.Add(parameter);
+                    }
+                }
+
+                return parameters.AsEnumerable();
+            }
+
+        }
+
+        /// <summary>
         /// Returns True if this object is a simple type.
         /// </summary>
         /// <param name="type"></param>
@@ -248,5 +305,250 @@ namespace Apps72.Dev.Data
             }
         }
 
+        /// <summary>
+        /// Fill all dbTypeList entries
+        /// See https://gist.github.com/abrahamjp
+        /// </summary>
+        private static void FillDbTypeList()
+        {
+            DbTypeMapEntry dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(bool), DbType.Boolean, SqlDbType.Bit);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(byte), DbType.Double, SqlDbType.TinyInt);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(byte[]), DbType.Binary, SqlDbType.Image);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(DateTime), DbType.DateTime, SqlDbType.DateTime);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(Decimal), DbType.Decimal, SqlDbType.Decimal);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(double), DbType.Double, SqlDbType.Float);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(Guid), DbType.Guid, SqlDbType.UniqueIdentifier);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(Int16), DbType.Int16, SqlDbType.SmallInt);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(Int32), DbType.Int32, SqlDbType.Int);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(Int64), DbType.Int64, SqlDbType.BigInt);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Variant);
+            _dbTypeList.Add(dbTypeMapEntry);
+
+            dbTypeMapEntry
+            = new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.VarChar);
+            _dbTypeList.Add(dbTypeMapEntry);
+        }
+
+        #region SqlDbType and DBType Convertors
+
+        /// <summary>
+        /// Convert db type to .Net data type
+        /// </summary>
+        /// <param name="dbType"></param>
+        /// <returns></returns>
+        public static Type ToNetType(DbType dbType)
+        {
+            DbTypeMapEntry entry = Find(dbType);
+            return entry.Type;
+        }
+
+        /// <summary>
+        /// Convert TSQL type to .Net data type
+        /// </summary>
+        /// <param name="sqlDbType"></param>
+        /// <returns></returns>
+        public static Type ToNetType(SqlDbType sqlDbType)
+        {
+            DbTypeMapEntry entry = Find(sqlDbType);
+            return entry.Type;
+        }
+
+        /// <summary>
+        /// Convert .Net type to Db type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static DbType ToDbType(Type type)
+        {
+            DbTypeMapEntry entry = Find(type);
+            return entry.DbType;
+        }
+
+        /// <summary>
+        /// Convert TSQL data type to DbType
+        /// </summary>
+        /// <param name="sqlDbType"></param>
+        /// <returns></returns>
+        public static DbType ToDbType(SqlDbType sqlDbType)
+        {
+            DbTypeMapEntry entry = Find(sqlDbType);
+            return entry.DbType;
+        }
+
+        /// <summary>
+        /// Convert .Net type to TSQL data type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static SqlDbType ToSqlDbType(Type type)
+        {
+            DbTypeMapEntry entry = Find(type);
+            return entry.SqlDbType;
+        }
+
+        /// <summary>
+        /// Convert DbType type to TSQL data type
+        /// </summary>
+        /// <param name="dbType"></param>
+        /// <returns></returns>
+        public static SqlDbType ToSqlDbType(DbType dbType)
+        {
+            DbTypeMapEntry entry = Find(dbType);
+            return entry.SqlDbType;
+        }
+
+        private static DbTypeMapEntry Find(Type type)
+        {
+            object retObj = null;
+            for (int i = 0; i < _dbTypeList.Count; i++)
+            {
+                DbTypeMapEntry entry = (DbTypeMapEntry)_dbTypeList[i];
+                if (entry.Type == type)
+                {
+                    retObj = entry;
+                    break;
+                }
+            }
+            if (retObj == null)
+            {
+                throw
+                new ApplicationException("Referenced an unsupported Type");
+            }
+
+            return (DbTypeMapEntry)retObj;
+        }
+
+        private static DbTypeMapEntry Find(DbType dbType)
+        {
+            object retObj = null;
+            for (int i = 0; i < _dbTypeList.Count; i++)
+            {
+                DbTypeMapEntry entry = (DbTypeMapEntry)_dbTypeList[i];
+                if (entry.DbType == dbType)
+                {
+                    retObj = entry;
+                    break;
+                }
+            }
+            if (retObj == null)
+            {
+                throw
+                new ApplicationException("Referenced an unsupported DbType");
+            }
+
+            return (DbTypeMapEntry)retObj;
+        }
+
+        private static DbTypeMapEntry Find(SqlDbType sqlDbType)
+        {
+            object retObj = null;
+            for (int i = 0; i < _dbTypeList.Count; i++)
+            {
+                DbTypeMapEntry entry = (DbTypeMapEntry)_dbTypeList[i];
+                if (entry.SqlDbType == sqlDbType)
+                {
+                    retObj = entry;
+                    break;
+                }
+            }
+            if (retObj == null)
+            {
+                throw
+                new ApplicationException("Referenced an unsupported SqlDbType");
+            }
+
+            return (DbTypeMapEntry)retObj;
+        }
+
+        private struct DbTypeMapEntry
+        {
+            public Type Type;
+            public DbType DbType;
+            public SqlDbType SqlDbType;
+            public DbTypeMapEntry(Type type, DbType dbType, SqlDbType sqlDbType)
+            {
+                this.Type = type;
+                this.DbType = dbType;
+                this.SqlDbType = sqlDbType;
+            }
+
+        };
+
+        #endregion
+
+        /// <summary>
+        /// Class implementing IDataParameter
+        /// </summary>
+        public class DataParameter : IDataParameter
+        {
+            /// <summary>
+            /// <see cref="IDataParameter.DbType"/>
+            /// </summary>
+            public DbType DbType { get; set; }
+
+            /// <summary>
+            /// <see cref="IDataParameter.IsNullable"/>
+            /// </summary>
+            public bool IsNullable { get; set; }
+
+            /// <summary>
+            /// <see cref="IDataParameter.ParameterName"/>
+            /// </summary>
+            public string ParameterName { get; set; }
+
+            /// <summary>
+            /// <see cref="IDataParameter.Value"/>
+            /// </summary>
+            public object Value { get; set; }
+
+            /// <summary>
+            /// <see cref="IDataParameter.Direction"/>
+            /// </summary>
+            public ParameterDirection Direction { get; set; }
+
+            /// <summary>
+            /// <see cref="IDataParameter.SourceColumn"/>
+            /// </summary>
+            public string SourceColumn { get; set; }
+
+            /// <summary>
+            /// <see cref="IDataParameter.SourceVersion"/>
+            /// </summary>
+            public DataRowVersion SourceVersion { get; set; }
+           
+        }
+
+        
     }
 }
