@@ -1,4 +1,4 @@
-# Apps72.Dev.Data 1.2
+# Apps72.Dev.Data.SqlDatabaseCommand
 
 ## Introduction
 
