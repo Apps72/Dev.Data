@@ -255,7 +255,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
         }
     }   
 
-## Release Notes
+## <a name="ReleaseNotes"></a>Release Notes
 
 ### Version 1.3
 
