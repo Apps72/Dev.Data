@@ -16,6 +16,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 ## Commands
 
 - [ExecuteTable](#ExecuteTable): Execute a SQL query and retrieve all data to a list of C# objects.
+- [Parameters.AddValues](#ExecuteTableWithParameters): Execute a SQL query, add some parameters and retrieve all data to a list of C# objects.
 - [ExecuteRow](#ExecuteRow): Execute a SQL query and retrieve the first row to one serialized C# object.
 - [ExecuteScalar](#ExecuteScalar): Execute a SQL query and retrieve the first value (first row / first column) to a C# data type.
 - [TransactionBegin](#TransactionBegin): Manage your SQL Transactions.
@@ -48,6 +49,24 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
                 Age = DateTime.Today.Year - row.Field<DateTime>("HIREDATE").Year
             };
         });
+    }
+
+#### <a name="ExecuteTableWithParameters"></a>ExecuteTable with parameters
+
+    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    {
+	    cmd.CommandText.AppendLine(" SELECT * ")
+                       .AppendLine("   FROM EMP ")
+                       .AppendLine("  WHERE EMPNO = @EmpNo ")
+                       .AppendLine("    AND HIREDATE = @HireDate ");
+
+        cmd.Parameters.AddValues(new
+                {
+                    EmpNo = 7369,
+                    HireDate = new DateTime(1980, 12, 17)
+                });
+
+	    var emps = cmd.ExecuteTable<Employee>();
     }
 
 #### <a name="ExecuteRow"></a>ExecuteRow
@@ -235,3 +254,13 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
             }
         }
     }   
+
+## Release Notes
+
+### Version 1.3
+
+* Add a extension method **SqlParameterCollection.AddValues** to simplify the creation of parameters. See [Parameters.AddValues](#ExecuteTableWithParameters) for a code sample.
+
+### Version 1.2
+
+* Initial version with all basic features.
