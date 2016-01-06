@@ -61,6 +61,11 @@
   <ItemGroup>
     <Compile Include="BestPractice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScottEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ScottEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="SqlDatabaseCommandTests.cs" />
     <Compile Include="SqlServer2008R2Tests.cs" />
   </ItemGroup>
@@ -72,6 +77,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="scott.sql" />
+    <Content Include="ScottEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ScottEntities.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

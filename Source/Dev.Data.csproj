@@ -57,6 +57,7 @@
     <Compile Include="CommandTextFormatted.cs" />
     <Compile Include="DataTypedConvertor.cs" />
     <Compile Include="DataExtensions.cs" />
+    <Compile Include="Generator\EntitiesGenerator.cs" />
     <Compile Include="ExceptionOccuredEventArgs.cs" />
     <Compile Include="IDatabaseCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

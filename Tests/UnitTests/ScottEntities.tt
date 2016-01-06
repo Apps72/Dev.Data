@@ -1,0 +1,25 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="$(SolutionDir)Tests\UnitTests\bin\Debug\Apps72.Dev.Data.dll" #>
+<# const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;"; #>
+using System;
+     
+namespace <#=System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint")#>.Entities
+{
+<# 
+Apps72.Dev.Data.Generator.EntitiesGenerator entitiesGenerator = new Apps72.Dev.Data.Generator.EntitiesGenerator(CONNECTION_STRING);
+foreach(var table in entitiesGenerator.Tables)
+  { #>
+    /// <summary />
+    public partial class <#= table.Schema #>_<#= table.Name #>
+    {
+<# foreach(var column in table.Columns)
+   { #>
+        /// <summary />
+        public virtual <#= column.CSharpType #><#= column.IsNullable && column.CSharpType != "String" ? "?" : "" #> <#= column.Name #> { get; set; }
+<# }#>
+    }
+<# }#>
+}
