@@ -1,4 +1,4 @@
-# SqlDatabaseCommand - .NET Simple Object Mapping
+# SqlDatabaseCommand - Simple Object Mapping
 
 ## Introduction
 
