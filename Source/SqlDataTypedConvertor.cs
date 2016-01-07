@@ -11,11 +11,11 @@ namespace Apps72.Dev.Data
     /// <summary>
     /// Convert DataRows to Typed objects or Typed objects to DataRows.
     /// </summary>
-    public class DataTypedConvertor
+    public class SqlDataTypedConvertor
     {
-        private static readonly ArrayList _dbTypeList = new ArrayList();
+        private static readonly List<DbTypeMapEntry> _dbTypeList = new List<DbTypeMapEntry>();
 
-        static DataTypedConvertor()
+        static SqlDataTypedConvertor()
         {
             FillDbTypeList();
         }
@@ -31,7 +31,7 @@ namespace Apps72.Dev.Data
             T[] results = new T[table.Rows.Count];
 
             // If is Primitive type (string, int, ...)
-            if (DataTypedConvertor.IsPrimitive(typeof(T)))
+            if (SqlDataTypedConvertor.IsPrimitive(typeof(T)))
             {
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
@@ -48,7 +48,7 @@ namespace Apps72.Dev.Data
             {
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    results[i] = DataTypedConvertor.DataRowTo<T>(table.Rows[i]);
+                    results[i] = SqlDataTypedConvertor.DataRowTo<T>(table.Rows[i]);
                 }
             }
 
@@ -63,7 +63,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static T DataRowTo<T>(System.Data.DataRow row)
         {
-            return DataTypedConvertor.DataRowTo<T>(row, default(T));
+            return SqlDataTypedConvertor.DataRowTo<T>(row, default(T));
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Apps72.Dev.Data
                         DataParameter parameter = new DataParameter();
                         parameter.Value = typeof(T).GetProperty(property.Name).GetValue(value, null);
                         parameter.IsNullable = IsNullable(propType);
-                        parameter.DbType = DataTypedConvertor.ToDbType(propType);
+                        parameter.DbType = SqlDataTypedConvertor.ToDbType(propType);
 
                         // Parameter name
                         string attribute = Annotations.ColumnAttribute.GetColumnAttributeName(property);
@@ -295,7 +295,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         internal static Type GetNullableType(Type type)
         {
-            if (DataTypedConvertor.IsNullable(type))
+            if (SqlDataTypedConvertor.IsNullable(type))
             {
                 return type.GetGenericArguments()[0];
             }
@@ -310,54 +310,47 @@ namespace Apps72.Dev.Data
         /// See https://gist.github.com/abrahamjp
         /// </summary>
         private static void FillDbTypeList()
-        {
-            DbTypeMapEntry dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(bool), DbType.Boolean, SqlDbType.Bit);
-            _dbTypeList.Add(dbTypeMapEntry);
+        {            
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int16), DbType.Int16, SqlDbType.SmallInt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int32), DbType.Int32, SqlDbType.Int));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int64), DbType.Int64, SqlDbType.BigInt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt16), DbType.UInt16, SqlDbType.SmallInt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt32), DbType.UInt32, SqlDbType.Int));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt64), DbType.UInt64, SqlDbType.BigInt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(bool), DbType.Boolean, SqlDbType.Bit));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte), DbType.Byte, SqlDbType.TinyInt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(sbyte), DbType.SByte, SqlDbType.SmallInt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(Decimal), DbType.Decimal, SqlDbType.Decimal));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(Decimal), DbType.Single, SqlDbType.Decimal));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.Double, SqlDbType.Float));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(decimal), DbType.Currency, SqlDbType.Money));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(decimal), DbType.Currency, SqlDbType.SmallMoney));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.Double, SqlDbType.Real));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.VarNumeric, SqlDbType.Real));
 
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(byte), DbType.Double, SqlDbType.TinyInt);
-            _dbTypeList.Add(dbTypeMapEntry);
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.NVarChar));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.NChar));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.Char));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.VarChar));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.NText));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.Text));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.AnsiString, SqlDbType.VarChar));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.AnsiStringFixedLength, SqlDbType.VarChar));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.Xml, SqlDbType.Xml));
 
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(byte[]), DbType.Binary, SqlDbType.Image);
-            _dbTypeList.Add(dbTypeMapEntry);
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime, SqlDbType.DateTime));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.Date, SqlDbType.Date));            
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime2, SqlDbType.DateTime2));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime, SqlDbType.SmallDateTime));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTimeOffset, SqlDbType.DateTimeOffset));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.Time, SqlDbType.Time));
 
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(DateTime), DbType.DateTime, SqlDbType.DateTime);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(Decimal), DbType.Decimal, SqlDbType.Decimal);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(double), DbType.Double, SqlDbType.Float);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(Guid), DbType.Guid, SqlDbType.UniqueIdentifier);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(Int16), DbType.Int16, SqlDbType.SmallInt);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(Int32), DbType.Int32, SqlDbType.Int);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(Int64), DbType.Int64, SqlDbType.BigInt);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Variant);
-            _dbTypeList.Add(dbTypeMapEntry);
-
-            dbTypeMapEntry
-            = new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.VarChar);
-            _dbTypeList.Add(dbTypeMapEntry);
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(Guid), DbType.Guid, SqlDbType.UniqueIdentifier));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Variant));            
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte[]), DbType.Binary, SqlDbType.Image));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte[]), DbType.Binary, SqlDbType.Binary));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Udt));
+            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Structured));
         }
 
         #region SqlDbType and DBType Convertors
@@ -369,7 +362,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static Type ToNetType(DbType dbType)
         {
-            DbTypeMapEntry entry = Find(dbType);
+            DbTypeMapEntry entry = _dbTypeList.First(t => t.DbType == dbType);
             return entry.Type;
         }
 
@@ -380,7 +373,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static Type ToNetType(SqlDbType sqlDbType)
         {
-            DbTypeMapEntry entry = Find(sqlDbType);
+            DbTypeMapEntry entry = _dbTypeList.First(t => t.SqlDbType == sqlDbType);
             return entry.Type;
         }
 
@@ -391,7 +384,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static DbType ToDbType(Type type)
         {
-            DbTypeMapEntry entry = Find(type);
+            DbTypeMapEntry entry = _dbTypeList.First(t => t.Type == type);
             return entry.DbType;
         }
 
@@ -402,7 +395,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static DbType ToDbType(SqlDbType sqlDbType)
         {
-            DbTypeMapEntry entry = Find(sqlDbType);
+            DbTypeMapEntry entry = _dbTypeList.First(t => t.SqlDbType == sqlDbType);
             return entry.DbType;
         }
 
@@ -413,7 +406,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static SqlDbType ToSqlDbType(Type type)
         {
-            DbTypeMapEntry entry = Find(type);
+            DbTypeMapEntry entry = _dbTypeList.First(t => t.Type == type);
             return entry.SqlDbType;
         }
 
@@ -424,73 +417,11 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static SqlDbType ToSqlDbType(DbType dbType)
         {
-            DbTypeMapEntry entry = Find(dbType);
+            DbTypeMapEntry entry = _dbTypeList.First(t => t.DbType == dbType);
             return entry.SqlDbType;
-        }
+        }        
 
-        private static DbTypeMapEntry Find(Type type)
-        {
-            object retObj = null;
-            for (int i = 0; i < _dbTypeList.Count; i++)
-            {
-                DbTypeMapEntry entry = (DbTypeMapEntry)_dbTypeList[i];
-                if (entry.Type == type)
-                {
-                    retObj = entry;
-                    break;
-                }
-            }
-            if (retObj == null)
-            {
-                throw
-                new ApplicationException("Referenced an unsupported Type");
-            }
-
-            return (DbTypeMapEntry)retObj;
-        }
-
-        private static DbTypeMapEntry Find(DbType dbType)
-        {
-            object retObj = null;
-            for (int i = 0; i < _dbTypeList.Count; i++)
-            {
-                DbTypeMapEntry entry = (DbTypeMapEntry)_dbTypeList[i];
-                if (entry.DbType == dbType)
-                {
-                    retObj = entry;
-                    break;
-                }
-            }
-            if (retObj == null)
-            {
-                throw
-                new ApplicationException("Referenced an unsupported DbType");
-            }
-
-            return (DbTypeMapEntry)retObj;
-        }
-
-        private static DbTypeMapEntry Find(SqlDbType sqlDbType)
-        {
-            object retObj = null;
-            for (int i = 0; i < _dbTypeList.Count; i++)
-            {
-                DbTypeMapEntry entry = (DbTypeMapEntry)_dbTypeList[i];
-                if (entry.SqlDbType == sqlDbType)
-                {
-                    retObj = entry;
-                    break;
-                }
-            }
-            if (retObj == null)
-            {
-                throw
-                new ApplicationException("Referenced an unsupported SqlDbType");
-            }
-
-            return (DbTypeMapEntry)retObj;
-        }
-
+        /// <summary />
         private struct DbTypeMapEntry
         {
             public Type Type;
@@ -502,7 +433,6 @@ namespace Apps72.Dev.Data
                 this.DbType = dbType;
                 this.SqlDbType = sqlDbType;
             }
-
         };
 
         #endregion

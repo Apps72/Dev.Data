@@ -1,9 +1,12 @@
-﻿using System;
+﻿// *********************************************
+// Code Generated with Apps72.Dev.Data.Generator
+// *********************************************
+using System;
      
 namespace Apps72.Dev.Data.Tests.Entities
 {
     /// <summary />
-    public partial class dbo_BONUS
+    public partial class BONUS
     {
         /// <summary />
         public virtual String ENAME { get; set; }
@@ -15,7 +18,7 @@ namespace Apps72.Dev.Data.Tests.Entities
         public virtual Int32? COMM { get; set; }
     }
     /// <summary />
-    public partial class dbo_DEPT
+    public partial class DEPT
     {
         /// <summary />
         public virtual Int32 DEPTNO { get; set; }
@@ -25,7 +28,7 @@ namespace Apps72.Dev.Data.Tests.Entities
         public virtual String LOC { get; set; }
     }
     /// <summary />
-    public partial class dbo_EMP
+    public partial class EMP
     {
         /// <summary />
         public virtual Int32 EMPNO { get; set; }
@@ -45,7 +48,7 @@ namespace Apps72.Dev.Data.Tests.Entities
         public virtual Int32? DEPTNO { get; set; }
     }
     /// <summary />
-    public partial class dbo_SALGRADE
+    public partial class SALGRADE
     {
         /// <summary />
         public virtual Int32? GRADE { get; set; }

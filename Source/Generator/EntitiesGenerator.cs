@@ -161,7 +161,7 @@ namespace Apps72.Dev.Data.Generator
             {
                 System.Data.SqlDbType? sqlDbType = this.SqlDbType;
                 if (sqlDbType.HasValue)
-                    return DataTypedConvertor.ToNetType(sqlDbType.Value).Name;
+                    return SqlDataTypedConvertor.ToNetType(sqlDbType.Value).Name;
                 else
                     return "Object";
             }

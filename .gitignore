@@ -15,3 +15,4 @@
 /Tests/UnitTests/bin/Release
 /Tests/UnitTests/obj/Release
 /.vs/config/applicationhost.config
+*.user
