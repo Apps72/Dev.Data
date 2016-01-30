@@ -13,7 +13,6 @@ namespace Apps72.Dev.Data.Generator
     {
         private string _connectionString = string.Empty;
         private SqlConnection _connection = null;
-        private List<Table> _tables = new List<Table>();
 
         /// <summary>
         /// Initializes a new instance of EntitiesGenerator
@@ -22,9 +21,8 @@ namespace Apps72.Dev.Data.Generator
         public EntitiesGenerator(string connectionString)
         {
             _connectionString = connectionString;
-            this.GetAllTablesAndColumns();
+            this.FillAllTablesAndColumns();
         }
-
 
         /// <summary>
         /// Initializes a new instance of EntitiesGenerator
@@ -33,26 +31,23 @@ namespace Apps72.Dev.Data.Generator
         public EntitiesGenerator(SqlConnection connection)
         {
             _connection = connection;
-            this.GetAllTablesAndColumns();
+            this.FillAllTablesAndColumns();
         }
 
         /// <summary>
         /// Gets all tables founds
         /// </summary>
-        public IEnumerable<Table> Tables
-        {
-            get
-            {
-                return _tables.Where(t => t.IsView == false);
-            }
-        }
+        public virtual IEnumerable<Table> Tables { get; private set; }
 
         /// <summary>
         /// Search all table names and columns names in SQL Server
         /// </summary>
-        private void GetAllTablesAndColumns()
+        protected virtual void FillAllTablesAndColumns()
         {
-            using (SqlDatabaseCommand cmd = _connection == null ? new SqlDatabaseCommand(_connectionString) : new SqlDatabaseCommand(_connection))
+            List<Table> tablesFound = new List<Table>();
+            IEnumerable<TableAndColumn> tableAndColumns;
+
+            using (SqlDatabaseCommand cmd = this.GetDatabaseCommand())
             {
                 cmd.CommandText.AppendLine(" SELECT sys.schemas.name AS SchemaName, ");
                 cmd.CommandText.AppendLine("        sys.tables.name AS TableName, ");
@@ -67,32 +62,45 @@ namespace Apps72.Dev.Data.Generator
                 cmd.CommandText.AppendLine("        INNER JOIN sys.systypes ON sys.systypes.xtype = sys.columns.system_type_id ");
                 cmd.CommandText.AppendLine(" ORDER BY SchemaName, TableName, column_id ");
 
-                var tableAndColumns = cmd.ExecuteTable<TableAndColumn>();
+                tableAndColumns = cmd.ExecuteTable<TableAndColumn>();
+            }
 
-                foreach (TableAndColumn column in tableAndColumns)
+            foreach (TableAndColumn column in tableAndColumns)
+            {
+                // If this table is not already existing, create it.
+                if (!tablesFound.Any(t => t.Name == column.TableName && t.Schema == column.SchemaName))
                 {
-                    // If this table is not already existing, create it.
-                    if (!_tables.Any(t => t.Name == column.TableName && t.Schema == column.SchemaName))
+                    tablesFound.Add(new Table()
                     {
-                        _tables.Add(new Table()
-                        {
-                            Schema = column.SchemaName,
-                            Name = column.TableName,
-                            IsView = column.IsView,
-                            Columns = new List<Column>()
-                        });
-                    }
-
-                    // Fill all columns
-                    List<Column> columns = _tables.First(t => t.Name == column.TableName && t.Schema == column.SchemaName).Columns as List<Column>;
-                    columns.Add(new Column()
-                    {
-                        Name = column.ColumnName,
-                        SqlType = column.ColumnType,
-                        IsNullable = column.IsColumnNullable
+                        Schema = column.SchemaName,
+                        Name = column.TableName,
+                        IsView = column.IsView,
+                        Columns = new List<Column>()
                     });
                 }
+
+                // Fill all columns
+                List<Column> columns = tablesFound.First(t => t.Name == column.TableName && t.Schema == column.SchemaName).Columns as List<Column>;
+                columns.Add(new Column()
+                {
+                    Name = column.ColumnName,
+                    SqlType = column.ColumnType,
+                    IsNullable = column.IsColumnNullable
+                });
             }
+
+            this.Tables = tablesFound.Where(t => t.IsView == false);
+        }
+
+        /// <summary>
+        /// Returns a new reference to SqlDatabaseCommand
+        /// </summary>
+        /// <returns></returns>
+        protected virtual SqlDatabaseCommand GetDatabaseCommand()
+        {
+            SqlDatabaseCommand command = _connection == null ? new SqlDatabaseCommand(_connectionString) : new SqlDatabaseCommand(_connection);
+            command.ThrowException = false;
+            return command;
         }
 
         /// <summary />
