@@ -48,6 +48,30 @@ namespace Apps72.Dev.Data.Tests.Entities
         public virtual Int32? DEPTNO { get; set; }
     }
     /// <summary />
+    public partial class Nationality
+    {
+        /// <summary />
+        public virtual String NationalityCode { get; set; }
+    }
+    /// <summary />
+    public partial class NationalityTranslate
+    {
+        /// <summary />
+        public virtual String NationalityCode { get; set; }
+        /// <summary />
+        public virtual String Language { get; set; }
+        /// <summary />
+        public virtual String Description { get; set; }
+    }
+    /// <summary />
+    public partial class Person
+    {
+        /// <summary />
+        public virtual Int32 ID { get; set; }
+        /// <summary />
+        public virtual String NationalityCode { get; set; }
+    }
+    /// <summary />
     public partial class SALGRADE
     {
         /// <summary />

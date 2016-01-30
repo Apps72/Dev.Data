@@ -575,7 +575,7 @@ namespace Apps72.Dev.Data.Tests
             dt.Rows.Add(DateTime.Today, "Voituron", 1);
             dt.Rows.Add(DateTime.Today.AddDays(1), "Dubois", 2);
 
-            EMPBase[] employees = SqlDataTypedConvertor.DataTableTo<EMPBase>(dt);
+            EMPBase[] employees = DataTypedConvertor.DataTableTo<EMPBase>(dt);
 
             Assert.AreEqual(employees[0].EName, "Voituron");
             Assert.AreEqual(employees[0].HireDate, DateTime.Today);
@@ -592,7 +592,7 @@ namespace Apps72.Dev.Data.Tests
             dt.Columns.Add("Sal", typeof(int));
             dt.Rows.Add(DateTime.Today, "Voituron", 1);
 
-            EMPBase employee = SqlDataTypedConvertor.DataRowTo<EMPBase>(dt.Rows[0]);
+            EMPBase employee = DataTypedConvertor.DataRowTo<EMPBase>(dt.Rows[0]);
 
             Assert.AreEqual(employee.EName, "Voituron");
             Assert.AreEqual(employee.HireDate, DateTime.Today);
@@ -608,7 +608,7 @@ namespace Apps72.Dev.Data.Tests
             dt.Rows.Add(DateTime.Today, "Voituron", 1);
 
             EMPBase employee = new EMPBase();
-            SqlDataTypedConvertor.DataRowTo<EMPBase>(dt.Rows[0], employee);
+            DataTypedConvertor.DataRowTo<EMPBase>(dt.Rows[0], employee);
 
             Assert.AreEqual(employee.EName, "Voituron");
             Assert.AreEqual(employee.HireDate, DateTime.Today);
@@ -621,7 +621,7 @@ namespace Apps72.Dev.Data.Tests
             employees.Add(new EMPBase() { HireDate = DateTime.Today, EName = "Voituron" });
             employees.Add(new EMPBase() { HireDate = DateTime.Today.AddDays(1), EName = "Dubois", Comm = 123 });
 
-            DataTable table = SqlDataTypedConvertor.ToDataTable(employees.ToArray());
+            DataTable table = DataTypedConvertor.ToDataTable(employees.ToArray());
 
             Assert.AreEqual(table.Rows.Count, 2);
             Assert.AreEqual(table.Rows[0]["EName"], "Voituron");
@@ -665,7 +665,7 @@ namespace Apps72.Dev.Data.Tests
                 List<EMPBase> employees = new List<EMPBase>();
                 employees.Add(new EMPBase() { EmpNo = 1 });
                 employees.Add(new EMPBase() { EmpNo = 2 });
-                return SqlDataTypedConvertor.ToDataTable(employees);
+                return DataTypedConvertor.ToDataTable(employees);
             });
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
@@ -684,7 +684,7 @@ namespace Apps72.Dev.Data.Tests
 
             conn.DefineDataInjection((cmd) =>
             {
-                return SqlDataTypedConvertor.ToDataTable(new int[] { 2 });
+                return DataTypedConvertor.ToDataTable(new int[] { 2 });
             });
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))

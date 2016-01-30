@@ -50,7 +50,7 @@ namespace Apps72.Dev.Data
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
         public static void AddValues<T>(this SqlParameterCollection parameters, T values)
         {
-            IEnumerable<IDataParameter> properties = SqlDataTypedConvertor.ToParameterCollection(values);
+            IEnumerable<IDataParameter> properties = DataTypedConvertor.ToParameterCollection(values);
 
             // Remove existing parameters found in Values properties
             for (int i = parameters.Count - 1; i >= 0; i--)
@@ -69,7 +69,7 @@ namespace Apps72.Dev.Data
                             ParameterName = p.ParameterName,
                             Value = p.Value,
                             IsNullable = p.IsNullable,
-                            SqlDbType = SqlDataTypedConvertor.ToSqlDbType(p.DbType)
+                            SqlDbType = DataTypedConvertor.ToSqlDbType(p.DbType)
                         })
                         .ToArray());
         }

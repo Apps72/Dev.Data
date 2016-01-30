@@ -55,7 +55,7 @@
     <Compile Include="Annotations\ColumnAttribute.cs" />
     <Compile Include="DatabaseCommandBase.cs" />
     <Compile Include="CommandTextFormatted.cs" />
-    <Compile Include="SqlDataTypedConvertor.cs" />
+    <Compile Include="DataTypedConvertor.cs" />
     <Compile Include="DataExtensions.cs" />
     <Compile Include="Generator\EntitiesGenerator.cs" />
     <Compile Include="ExceptionOccuredEventArgs.cs" />

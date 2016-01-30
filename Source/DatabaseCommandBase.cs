@@ -284,7 +284,7 @@ namespace Apps72.Dev.Data
         public virtual IEnumerable<TReturn> ExecuteTable<TReturn>()
         {
             System.Data.DataTable table = this.ExecuteTable();
-            return SqlDataTypedConvertor.DataTableTo<TReturn>(table);
+            return DataTypedConvertor.DataTableTo<TReturn>(table);
         }
 
         /// <summary>
@@ -453,14 +453,14 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual TReturn ExecuteRow<TReturn>()
         {
-            if (SqlDataTypedConvertor.IsPrimitive(typeof(TReturn)))
+            if (DataTypedConvertor.IsPrimitive(typeof(TReturn)))
             {
                 return this.ExecuteScalar<TReturn>();
             }
             else
             {
                 System.Data.DataRow row = this.ExecuteRow();
-                return SqlDataTypedConvertor.DataRowTo<TReturn>(row);
+                return DataTypedConvertor.DataRowTo<TReturn>(row);
             }
         }
 
@@ -486,7 +486,7 @@ namespace Apps72.Dev.Data
         {
             System.Data.DataRow row = this.ExecuteRow();
 
-            return SqlDataTypedConvertor.DataRowTo<TReturn>(row, itemOftype);
+            return DataTypedConvertor.DataRowTo<TReturn>(row, itemOftype);
         }
 
         /// <summary>

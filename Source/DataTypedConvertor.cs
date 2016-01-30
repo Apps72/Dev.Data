@@ -11,11 +11,11 @@ namespace Apps72.Dev.Data
     /// <summary>
     /// Convert DataRows to Typed objects or Typed objects to DataRows.
     /// </summary>
-    public class SqlDataTypedConvertor
+    public class DataTypedConvertor
     {
         private static readonly List<DbTypeMapEntry> _dbTypeList = new List<DbTypeMapEntry>();
 
-        static SqlDataTypedConvertor()
+        static DataTypedConvertor()
         {
             FillDbTypeList();
         }
@@ -31,7 +31,7 @@ namespace Apps72.Dev.Data
             T[] results = new T[table.Rows.Count];
 
             // If is Primitive type (string, int, ...)
-            if (SqlDataTypedConvertor.IsPrimitive(typeof(T)))
+            if (DataTypedConvertor.IsPrimitive(typeof(T)))
             {
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
@@ -48,7 +48,7 @@ namespace Apps72.Dev.Data
             {
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    results[i] = SqlDataTypedConvertor.DataRowTo<T>(table.Rows[i]);
+                    results[i] = DataTypedConvertor.DataRowTo<T>(table.Rows[i]);
                 }
             }
 
@@ -63,7 +63,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public static T DataRowTo<T>(System.Data.DataRow row)
         {
-            return SqlDataTypedConvertor.DataRowTo<T>(row, default(T));
+            return DataTypedConvertor.DataRowTo<T>(row, default(T));
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace Apps72.Dev.Data
                         DataParameter parameter = new DataParameter();
                         parameter.Value = typeof(T).GetProperty(property.Name).GetValue(value, null);
                         parameter.IsNullable = IsNullable(propType);
-                        parameter.DbType = SqlDataTypedConvertor.ToDbType(propType);
+                        parameter.DbType = DataTypedConvertor.ToDbType(propType);
 
                         // Parameter name
                         string attribute = Annotations.ColumnAttribute.GetColumnAttributeName(property);
@@ -295,7 +295,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         internal static Type GetNullableType(Type type)
         {
-            if (SqlDataTypedConvertor.IsNullable(type))
+            if (DataTypedConvertor.IsNullable(type))
             {
                 return type.GetGenericArguments()[0];
             }
