@@ -26,6 +26,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 - [Extensions](#Extensions): Use some extensions methods to simplify your code (AddWithValueOrDBNull, ConvertToDBNull, ...)
 - [Data Injection](#DataInjection): Include your Unit Tests without Database, but intercept all queries executions to set predefined data.
 - [Best Practices](#BestPractices): Copy our samples and use it as templates.
+- [Entities Generators](#EntitiesGenerator): Generate automatically all classes from your database classes (via a T4 file).
 
 
 #### <a name="ExecuteTable"></a>ExecuteTable
@@ -255,12 +256,63 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
         }
     }   
 
+#### <a name="EntitiesGenerator"></a>Entities Generator
+
+You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformation_Toolkit">T4 file</a> to generate all classes associated to your database tables.
+Copy this [sample .tt file](Apps72/Dev.Data/blob/master/Tests/UnitTests/Entities.tt) in your project and set your correct **Connection String**.
+
+    // UPDATE THIS CONNECTION STRING
+    const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
+
+Each time you save this .tt file, you create an equivalent .cs file with all classes.
+
+For example:
+
+    // *********************************************
+    // Code Generated with Apps72.Dev.Data.Generator
+    // *********************************************
+    using System;
+
+    namespace Apps72.Dev.Data.Tests.Entities
+    {
+        /// <summary />
+        public partial class DEPT
+        {
+            /// <summary />
+            public virtual Int32 DEPTNO { get; set; }
+            /// <summary />
+            public virtual String DNAME { get; set; }
+            /// <summary />
+            public virtual String LOC { get; set; }
+        }
+        /// <summary />
+        public partial class EMP
+        {
+            /// <summary />
+            public virtual Int32 EMPNO { get; set; }
+            /// <summary />
+            public virtual String ENAME { get; set; }
+            /// <summary />
+            public virtual Int32? MGR { get; set; }
+            /// <summary />
+            public virtual DateTime? HIREDATE { get; set; }
+            /// <summary />
+            public virtual Int32? SAL { get; set; }
+            /// <summary />
+            public virtual Int32? DEPTNO { get; set; }
+        }
+    }
+
 ## <a name="ReleaseNotes"></a>Release Notes
+
+### Version 1.2
+
+* Initial version with all basic features.
 
 ### Version 1.3
 
 * Add a extension method **SqlParameterCollection.AddValues** to simplify the creation of parameters. See [Parameters.AddValues](#ExecuteTableWithParameters) for a code sample.
 
-### Version 1.2
+### Version 1.4
 
-* Initial version with all basic features.
+* Add an **EntitiesGenerator** class to generate all classes associated to an existing Database, via the file **Entities.tt**.
