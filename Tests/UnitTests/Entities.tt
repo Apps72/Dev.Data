@@ -1,8 +1,8 @@
 ﻿<# 
 
    // UPDATE THIS CONNECTION STRING
-    const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
-   //const string CONNECTION_STRING = "";
+   // const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
+   const string CONNECTION_STRING = "";
 
    // True to generate class names prefixed with the Table Schema (ex. "dbo_EMP")
    const bool INCLUDE_SCHEMA_PREFIX = false;
