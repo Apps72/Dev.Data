@@ -1,4 +1,4 @@
-# Apps72.Dev.Data.SqlDatabaseCommand
+# SqlDatabaseCommand - Simple Object Mapping
 
 ## Introduction
 
