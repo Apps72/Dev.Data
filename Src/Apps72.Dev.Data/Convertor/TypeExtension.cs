@@ -2,7 +2,7 @@
 
 namespace Apps72.Dev.Data.Convertor
 {
-    public static class TypeExtension
+    internal static class TypeExtension
     {
 
         /// <summary>

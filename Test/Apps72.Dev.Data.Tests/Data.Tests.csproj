@@ -35,8 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Data">
-      <HintPath>..\..\Src\artifacts\bin\Data\Debug\net451\Data.dll</HintPath>
+    <Reference Include="Apps72.Dev.Data">
+      <HintPath>..\..\Src\artifacts\bin\Data\Debug\net451\Apps72.Dev.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Data.Sqlite", "Src\Data.Sqlite\Data.Sqlite.xproj", "{725D55EA-2DEC-4E46-A4C1-A2E763F77316}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Data.Sqlite", "Src\Apps72.Dev.Data.Sqlite\Data.Sqlite.xproj", "{725D55EA-2DEC-4E46-A4C1-A2E763F77316}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{D88D530C-6B56-4F4E-BC62-D119E28F2B91}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Data", "Src\Data\Data.xproj", "{6E3777D9-EB4D-49B5-AA41-652166A355D6}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Data", "Src\Apps72.Dev.Data\Data.xproj", "{6E3777D9-EB4D-49B5-AA41-652166A355D6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A2298513-AFE2-430D-9409-4E9B96D8CA5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Tests", "Test\Data.Tests\Data.Tests.csproj", "{F63108D4-A298-44B4-86AE-3AAB86AAB876}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Tests", "Test\Apps72.Dev.Data.Tests\Data.Tests.csproj", "{F63108D4-A298-44B4-86AE-3AAB86AAB876}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0503DBDC-F76E-44B0-A9D9-0E71E9EBD875}"
 	ProjectSection(SolutionItems) = preProject
