@@ -20,6 +20,7 @@ namespace Apps72.Dev.Data.Internal
         {
             this.Columns = null;
             this.Rows = null;
+            this.IsColumnDefined = false;
         }
 
         /// <summary>
@@ -30,20 +31,45 @@ namespace Apps72.Dev.Data.Internal
         public void Load(DbDataReader reader, bool firstRowOnly)
         {
             List<DataRow> data = new List<DataRow>();
-            int fieldCount = this.FillColumnsProperties(reader);
+            int fieldCount = 0;
 
-            while (reader.Read())
+            // Read Columns definition
+            if (reader.Read())
             {
-                object[] row = new object[fieldCount];
-                int result = reader.GetValues(row);
-                data.Add(new DataRow(this, row));
-
-                if (firstRowOnly)
-                    continue;
+                fieldCount = this.FillColumnsProperties(reader);
             }
 
-            this.Rows = data.AsEnumerable();
+            // Read data
+            if (fieldCount > 0)
+            {
+                // Only first row
+                if (firstRowOnly)
+                {
+                    object[] row = new object[fieldCount];
+                    int result = reader.GetValues(row);
+                    data.Add(new DataRow(this, row));
+                }
+
+                // All rows
+                else
+                {
+                    do
+                    {
+                        object[] row = new object[fieldCount];
+                        int result = reader.GetValues(row);
+                        data.Add(new DataRow(this, row));
+
+                        if (firstRowOnly)
+                            continue;
+                    }
+                    while (reader.Read());
+                }
+            }
+
+            this.Rows = data.ToArray();
         }
+        
+        public bool IsColumnDefined { get; set; }
 
         /// <summary>
         /// Fill all columns properties
@@ -68,6 +94,7 @@ namespace Apps72.Dev.Data.Internal
             }
 
             this.Columns = columns;
+            this.IsColumnDefined = true;
 
             return fieldCount;
         }
@@ -75,12 +102,12 @@ namespace Apps72.Dev.Data.Internal
         /// <summary>
         /// Gets the Columns properties
         /// </summary>
-        public IEnumerable<DataColumn> Columns { get; private set; }
+        public DataColumn[] Columns { get; private set; }
 
         /// <summary>
         /// Gets all Rows values
         /// </summary>
-        public IEnumerable<DataRow> Rows { get; private set; }
+        public DataRow[] Rows { get; private set; }
 
         /// <summary>
         /// Creates a new instance of T type and sets all row values to the new T properties.
@@ -88,7 +115,7 @@ namespace Apps72.Dev.Data.Internal
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
         /// <returns></returns>
-        public T[] DataTableTo<T>()
+        public T[] ConvertTo<T>()
         {
             T[] results = new T[this.Rows.Count()];
 
@@ -120,6 +147,27 @@ namespace Apps72.Dev.Data.Internal
 
             return results;
         }
+
+#if NET451
+        public System.Data.DataTable ConvertToSystemDataTable()
+        {
+            System.Data.DataTable table = new System.Data.DataTable();
+            table.TableName = "DataTable";
+
+            // Columns
+            table.Columns.AddRange(this.Columns.Select(c => 
+                                            new System.Data.DataColumn()
+                                            {
+                                                ColumnName = c.ColumnName,
+                                                AllowDBNull = c.IsNullable,
+                                                DataType = c.ColumnType
+                                            }).ToArray());
+
+            table.NewRow();
+
+            return table;
+        }
+#endif
     }
 
 }

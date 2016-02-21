@@ -10,7 +10,6 @@ namespace Apps72.Dev.Data
     [DebuggerDisplay("{CommandText}")]
     public abstract partial class DatabaseCommandBase : IDatabaseCommandBase
     {
-
         #region EVENTS
 
         /// <summary>
@@ -220,14 +219,36 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         internal virtual Internal.DataTable ExecuteInternalDataTable(bool firstRowOnly)
         {
-            this.Command.CommandText = this.CommandText.ToString();
+            ResetException();
 
-            Internal.DataTable data = new Internal.DataTable();
-            using (DbDataReader dr = this.Command.ExecuteReader())
+            try
             {
-                data.Load(dr, firstRowOnly);
-                return data;
+                string sql = this.CommandText.ToString();
+
+                if (String.CompareOrdinal(sql, this.Command.CommandText) != 0) this.Command.CommandText = sql;
+
+                if (this.Log != null)
+                    this.Log.Invoke(this.Command.CommandText);
+
+                // If UnitTest activated, invoke the "Get Method" to retrieve custom data
+                //if (this.Connection.ContainsDataInjectionDataTable())
+                //{
+                //    return this.Connection.InvokeAndReturnRowsCount(this.Command);
+                //}
+
+                // Send the request to the Database server
+                Internal.DataTable data = new Internal.DataTable();
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    data.Load(dr, firstRowOnly);
+                    return data;
+                }
             }
+            catch (DbException ex)
+            {
+                return ThrowSqlExceptionOrDefaultValue<Internal.DataTable>(ex);
+            }
+           
         }
 
         /// <summary>
@@ -248,7 +269,7 @@ namespace Apps72.Dev.Data
         public virtual IEnumerable<TReturn> ExecuteTable<TReturn>()
         {
             Internal.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            return table.DataTableTo<TReturn>();
+            return table.ConvertTo<TReturn>();
         }
 
         /// <summary>
@@ -271,6 +292,59 @@ namespace Apps72.Dev.Data
         public virtual IEnumerable<TReturn> ExecuteTable<TReturn>(TReturn itemOftype)
         {
             return ExecuteTable<TReturn>();
+        }
+
+        /// <summary>
+        /// Execute the query and return a new instance of TReturn with the first row of results
+        /// </summary>
+        /// <typeparam name="TReturn">Object type</typeparam>
+        /// <returns>First row of results</returns>
+        /// <example>
+        /// <code>
+        ///   Employee emp = cmd.ExecuteRow&lt;Employee&gt;();
+        /// </code>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual TReturn ExecuteRow<TReturn>()
+        {
+            return this.ExecuteRow<TReturn>(default(TReturn));
+        }
+
+        /// <summary>
+        /// Execute the query and fill the specified TReturn object with the first row of results
+        /// </summary>
+        /// <typeparam name="TReturn">Object type</typeparam>
+        /// <param name="itemOftype"></param>
+        /// <returns>First row of results</returns>
+        /// <example>
+        /// <code>
+        ///   Employee emp = new Employee();
+        ///   var x = cmd.ExecuteRow(new { emp.Age, emp.Name });
+        ///   var y = cmd.ExecuteRow(new { Age = 0, Name = "" });
+        ///   var z = cmd.ExecuteRow(emp);
+        /// </code>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual TReturn ExecuteRow<TReturn>(TReturn itemOftype)
+        {
+            if (Convertor.TypeExtension.IsPrimitive(typeof(TReturn)))
+            {
+                return this.ExecuteScalar<TReturn>();
+            }
+            else
+            {
+                Internal.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
+                if (table.Rows.Length > 0)
+                    return table.Rows[0].ConvertTo<TReturn>(itemOftype);
+                else
+                    return default(TReturn);
+            }            
         }
 
         /// <summary>
@@ -437,16 +511,6 @@ namespace Apps72.Dev.Data
             }
 
             return default(T);
-        }
-
-        public TReturn ExecuteRow<TReturn>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TReturn ExecuteRow<TReturn>(TReturn itemOftype)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

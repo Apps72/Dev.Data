@@ -178,13 +178,13 @@ namespace Apps72.Dev.Data
         /// Execute query and return results by using a Datatable
         /// </summary>
         /// <returns>DataTable of results</returns>
-        //public virtual DataTable ExecuteTable()
-        //{
-        //    return this.ExecuteCommandOrRetryIfErrorOccured(() =>
-        //    {
-        //        return base.ExecuteTable();
-        //    });
-        //}
+        public override DataTable ExecuteTable()
+        {
+            return this.ExecuteCommandOrRetryIfErrorOccured(() =>
+            {
+                return base.ExecuteTable();
+            });
+        }
 
         /// <summary>
         /// Execute the query and return the count of modified rows

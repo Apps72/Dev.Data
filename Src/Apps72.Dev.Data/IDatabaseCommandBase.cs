@@ -158,6 +158,5 @@ namespace Apps72.Dev.Data
         /// Gets the last raised exception 
         /// </summary>
         System.Data.Common.DbException Exception { get; }
-
     }
 }
