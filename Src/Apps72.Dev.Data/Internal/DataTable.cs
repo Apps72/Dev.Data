@@ -20,7 +20,6 @@ namespace Apps72.Dev.Data.Internal
         {
             this.Columns = null;
             this.Rows = null;
-            this.IsColumnDefined = false;
         }
 
         /// <summary>
@@ -67,9 +66,7 @@ namespace Apps72.Dev.Data.Internal
             }
 
             this.Rows = data.ToArray();
-        }
-        
-        public bool IsColumnDefined { get; set; }
+        }      
 
         /// <summary>
         /// Fill all columns properties
@@ -94,7 +91,6 @@ namespace Apps72.Dev.Data.Internal
             }
 
             this.Columns = columns;
-            this.IsColumnDefined = true;
 
             return fieldCount;
         }

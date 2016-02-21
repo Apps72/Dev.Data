@@ -55,12 +55,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="SqlBestPracticeTests.cs" />
     <Compile Include="Entities.cs" />
     <Compile Include="SqlDatabaseCommandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlDataInjectionTests.cs" />
+    <Compile Include="SqlEntitiesGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertorTypeExtensionTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="scott.sql" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

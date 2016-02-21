@@ -2,6 +2,7 @@
 using System.Data;
 #if NET451
 using System.Data.SqlClient;
+using Apps72.Dev.Data.Internal;
 #endif
 
 namespace Apps72.Dev.Data
@@ -20,7 +21,7 @@ namespace Apps72.Dev.Data
     /// </example>
     public class SqlDatabaseCommand : DatabaseCommandBase
     {
-        //private SqlDatabaseRetryExceptions _retryIfExceptionsOccured = null;
+        private SqlDatabaseRetryExceptions _retryIfExceptionsOccured = null;
         private bool _mustAutoDisconnect = false;
 
         /// <summary>
@@ -146,13 +147,13 @@ namespace Apps72.Dev.Data
         /// To use this feature, set the default error number to retry, via RetryIfExceptionsOccured.SetDeadLockCodes()
         /// By default, a maximum of 3 retries and a waiting time of 1 second between two retries, is set.
         /// </summary>
-        //public virtual SqlDatabaseRetryExceptions RetryIfExceptionsOccured
-        //{
-        //    get
-        //    {
-        //        return _retryIfExceptionsOccured ?? (_retryIfExceptionsOccured = new SqlDatabaseRetryExceptions());
-        //    }
-        //}
+        public virtual SqlDatabaseRetryExceptions RetryIfExceptionsOccured
+        {
+            get
+            {
+                return _retryIfExceptionsOccured ?? (_retryIfExceptionsOccured = new SqlDatabaseRetryExceptions());
+            }
+        }
 
         /// <summary>
         /// Gets the last raised exception 
@@ -178,11 +179,24 @@ namespace Apps72.Dev.Data
         /// Execute query and return results by using a Datatable
         /// </summary>
         /// <returns>DataTable of results</returns>
-        public override DataTable ExecuteTable()
+        public override System.Data.DataTable ExecuteTable()
         {
             return this.ExecuteCommandOrRetryIfErrorOccured(() =>
             {
                 return base.ExecuteTable();
+            });
+        }
+
+        /// <summary>
+        /// Execute the query and return an internal DataTable with all data.
+        /// </summary>
+        /// <param name="firstRowOnly"></param>
+        /// <returns></returns>
+        internal override Internal.DataTable ExecuteInternalDataTable(bool firstRowOnly)
+        {
+            return this.ExecuteCommandOrRetryIfErrorOccured(() =>
+            {
+                return base.ExecuteInternalDataTable(firstRowOnly);
             });
         }
 
@@ -237,52 +251,51 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         private T ExecuteCommandOrRetryIfErrorOccured<T>(Func<T> action)
         {
-            return action.Invoke();
-        //    if (this.RetryIfExceptionsOccured != null && this.RetryIfExceptionsOccured.IsDefined())
-        //    {
-        //        SqlException lastException = null;
-        //        bool toRetry = false;
+            if (this.RetryIfExceptionsOccured != null && this.RetryIfExceptionsOccured.IsDefined())
+            {
+                SqlException lastException = null;
+                bool toRetry = false;
 
-        //        do
-        //        {
-        //            try
-        //            {
-        //                // Execute the query
-        //                T data = action.Invoke();
+                do
+                {
+                    try
+                    {
+                        // Execute the query
+                        T data = action.Invoke();
 
-        //                // Check if a unknown Exception has occurend and is ThrowException = false
-        //                if (this.Exception == null || this.RetryIfExceptionsOccured.IsNotAnExceptionToRetry(this.Exception))
-        //                    return data;
-        //                else
-        //                    lastException = this.Exception;
-        //            }
-        //            catch (SqlException ex)
-        //            {
-        //                // Check if a unknown Exception
-        //                if (this.RetryIfExceptionsOccured.IsNotAnExceptionToRetry(ex))
-        //                    throw;
-        //                else
-        //                    lastException = ex;
-        //            }
+                        // Check if a unknown Exception has occurend and is ThrowException = false
+                        if (this.Exception == null || this.RetryIfExceptionsOccured.IsNotAnExceptionToRetry(this.Exception))
+                            return data;
+                        else
+                            lastException = this.Exception;
+                    }
+                    catch (SqlException ex)
+                    {
+                        // Check if a unknown Exception
+                        if (this.RetryIfExceptionsOccured.IsNotAnExceptionToRetry(ex))
+                            throw;
+                        else
+                            lastException = ex;
+                    }
 
-        //            // Need to execute this command (action) again
-        //            toRetry = this.RetryIfExceptionsOccured.IsMustRetryAndWait();
+                    // Need to execute this command (action) again
+                    toRetry = this.RetryIfExceptionsOccured.IsMustRetryAndWait();
 
-        //            // Trace the error occured
-        //            if (toRetry && this.Log != null)
-        //            {
-        //                this.Log.Invoke(String.Format("Retry activated. SqlException #{1} was: \"{0}\".", this.Exception.Message, this.RetryIfExceptionsOccured.RetryCount - 1));
-        //            }
+                    // Trace the error occured
+                    if (toRetry && this.Log != null)
+                    {
+                        this.Log.Invoke(String.Format("Retry activated. SqlException #{1} was: \"{0}\".", this.Exception.Message, this.RetryIfExceptionsOccured.RetryCount - 1));
+                    }
 
-        //        } while (toRetry);
+                } while (toRetry);
 
-        //        // If exeed the number of retries... So, throw this last exception
-        //        throw lastException;
-        //    }
-        //    else
-        //    {
-        //        return action.Invoke();
-        //    }
+                // If exeed the number of retries... So, throw this last exception
+                throw lastException;
+            }
+            else
+            {
+                return action.Invoke();
+            }
         }
 
 #if SQL_CLR

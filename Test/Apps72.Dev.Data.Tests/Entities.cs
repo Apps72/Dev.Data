@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Apps72.Dev.Data;
+using System;
+using System.Data.SqlClient;
 
 namespace Data.Tests
 {
@@ -25,6 +27,20 @@ namespace Data.Tests
             get
             {
                 return new EMP() { EmpNo = 7369, EName = "SMITH", HireDate = new DateTime(1980, 12, 17), Comm = null, Salary = 800 };
+            }
+        }
+
+        public static int GetEmployeesCount(SqlConnection currentConnection)
+        {
+            return GetEmployeesCount(currentConnection, null);
+        }
+
+        public static int GetEmployeesCount(SqlConnection currentConnection, SqlTransaction currentTransaction)
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(currentConnection, currentTransaction, string.Empty))
+            {
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                return cmd.ExecuteScalar<int>();
             }
         }
     }

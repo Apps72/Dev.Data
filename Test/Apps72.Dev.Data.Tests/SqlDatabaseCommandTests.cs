@@ -340,7 +340,7 @@ namespace Data.Tests
                 cmd.ExecuteNonQuery();
                 cmd.TransactionRollback();
 
-                Assert.AreEqual(this.GetEmployeesCount(), 14);
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);
             }
         }
 
@@ -357,12 +357,12 @@ namespace Data.Tests
                 currentTransaction = cmd.TransactionBegin();
                 cmd.ExecuteNonQuery();
 
-                Assert.AreEqual(this.GetEmployeesCount(currentTransaction), 0);     // Inside the transaction
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection, currentTransaction), 0);     // Inside the transaction
 
                 cmd.TransactionRollback();
 
-                Assert.AreEqual(this.GetEmployeesCount(currentTransaction), 14);    // Inside the transaction
-                Assert.AreEqual(this.GetEmployeesCount(), 14);                      // Ouside the transaction
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection, currentTransaction), 14);    // Inside the transaction
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);                      // Ouside the transaction
             }
         }
 
@@ -390,124 +390,124 @@ namespace Data.Tests
 
         #region DEADLOCKS
 
-        //[TestMethod()]
-        //public void RaiseDeadLock_Test()
-        //{
-        //    SqlException ex = this.RaiseSqlDeadLock(false);
+        [TestMethod()]
+        public void RaiseDeadLock_Test()
+        {
+            SqlException ex = this.RaiseSqlDeadLock(false);
 
-        //    Assert.IsNotNull(ex);
-        //    Assert.AreEqual(ex.Number, 1205);
-        //}
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(ex.Number, 1205);
+        }
 
-        //[TestMethod()]
-        //public void RetryWhenDeadLockOccured_Test()
-        //{
-        //    SqlException ex = this.RaiseSqlDeadLock(true);
+        [TestMethod()]
+        public void RetryWhenDeadLockOccured_Test()
+        {
+            SqlException ex = this.RaiseSqlDeadLock(true);
 
-        //    Assert.IsNull(ex);
-        //}
+            Assert.IsNull(ex);
+        }
 
-        //private SqlException RaiseSqlDeadLock(bool withRetry)
-        //{
-        //    // See: http://stackoverflow.com/questions/22825147/how-to-simulate-deadlock-on-sql-server
+        private SqlException RaiseSqlDeadLock(bool withRetry)
+        {
+            // See: http://stackoverflow.com/questions/22825147/how-to-simulate-deadlock-on-sql-server
 
-        //    SqlConnection connection2 = new SqlConnection(CONNECTION_STRING);
-        //    connection2.Open();
-        //    SqlException exToReturn = null;
+            SqlConnection connection2 = new SqlConnection(CONNECTION_STRING);
+            connection2.Open();
+            SqlException exToReturn = null;
 
-        //    try
-        //    {
-        //        using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
-        //        {
-        //            cmd.Log = Console.WriteLine;
+            try
+            {
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+                {
+                    cmd.Log = Console.WriteLine;
 
-        //            cmd.CommandText.AppendLine(" CREATE TABLE ##Employees ( ");
-        //            cmd.CommandText.AppendLine("     EmpId INT IDENTITY, ");
-        //            cmd.CommandText.AppendLine("     EmpName VARCHAR(16), ");
-        //            cmd.CommandText.AppendLine("     Phone VARCHAR(16) ");
-        //            cmd.CommandText.AppendLine(" ) ");
+                    cmd.CommandText.AppendLine(" CREATE TABLE ##Employees ( ");
+                    cmd.CommandText.AppendLine("     EmpId INT IDENTITY, ");
+                    cmd.CommandText.AppendLine("     EmpName VARCHAR(16), ");
+                    cmd.CommandText.AppendLine("     Phone VARCHAR(16) ");
+                    cmd.CommandText.AppendLine(" ) ");
 
-        //            cmd.CommandText.AppendLine(" INSERT INTO ##Employees (EmpName, Phone) ");
-        //            cmd.CommandText.AppendLine(" VALUES('Martha', '800-555-1212'), ('Jimmy', '619-555-8080') ");
+                    cmd.CommandText.AppendLine(" INSERT INTO ##Employees (EmpName, Phone) ");
+                    cmd.CommandText.AppendLine(" VALUES('Martha', '800-555-1212'), ('Jimmy', '619-555-8080') ");
 
-        //            cmd.CommandText.AppendLine(" CREATE TABLE ##Suppliers( ");
-        //            cmd.CommandText.AppendLine("     SupplierId INT IDENTITY, ");
-        //            cmd.CommandText.AppendLine("     SupplierName VARCHAR(64), ");
-        //            cmd.CommandText.AppendLine("     Fax VARCHAR(16) ");
-        //            cmd.CommandText.AppendLine(" ) ");
+                    cmd.CommandText.AppendLine(" CREATE TABLE ##Suppliers( ");
+                    cmd.CommandText.AppendLine("     SupplierId INT IDENTITY, ");
+                    cmd.CommandText.AppendLine("     SupplierName VARCHAR(64), ");
+                    cmd.CommandText.AppendLine("     Fax VARCHAR(16) ");
+                    cmd.CommandText.AppendLine(" ) ");
 
-        //            cmd.CommandText.AppendLine(" INSERT INTO ##Suppliers (SupplierName, Fax) ");
-        //            cmd.CommandText.AppendLine(" VALUES ('Acme', '877-555-6060'), ('Rockwell', '800-257-1234') ");
+                    cmd.CommandText.AppendLine(" INSERT INTO ##Suppliers (SupplierName, Fax) ");
+                    cmd.CommandText.AppendLine(" VALUES ('Acme', '877-555-6060'), ('Rockwell', '800-257-1234') ");
 
-        //            cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
 
-        //        }
+                }
 
-        //        using (SqlDatabaseCommand cmd1 = new SqlDatabaseCommand(_connection))
-        //        {
-        //            using (SqlDatabaseCommand cmd2 = new SqlDatabaseCommand(connection2))
-        //            {
-        //                cmd1.Log = Console.WriteLine;
-        //                cmd2.Log = Console.WriteLine;
+                using (SqlDatabaseCommand cmd1 = new SqlDatabaseCommand(_connection))
+                {
+                    using (SqlDatabaseCommand cmd2 = new SqlDatabaseCommand(connection2))
+                    {
+                        cmd1.Log = Console.WriteLine;
+                        cmd2.Log = Console.WriteLine;
 
-        //                cmd1.TransactionBegin();
-        //                cmd2.TransactionBegin();
+                        cmd1.TransactionBegin();
+                        cmd2.TransactionBegin();
 
-        //                cmd1.Clear();
-        //                cmd1.CommandText.AppendLine(" UPDATE ##Employees SET EmpName = 'Mary'    WHERE empid = 1 ");
-        //                cmd1.ExecuteNonQuery();
+                        cmd1.Clear();
+                        cmd1.CommandText.AppendLine(" UPDATE ##Employees SET EmpName = 'Mary'    WHERE empid = 1 ");
+                        cmd1.ExecuteNonQuery();
 
-        //                cmd2.Clear();
-        //                cmd2.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
-        //                cmd2.ExecuteNonQuery();
+                        cmd2.Clear();
+                        cmd2.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
+                        cmd2.ExecuteNonQuery();
 
-        //                // Start and when cmd2.ExecuteNonQuery command will be executed, an DeadLock exception will be raised.
-        //                Task task1 = Task.Factory.StartNew(() =>
-        //                {
-        //                    cmd1.Clear();
-        //                    cmd1.ThrowException = false;
-        //                    if (withRetry)
-        //                    {
-        //                        cmd1.RetryIfExceptionsOccured.SetDeadLockCodes();
-        //                    }
-        //                    cmd1.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
-        //                    cmd1.ExecuteNonQuery();
-        //                });
+                        // Start and when cmd2.ExecuteNonQuery command will be executed, an DeadLock exception will be raised.
+                        Task task1 = Task.Factory.StartNew(() =>
+                        {
+                            cmd1.Clear();
+                            cmd1.ThrowException = false;
+                            if (withRetry)
+                            {
+                                cmd1.RetryIfExceptionsOccured.SetDeadLockCodes();
+                            }
+                            cmd1.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
+                            cmd1.ExecuteNonQuery();
+                        });
 
-        //                System.Threading.Thread.Sleep(1000);
+                        System.Threading.Thread.Sleep(1000);
 
-        //                cmd2.Clear();
-        //                cmd2.CommandText.AppendLine(" UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ");
-        //                cmd2.ExecuteNonQuery();
+                        cmd2.Clear();
+                        cmd2.CommandText.AppendLine(" UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ");
+                        cmd2.ExecuteNonQuery();
 
-        //                cmd2.Dispose();
-        //                connection2.Close();
+                        cmd2.Dispose();
+                        connection2.Close();
 
-        //                // Wait cmd1 finished (and raised an Exception)
-        //                task1.Wait();
+                        // Wait cmd1 finished (and raised an Exception)
+                        task1.Wait();
 
-        //                exToReturn = cmd1.Exception;
-        //            }
-        //        }
+                        exToReturn = cmd1.Exception;
+                    }
+                }
 
-        //        using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
-        //        {
-        //            cmd.Log = Console.WriteLine;
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+                {
+                    cmd.Log = Console.WriteLine;
 
-        //            cmd.CommandText.AppendLine(" DROP TABLE ##Employees ");
-        //            cmd.CommandText.AppendLine(" DROP TABLE ##Suppliers ");
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        connection2.Close();
-        //        connection2.Dispose();
-        //        connection2 = null;
-        //    }
+                    cmd.CommandText.AppendLine(" DROP TABLE ##Employees ");
+                    cmd.CommandText.AppendLine(" DROP TABLE ##Suppliers ");
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                connection2.Close();
+                connection2.Dispose();
+                connection2 = null;
+            }
 
-        //    return exToReturn;
-        //}
+            return exToReturn;
+        }
 
         #endregion
 
@@ -562,28 +562,33 @@ namespace Data.Tests
 
         #endregion
 
-        #region PRIVATES
+        #region EXTENSIONS
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private int GetEmployeesCount()
+        [TestMethod]
+        public void Parameter_AddWithValueOrDBNull_Test()
         {
-            return this.GetEmployeesCount(null);
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SET ANSI_NULLS OFF ");
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP WHERE COMM = @Comm ");
+                cmd.Parameters.AddWithValueOrDBNull("@Comm", null);
+
+                Assert.AreEqual(cmd.ExecuteScalar<int>(), 10);
+            }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="currentTransaction"></param>
-        /// <returns></returns>
-        private int GetEmployeesCount(SqlTransaction currentTransaction)
+        [TestMethod]
+        public void Parameter_ConvertToDBNull_Test()
         {
-            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection, currentTransaction, string.Empty))
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
             {
-                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
-                return cmd.ExecuteScalar<int>();
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SET ANSI_NULLS OFF ");
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP WHERE COMM = @Comm ");
+                cmd.Parameters.AddWithValue("@Comm", null).ConvertToDBNull();
+
+                Assert.AreEqual(cmd.ExecuteScalar<int>(), 10);
             }
         }
 

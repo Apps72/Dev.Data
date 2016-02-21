@@ -82,7 +82,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the current DbCommand
         /// </summary>
-        protected virtual DbCommand Command { get; set; }
+        internal virtual DbCommand Command { get; set; }
 
         /// <summary>
         /// Gets or sets the current transaction
@@ -484,6 +484,8 @@ namespace Apps72.Dev.Data
         #endregion
 
         #region PRIVATE
+
+
 
         /// <summary>
         /// Set the last raised exception to null
