@@ -9,7 +9,7 @@ namespace Apps72.Dev.Data
     /// </summary>
     public static class DataInjectionExtension
     {
-        private static readonly Dictionary<int, Func<DataInjectionDbCommand, object>> _listOfActions = new Dictionary<int, Func<DataInjectionDbCommand, object>>();
+        private static readonly Dictionary<int, Action<DataInjectionDbCommand>> _listOfActions = new Dictionary<int, Action<DataInjectionDbCommand>>();
 
         #region METHODS
 
@@ -19,7 +19,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="action"></param>
-        public static void DefineDataInjection<T>(this DbConnection connection, Func<DataInjectionDbCommand, IEnumerable<T>> action)
+        public static void DefineDataInjection(this DbConnection connection, Action<DataInjectionDbCommand> action)
         {
             _listOfActions.Add(connection.GetHashCode(), action);
         }
@@ -44,10 +44,12 @@ namespace Apps72.Dev.Data
         /// <param name="connection"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        internal static IEnumerable<T> InvokeAndReturnData<T>(this DbConnection connection, DatabaseCommandBase command)
+        internal static DataInjectionDbCommand InvokeAndReturnData(this DbConnection connection, DatabaseCommandBase command)
         {
             var item = _listOfActions[connection.GetHashCode()];
-            return item.Invoke(new DataInjectionDbCommand(command.Command)) as IEnumerable<T>;
+            var dataInjectionCommand = new DataInjectionDbCommand(command);
+            item?.Invoke(dataInjectionCommand);
+            return dataInjectionCommand;
         }
 
         #endregion

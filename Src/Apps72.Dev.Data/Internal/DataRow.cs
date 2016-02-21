@@ -19,10 +19,25 @@ namespace Apps72.Dev.Data.Internal
         /// </summary>
         /// <param name="table"></param>
         /// <param name="values"></param>
-        public DataRow(DataTable table, object[] values)
+        public DataRow(DataTable table, object values)
         {
-            _rowValues = values;
-            _table = table;
+            // Simple value type
+            if (Convertor.TypeExtension.IsPrimitive(values.GetType()))
+            {
+                _rowValues = new object[] { values };
+            }
+
+            // Complex values type
+            else
+            {
+                PropertyInfo[] properties = values.GetType().GetProperties();
+                _rowValues = new object[properties.Length];
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    _rowValues[i] = properties[i].GetValue(values);
+                }
+                _table = table;
+            }
         }
 
         /// <summary>
@@ -135,5 +150,17 @@ namespace Apps72.Dev.Data.Internal
             }
 
         }
+
+        /// <summary>
+        /// Gets all values as an Array of objects
+        /// </summary>
+        public object[] ItemArray
+        {
+            get
+            {
+                return _rowValues;
+            }
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -12,68 +13,89 @@ namespace Data.Tests
     [TestClass]
     public class SqlDataInjectionTests
     {
-        //[TestMethod]
-        //public void DataInjection_WithDataTable_Test()
-        //{
-        //    SqlConnection conn = new SqlConnection();
+        [TestMethod]
+        public void DataInjection_WithEmp_Test()
+        {
+            SqlConnection conn = new SqlConnection();
 
-        //    conn.DefineDataInjection((cmd) =>
-        //    {
-        //        var dt = new DataTable();
-        //        dt.Columns.Add("Col1", typeof(int));
-        //        dt.Rows.Add(2);
-        //        return dt;
-        //    });
+            conn.DefineDataInjection((cmd) =>
+            {
+                List<EMPBase> employees = new List<EMPBase>();
+                employees.Add(new EMPBase() { EName = "", EmpNo = 1 });
+                employees.Add(new EMPBase() { EName = "", EmpNo = 2 });
 
-        //    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
-        //        cmd.Parameters.AddWithValueOrDBNull("@Comm", null);
+                cmd.Inject(employees);
+            });
 
-        //        Assert.AreEqual(cmd.ExecuteScalar<int>(), 2);
-        //    }
-        //}
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
 
-        //[TestMethod]
-        //public void DataInjection_WithEmp_Test()
-        //{
-        //    SqlConnection conn = new SqlConnection();
+                DataTable table = cmd.ExecuteTable();
 
-        //    conn.DefineDataInjection((cmd) =>
-        //    {
-        //        List<EMPBase> employees = new List<EMPBase>();
-        //        employees.Add(new EMPBase() { EmpNo = 1 });
-        //        employees.Add(new EMPBase() { EmpNo = 2 });
-        //        return DataTypedConvertor.ToDataTable(employees);
-        //    });
+                Assert.AreEqual(table.Rows.Count, 2);
+            }
+        }
 
-        //    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        [TestMethod]
+        public void DataInjection_WithEmp_SingleRow_Test()
+        {
+            SqlConnection conn = new SqlConnection();
 
-        //        Assert.AreEqual(cmd.ExecuteTable().Rows.Count, 2);
-        //    }
-        //}
+            conn.DefineDataInjection((cmd) =>
+            {
+                cmd.Inject(new EMPBase() { EName = "SMITH", EmpNo = 1 });
+            });
 
-        //[TestMethod]
-        //public void DataInjection_WithPrimitive_Test()
-        //{
-        //    SqlConnection conn = new SqlConnection();
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
 
-        //    conn.DefineDataInjection((cmd) =>
-        //    {
-        //        return DataTypedConvertor.ToDataTable(new int[] { 2 });
-        //    });
+                DataTable table = cmd.ExecuteTable();
 
-        //    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                Assert.AreEqual(table.Rows[0]["ENAME"], "SMITH");
+            }
+        }
 
-        //        Assert.AreEqual(cmd.ExecuteScalar<int>(), 2);
-        //    }
-        //}
+        [TestMethod]
+        public void DataInjection_WithPrimitiveArray_Test()
+        {
+            SqlConnection conn = new SqlConnection();
+
+            conn.DefineDataInjection((cmd) =>
+            {
+                cmd.Inject(new int[] { 2 });
+            });
+
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+
+                Assert.AreEqual(cmd.ExecuteScalar<int>(), 2);
+            }
+        }
+
+        [TestMethod]
+        public void DataInjection_WithPrimitiveValue_Test()
+        {
+            SqlConnection conn = new SqlConnection();
+
+            conn.DefineDataInjection((cmd) =>
+            {
+                cmd.Inject(2);
+            });
+
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+
+                Assert.AreEqual(cmd.ExecuteScalar<int>(), 2);
+            }
+        }
+
     }
 }

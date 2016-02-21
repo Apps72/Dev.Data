@@ -66,7 +66,18 @@ namespace Apps72.Dev.Data.Internal
             }
 
             this.Rows = data.ToArray();
-        }      
+        }
+
+        /// <summary>
+        /// Load and fill all data (Rows and Columns) from the array of object[].
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="firstRowOnly"></param>
+        public void Load(IEnumerable<object> arrayOfvalues, bool firstRowOnly)
+        {
+            this.FillColumnsProperties(arrayOfvalues.First());
+            this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();
+        }
 
         /// <summary>
         /// Fill all columns properties
@@ -93,6 +104,59 @@ namespace Apps72.Dev.Data.Internal
             this.Columns = columns;
 
             return fieldCount;
+        }
+
+        /// <summary>
+        /// Fill all columns properties
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        private int FillColumnsProperties(object data)
+        {
+            if (data != null)
+            {
+                // Simple type
+                if (Convertor.TypeExtension.IsPrimitive(data.GetType()))
+                {
+                    Type columnType = data.GetType();
+                    var column = new DataColumn()
+                    {
+                        Ordinal = 0,
+                        ColumnName = "NoName",
+                        ColumnType = Convertor.TypeExtension.GetNullableSubType(columnType),
+                        IsNullable = Convertor.TypeExtension.IsNullable(columnType)
+                    };
+
+                    this.Columns = new DataColumn[] { column };
+                    return 1;
+                }
+
+                // Complex type
+                else
+                {
+                    PropertyInfo[] properties = data.GetType().GetProperties();
+                    var columns = new DataColumn[properties.Length];
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        Type columnType = properties[i].PropertyType;
+                        columns[i] = new DataColumn()
+                        {
+                            Ordinal = i,
+                            ColumnName = properties[i].Name,
+                            ColumnType = Convertor.TypeExtension.GetNullableSubType(columnType),
+                            IsNullable = Convertor.TypeExtension.IsNullable(columnType)
+                        };
+                    }
+
+                    this.Columns = columns;
+                    return properties.Length;
+                }
+            }
+            else
+            {
+                this.Columns = null;
+                return 0;
+            }
         }
 
         /// <summary>
@@ -158,9 +222,14 @@ namespace Apps72.Dev.Data.Internal
                                                 AllowDBNull = c.IsNullable,
                                                 DataType = c.ColumnType
                                             }).ToArray());
-
-            table.NewRow();
-
+            // Rows
+            foreach (DataRow row in this.Rows)
+            {
+                //System.Data.DataRow systemRow = table.NewRow();
+                //systemRow.ItemArray = row.ItemArray;
+                table.Rows.Add(row.ItemArray);
+            }
+            
             return table;
         }
 #endif

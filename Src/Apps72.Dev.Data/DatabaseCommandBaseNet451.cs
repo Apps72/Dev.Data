@@ -28,16 +28,19 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // If UnitTest activated, invoke the "Get Method" to retrieve custom data
-                //if (this.Connection.ContainsDataInjectionDataTable())
-                //{
-                //    return this.Connection.InvokeAndReturnData(this.Command);
-                //}
-
-                // Send the request to the Database server
-                using (System.Data.Common.DbDataReader dr = this.Command.ExecuteReader())
+                if (this.Connection.ContainsDataInjectionDataTable())
                 {
-                    data.Load(dr);
-                    return data;
+                    DataInjectionDbCommand command = this.Connection.InvokeAndReturnData(this);
+                    return command.GetSystemDataTable();
+                }
+                else
+                {
+                    // Send the request to the Database server
+                    using (System.Data.Common.DbDataReader dr = this.Command.ExecuteReader())
+                    {
+                        data.Load(dr);
+                        return data;
+                    }
                 }
             }
             catch (System.Data.Common.DbException ex)
