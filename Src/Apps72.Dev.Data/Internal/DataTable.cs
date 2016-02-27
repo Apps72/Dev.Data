@@ -73,7 +73,19 @@ namespace Apps72.Dev.Data.Internal
         /// </summary>
         /// <param name="values"></param>
         /// <param name="firstRowOnly"></param>
-        public void Load(IEnumerable<object> arrayOfvalues, bool firstRowOnly)
+        public void Load(IEnumerable<object[]> arrayOfvalues, bool firstRowOnly)
+        {
+            this.FillColumnsProperties(arrayOfvalues.First());
+            this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();
+        }
+
+        /// <summary>
+        /// Load and fill all data (Rows and Columns) from the array of typed object.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arrayOfvalues"></param>
+        /// <param name="firstRowOnly"></param>
+        public void Load<T>(IEnumerable<T> arrayOfvalues, bool firstRowOnly)
         {
             this.FillColumnsProperties(arrayOfvalues.First());
             this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();

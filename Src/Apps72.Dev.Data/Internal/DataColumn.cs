@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Apps72.Dev.Data.Internal
 {
     /// <summary>
     /// Description of a Data Column
     /// </summary>
+    [DebuggerDisplay("{ColumnName}")]
     internal class DataColumn
     {
         /// <summary />

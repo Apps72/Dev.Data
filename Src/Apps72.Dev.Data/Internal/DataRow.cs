@@ -15,12 +15,25 @@ namespace Apps72.Dev.Data.Internal
         private DataTable _table = null;
 
         /// <summary>
-        /// Initializes a new instance of a DataRow
+        /// Initializes a new instance of a DataRow with an array os simple item
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="values"></param>
+        public DataRow(DataTable table, object[] values)
+        {
+            _rowValues = values;
+            _table = table;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of a DataRow from a complex type with properties.
         /// </summary>
         /// <param name="table"></param>
         /// <param name="values"></param>
         public DataRow(DataTable table, object values)
         {
+            _table = table;
+
             // Simple value type
             if (Convertor.TypeExtension.IsPrimitive(values.GetType()))
             {
@@ -35,8 +48,7 @@ namespace Apps72.Dev.Data.Internal
                 for (int i = 0; i < properties.Length; i++)
                 {
                     _rowValues[i] = properties[i].GetValue(values);
-                }
-                _table = table;
+                }                
             }
         }
 
