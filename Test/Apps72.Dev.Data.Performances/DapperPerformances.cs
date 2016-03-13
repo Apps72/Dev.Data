@@ -2,32 +2,58 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using Dapper;
+using System.Linq;
 
 namespace Apps72.Dev.Data.Performances
 {
-    public class DapperPerformances
+    public class DapperPerformances : IPerformance
     {
-        private SqlConnection _connection;
-
-        public DapperPerformances(string connectionString, int numberOfExecutions)
+        public DapperPerformances()
         {
-            this.NumberOfExecutions = numberOfExecutions;
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
+            this.Watcher = new Stopwatch();
         }
+
+        public SqlConnection Connection { get; set; }
 
         public int NumberOfExecutions { get; set; }
 
-        public void SelectCount()
+        public Stopwatch Watcher { get; }
+
+        public void ExecuteScalar()
         {
-            var watch = Stopwatch.StartNew();
+            this.Watcher.Restart();
+
             for (int i = 0; i < this.NumberOfExecutions; i++)
             {
-                var count = _connection.Query("SELECT COUNT(*) FROM EMP");
+                var count = this.Connection.ExecuteScalar("SELECT COUNT(*) FROM EMP");
             }
-            var elapsed = watch.ElapsedMilliseconds;
-                                
-            Console.WriteLine($"Dapper             - SelectCount: {elapsed} ms for {this.NumberOfExecutions} executions... {(double)elapsed / (double)this.NumberOfExecutions} ms for one execution.");
+
+            Program.DisplayResult(this);
         }
+
+        public void ExecuteScalarTyped()
+        {
+            this.Watcher.Restart();
+
+            for (int i = 0; i < this.NumberOfExecutions; i++)
+            {
+                int count = this.Connection.ExecuteScalar<int>("SELECT COUNT(*) FROM EMP");
+            }
+
+            Program.DisplayResult(this);
+        }
+
+        public void ExecuteRowTyped()
+        {
+            this.Watcher.Restart();
+
+            for (int i = 0; i < this.NumberOfExecutions; i++)
+            {
+                EMP emp = this.Connection.Query<EMP>(" SELECT * FROM EMP WHERE EMPNO = 7369 ").First();
+            }
+
+            Program.DisplayResult(this);
+        }
+
     }
 }

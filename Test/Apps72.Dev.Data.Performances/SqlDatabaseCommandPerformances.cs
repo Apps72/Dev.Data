@@ -4,35 +4,66 @@ using System.Diagnostics;
 
 namespace Apps72.Dev.Data.Performances
 {
-    public class SqlDatabaseCommandPerformances
+    public class SqlDatabaseCommandPerformances : IPerformance
     {
-        private SqlConnection _connection;
-
-        public SqlDatabaseCommandPerformances(string connectionString, int numberOfExecutions)
+        public SqlDatabaseCommandPerformances()
         {
-            this.NumberOfExecutions = numberOfExecutions;
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
+            this.Watcher = new Stopwatch();
         }
+
+        public SqlConnection Connection { get; set; }
 
         public int NumberOfExecutions { get; set; }
 
-        public void SelectCount()
+        public Stopwatch Watcher { get; set; }
+
+        public void ExecuteScalar()
         {
-            var watch = Stopwatch.StartNew();
+            this.Watcher.Restart();
+            
             for (int i = 0; i < this.NumberOfExecutions; i++)
             {
-                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(this.Connection))
                 {
                     cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
                     var count = cmd.ExecuteScalar();
                 }
             }
-            var elapsed = watch.ElapsedMilliseconds;
 
-            Console.WriteLine($"SqlDatabaseCommand - SelectCount: {elapsed} ms for {this.NumberOfExecutions} executions... {(double)elapsed / (double)this.NumberOfExecutions} ms for one execution.");
+            Program.DisplayResult(this);
         }
 
+        public void ExecuteScalarTyped()
+        {
+            this.Watcher.Restart();
+
+            for (int i = 0; i < this.NumberOfExecutions; i++)
+            {
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(this.Connection))
+                {
+                    cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                    int count = cmd.ExecuteScalar<int>();
+                }
+            }
+
+            Program.DisplayResult(this);
+        }
+
+        public void ExecuteRowTyped()
+        {
+            this.Watcher.Restart();
+
+            for (int i = 0; i < this.NumberOfExecutions; i++)
+            {
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(this.Connection))
+                {
+                    cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
+                    EMP emp = cmd.ExecuteRow<EMP>();
+                }
+            }
+
+            Program.DisplayResult(this);
+        }
     }
 }
 
