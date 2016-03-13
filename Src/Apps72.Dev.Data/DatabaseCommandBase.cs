@@ -82,7 +82,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the current DbCommand
         /// </summary>
-        internal virtual DbCommand Command { get; set; }
+        protected virtual DbCommand Command { get; set; }
 
         /// <summary>
         /// Gets or sets the current transaction
