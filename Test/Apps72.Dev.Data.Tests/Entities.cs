@@ -1,48 +1,61 @@
-﻿using Apps72.Dev.Data;
+﻿
+// *********************************************
+// Code Generated with Apps72.Dev.Data.Generator
+// *********************************************
 using System;
-using System.Data.SqlClient;
 
-namespace Data.Tests
+namespace Data.Tests.Entities
 {
-    public class EMPBase
+    /// <summary />
+    public partial class BONUS
     {
-        public DateTime HireDate { get; set; }
-        public string EName { get; set; }
-        public int EmpNo { get; set; }
-        public int? Comm { get; set; }
+        /// <summary />
+        public virtual String ENAME { get; set; }
+        /// <summary />
+        public virtual String JOB { get; set; }
+        /// <summary />
+        public virtual Int32? SAL { get; set; }
+        /// <summary />
+        public virtual Int32? COMM { get; set; }
     }
-
-    public class EMP : EMPBase
+    /// <summary />
+    public partial class DEPT
     {
-        public int? SAL { get; set; }       // Not used, because there are a Salary property tagged [Column("SAL")]
-        [Apps72.Dev.Data.Annotations.Column("sal")]
-        public int? Salary { get; set; }
-        [Apps72.Dev.Data.Annotations.Column("MGR")]
-        public int? Manager { get; set; }
-        public int? MGR { get; set; }       // Not used, because there are a Manager property tagged [Column("MGR")]
-        public string ColumnNotUse { get; set; }
-
-        public static EMP Smith
-        {
-            get
-            {
-                return new EMP() { EmpNo = 7369, EName = "SMITH", HireDate = new DateTime(1980, 12, 17), Comm = null, Salary = 800 };
-            }
-        }
-
-        public static int GetEmployeesCount(SqlConnection currentConnection)
-        {
-            return GetEmployeesCount(currentConnection, null);
-        }
-
-        public static int GetEmployeesCount(SqlConnection currentConnection, SqlTransaction currentTransaction)
-        {
-            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(currentConnection, currentTransaction, string.Empty))
-            {
-                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
-                return cmd.ExecuteScalar<int>();
-            }
-        }
+        /// <summary />
+        public virtual Int32 DEPTNO { get; set; }
+        /// <summary />
+        public virtual String DNAME { get; set; }
+        /// <summary />
+        public virtual String LOC { get; set; }
     }
-
+    /// <summary />
+    public partial class EMP
+    {
+        /// <summary />
+        public virtual Int32 EMPNO { get; set; }
+        /// <summary />
+        public virtual String ENAME { get; set; }
+        /// <summary />
+        public virtual String JOB { get; set; }
+        /// <summary />
+        public virtual Int32? MGR { get; set; }
+        /// <summary />
+        public virtual DateTime? HIREDATE { get; set; }
+        /// <summary />
+        public virtual Int32? SAL { get; set; }
+        /// <summary />
+        public virtual Int32? COMM { get; set; }
+        /// <summary />
+        public virtual Int32? DEPTNO { get; set; }
+    }
+    /// <summary />
+    public partial class SALGRADE
+    {
+        /// <summary />
+        public virtual Int32? GRADE { get; set; }
+        /// <summary />
+        public virtual Int32? LOSAL { get; set; }
+        /// <summary />
+        public virtual Int32? HISAL { get; set; }
+    }
 }

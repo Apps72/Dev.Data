@@ -237,8 +237,6 @@ namespace Apps72.Dev.Data.Internal
             // Rows
             foreach (DataRow row in this.Rows)
             {
-                //System.Data.DataRow systemRow = table.NewRow();
-                //systemRow.ItemArray = row.ItemArray;
                 table.Rows.Add(row.ItemArray);
             }
             
