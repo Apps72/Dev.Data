@@ -3,6 +3,7 @@
 ## Introduction
 
 This C# library simplify all SQL Queries to external databases. An implementation for SQL Server is included.
+The version 1.5 was rebuild using the CoreCLR runtime (https://dotnet.github.io).
 
     int count = cmd.ExecuteScalar<int>();
     var emps = cmd.ExecuteTable<Employee>();
@@ -316,3 +317,8 @@ For example:
 ### Version 1.4
 
 * Add an **EntitiesGenerator** class to generate all classes associated to an existing Database, via the file **Entities.tt**.
+
+### Version 1.5
+
+* All code reviewed and rebuilt with .NET Core framework (https://dotnet.github.io)
+* Fix the Numeric SQL type to Decimal C# type.
