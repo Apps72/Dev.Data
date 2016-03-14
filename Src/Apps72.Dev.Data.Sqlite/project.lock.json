@@ -2805,7 +2805,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Apps72.Dev.Data >= 1.0.0-*",
+      "Apps72.Dev.Data >= 1.0.5-*",
       "Microsoft.Data.Sqlite >= 1.0.0-rc1-final"
     ],
     ".NETFramework,Version=v4.5.1": [],

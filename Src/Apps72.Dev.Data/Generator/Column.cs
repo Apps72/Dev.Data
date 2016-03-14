@@ -23,6 +23,10 @@ namespace Apps72.Dev.Data.Generator
                 {
                     return sqlDbType;
                 }
+                else if (String.Compare(this.SqlType, "numeric", true) == 0)
+                {
+                    return System.Data.SqlDbType.Decimal;
+                }
                 else
                 {
                     return null;

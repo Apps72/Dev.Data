@@ -38,7 +38,7 @@ namespace Data.Tests
             Assert.AreEqual("String", table.Columns.First(c => c.Name == "JOB").CSharpType);
             Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "MGR").CSharpType);
             Assert.AreEqual("DateTime", table.Columns.First(c => c.Name == "HIREDATE").CSharpType);
-            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "SAL").CSharpType);
+            Assert.AreEqual("Decimal", table.Columns.First(c => c.Name == "SAL").CSharpType);
             Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "COMM").CSharpType);
             Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "DEPTNO").CSharpType);
         }
