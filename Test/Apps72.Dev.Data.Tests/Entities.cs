@@ -42,7 +42,7 @@ namespace Data.Tests.Entities
         /// <summary />
         public virtual DateTime? HIREDATE { get; set; }
         /// <summary />
-        public virtual Int32? SAL { get; set; }
+        public virtual Decimal? SAL { get; set; }
         /// <summary />
         public virtual Int32? COMM { get; set; }
         /// <summary />

@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.5.1": {
-      "Apps72.Dev.Data/1.0.0": {
+      "Apps72.Dev.Data/1.5.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1",
         "frameworkAssemblies": [
@@ -46,7 +46,7 @@
       }
     },
     ".NETPlatform,Version=v5.4": {
-      "Apps72.Dev.Data/1.0.0": {
+      "Apps72.Dev.Data/1.5.0": {
         "type": "project",
         "framework": ".NETPlatform,Version=v5.4",
         "dependencies": {
@@ -404,7 +404,7 @@
       }
     },
     ".NETFramework,Version=v4.5.1/win7-x86": {
-      "Apps72.Dev.Data/1.0.0": {
+      "Apps72.Dev.Data/1.5.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1",
         "frameworkAssemblies": [
@@ -450,7 +450,7 @@
       }
     },
     ".NETFramework,Version=v4.5.1/win7-x64": {
-      "Apps72.Dev.Data/1.0.0": {
+      "Apps72.Dev.Data/1.5.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1",
         "frameworkAssemblies": [
@@ -496,7 +496,7 @@
       }
     },
     ".NETPlatform,Version=v5.4/win7-x86": {
-      "Apps72.Dev.Data/1.0.0": {
+      "Apps72.Dev.Data/1.5.0": {
         "type": "project",
         "framework": ".NETPlatform,Version=v5.4",
         "dependencies": {
@@ -919,7 +919,7 @@
       }
     },
     ".NETPlatform,Version=v5.4/win7-x64": {
-      "Apps72.Dev.Data/1.0.0": {
+      "Apps72.Dev.Data/1.5.0": {
         "type": "project",
         "framework": ".NETPlatform,Version=v5.4",
         "dependencies": {
@@ -1343,7 +1343,7 @@
     }
   },
   "libraries": {
-    "Apps72.Dev.Data/1.0.0": {
+    "Apps72.Dev.Data/1.5.0": {
       "type": "project",
       "path": "../Apps72.Dev.Data/project.json"
     },

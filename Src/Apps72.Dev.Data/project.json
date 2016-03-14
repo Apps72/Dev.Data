@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.5.0-*",
   "description": "Apps72.Dev.Data Class Library",
   "authors": [ "Denis Voituron" ],
   "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "projectUrl": "https://github.com/Apps72/Dev.Data",
+  "licenseUrl": "https://github.com/Apps72/Dev.Data",
 
   "frameworks": {
     "net451": {
