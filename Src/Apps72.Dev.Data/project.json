@@ -1,0 +1,26 @@
+{
+  "version": "1.5.1-*",
+  "description": "Apps72.Dev.Data Class Library",
+  "authors": [ "Denis Voituron" ],
+  "tags": [ "" ],
+  "projectUrl": "https://github.com/Apps72/Dev.Data",
+  "licenseUrl": "https://github.com/Apps72/Dev.Data",
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      }
+    },
+    "dotnet5.4": {
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1-beta-23516",
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Data.Common": "4.0.1-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Threading": "4.0.11-beta-23516"
+      }
+    }
+  }
+}

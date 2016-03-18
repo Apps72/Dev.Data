@@ -2,17 +2,18 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-*.suo
-/Source/bin
-/Source/obj/Debug
-/Tests/TestsSqlServer/bin/Debug
-/Tests/TestsSqlServer/obj/Debug
-/Tests/UnitTests/bin/Debug
-/Tests/UnitTests/obj/Debug
-/Source/obj/Release
-/Tests/TestsSqlServer/bin/Release
-/Tests/TestsSqlServer/obj/Release
-/Tests/UnitTests/bin/Release
-/Tests/UnitTests/obj/Release
-/.vs/config/applicationhost.config
+/Src/artifacts/bin
 *.user
+/Test/Data.Tests/bin/Debug
+/Test/Data.Tests/obj/Debug
+*.suo
+/Test/Apps72.Dev.Data.Tests/bin/Debug
+/Test/Apps72.Dev.Data.Tests/obj/Debug
+/Test/Apps72.Dev.Data.Performances/bin/Debug
+/packages/Dapper.1.42
+/Test/Apps72.Dev.Data.Performances/obj/Debug
+/Test/Apps72.Dev.Data.Performances/bin/Release
+/Test/Apps72.Dev.Data.Performances/obj/Release
+/Test/Apps72.Dev.Data.Tests/bin/Release
+/Test/Apps72.Dev.Data.Tests/obj/Release
+/.vs/config/applicationhost.config
