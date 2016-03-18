@@ -60,6 +60,31 @@ namespace Data.Tests
         }
 
         [TestMethod]
+        public void DataInjection_Typed_Test()
+        {
+            SqlConnection conn = new SqlConnection();
+            
+            conn.DefineDataInjection((cmd) =>
+            {
+                List<EMPBase> employees = new List<EMPBase>();
+                employees.Add(new EMPBase() { EName = "", EmpNo = 1 });
+                employees.Add(new EMPBase() { EName = "", EmpNo = 2 });
+
+                cmd.Inject(employees);
+            });
+
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+
+                var data = cmd.ExecuteTable<EMPBase>();
+
+                Assert.AreEqual(data.Count(), 2);
+            }
+        }
+
+        [TestMethod]
         public void DataInjection_WithPrimitiveArray_Test()
         {
             SqlConnection conn = new SqlConnection();
