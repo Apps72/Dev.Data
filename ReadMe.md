@@ -322,3 +322,7 @@ For example:
 
 * All code reviewed and rebuilt with .NET Core framework (https://dotnet.github.io)
 * Fix the Numeric SQL type to Decimal C# type.
+
+### Version 1.5.2
+
+* Fix using a Transaction in constructors: the transaction will be not disposed with the DatabaseCommandBase.

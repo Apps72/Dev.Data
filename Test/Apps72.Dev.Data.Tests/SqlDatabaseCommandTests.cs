@@ -348,6 +348,31 @@ namespace Data.Tests
         }
 
         [TestMethod]
+        public void ExecuteNonQuery_DefineTransactionBefore_Test()
+        {
+            using (SqlTransaction transaction = _connection.BeginTransaction())
+            {
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection, transaction))
+                {
+                    cmd.Log = Console.WriteLine;
+                    cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (1234, 'ABC') ");
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection, transaction))
+                {
+                    cmd.Log = Console.WriteLine;
+                    cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (9876, 'XYZ') ");
+                    cmd.ExecuteNonQuery();
+                }
+
+                transaction.Rollback();
+
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection, transaction), 14);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteNonQuery_TransactionForTwoCommands_Test()
         {
             SqlTransaction currentTransaction;

@@ -25,3 +25,7 @@
 /Test/Apps72.Dev.Data.Sqlite.Tests/Data.Sqlite.Tests.nuget.targets
 /Test/Apps72.Dev.Data.Sqlite.Tests/Apps72.Dev.Data.Sqlite.Tests.nuget.targets
 /Src/Apps72.Dev.Data.Sqlite/Data.Sqlite.nuget.targets
+/Src/Apps72.Dev.Data.Sqlite/bin/x86/Release
+/Src/Apps72.Dev.Data.Sqlite/obj/x86/Release
+/Test/Apps72.Dev.Data.Sqlite.Tests/bin/x86/Release
+/Test/Apps72.Dev.Data.Sqlite.Tests/obj/x86/Release

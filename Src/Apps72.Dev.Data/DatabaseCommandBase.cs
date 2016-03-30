@@ -471,9 +471,6 @@ namespace Apps72.Dev.Data
 
             }
 
-            if (this.Command.Transaction != null)
-                this.Command.Transaction.Dispose();
-
             if (this.Command != null)
                 this.Command.Dispose();
         }
