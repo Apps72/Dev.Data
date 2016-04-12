@@ -35,7 +35,7 @@ namespace Apps72.Dev.Data.Sqlite.Tests
         {
             get
             {
-                return new EMP() { EmpNo = 7369, EName = "SMITH", HireDate = "12-17-1980", Comm = null, Salary = 800 };
+                return new EMP() { EmpNo = 7369, EName = "SMITH", HireDate = "1980-12-17 00:00:00", Comm = null, Salary = 800 };
             }
         }
 
@@ -49,7 +49,7 @@ namespace Apps72.Dev.Data.Sqlite.Tests
             using (SqliteDatabaseCommand cmd = new SqliteDatabaseCommand(currentConnection, currentTransaction, string.Empty))
             {
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
-                return cmd.ExecuteScalar<int>();
+                return (int)cmd.ExecuteScalar<long>();
             }
         }
 
@@ -93,20 +93,20 @@ namespace Apps72.Dev.Data.Sqlite.Tests
                                             INSERT INTO DEPT VALUES (30,'SALES','CHICAGO');
                                             INSERT INTO DEPT VALUES (40,'OPERATIONS','BOSTON');
 
-                                            INSERT INTO EMP VALUES  (7369,'SMITH','CLERK',7902,'12-17-1980',800,NULL,20);
-                                            INSERT INTO EMP VALUES  (7499,'ALLEN','SALESMAN',7698,'2-20-1981',1600,300,30);
-                                            INSERT INTO EMP VALUES  (7521,'WARD','SALESMAN',7698,'2-22-1981',1250,500,30);
-                                            INSERT INTO EMP VALUES  (7566,'JONES','MANAGER',7839,'4-2-1981',2975,NULL,20);
-                                            INSERT INTO EMP VALUES  (7654,'MARTIN','SALESMAN',7698,'9-28-1981',1250,1400,30);
-                                            INSERT INTO EMP VALUES  (7698,'BLAKE','MANAGER',7839,'5-1-1981',2850,NULL,30);
-                                            INSERT INTO EMP VALUES  (7782,'CLARK','MANAGER',7839,'6-9-1981',2450,NULL,10);
-                                            INSERT INTO EMP VALUES  (7788,'SCOTT','ANALYST',7566,'07-13-87',3000,NULL,20);
-                                            INSERT INTO EMP VALUES  (7839,'KING','PRESIDENT',NULL,'11-17-1981',5000,NULL,10);
-                                            INSERT INTO EMP VALUES  (7844,'TURNER','SALESMAN',7698,'9-8-1981',1500,0,30);
-                                            INSERT INTO EMP VALUES  (7876,'ADAMS','CLERK',7788,'07-13-87',1100,NULL,20);
-                                            INSERT INTO EMP VALUES  (7900,'JAMES','CLERK',7698,'12-3-1981',950,NULL,30);
-                                            INSERT INTO EMP VALUES  (7902,'FORD','ANALYST',7566,'12-3-1981',3000,NULL,20);
-                                            INSERT INTO EMP VALUES  (7934,'MILLER','CLERK',7782,'1-23-1982',1300,NULL,10);
+                                            INSERT INTO EMP VALUES  (7369,'SMITH','CLERK',7902,'1980-12-17 00:00:00',800,NULL,20);
+                                            INSERT INTO EMP VALUES  (7499,'ALLEN','SALESMAN',7698,'1981-2-20 00:00:00',1600,300,30);
+                                            INSERT INTO EMP VALUES  (7521,'WARD','SALESMAN',7698,'1981-2-22 00:00:00',1250,500,30);
+                                            INSERT INTO EMP VALUES  (7566,'JONES','MANAGER',7839,'1981-4-2 00:00:00',2975,NULL,20);
+                                            INSERT INTO EMP VALUES  (7654,'MARTIN','SALESMAN',7698,'1981-9-28 00:00:00',1250,1400,30);
+                                            INSERT INTO EMP VALUES  (7698,'BLAKE','MANAGER',7839,'1981-5-1 00:00:00',2850,NULL,30);
+                                            INSERT INTO EMP VALUES  (7782,'CLARK','MANAGER',7839,'1981-6-9 00:00:00',2450,NULL,10);
+                                            INSERT INTO EMP VALUES  (7788,'SCOTT','ANALYST',7566,'1987-07-13 00:00:00',3000,NULL,20);
+                                            INSERT INTO EMP VALUES  (7839,'KING','PRESIDENT',NULL,'1981-11-17 00:00:00',5000,NULL,10);
+                                            INSERT INTO EMP VALUES  (7844,'TURNER','SALESMAN',7698,'1981-9-8 00:00:00',1500,0,30);
+                                            INSERT INTO EMP VALUES  (7876,'ADAMS','CLERK',7788,'1987-07-13 00:00:00',1100,NULL,20);
+                                            INSERT INTO EMP VALUES  (7900,'JAMES','CLERK',7698,'1981-12-3 00:00:00',950,NULL,30);
+                                            INSERT INTO EMP VALUES  (7902,'FORD','ANALYST',7566,'1981-12-3 00:00:00',3000,NULL,20);
+                                            INSERT INTO EMP VALUES  (7934,'MILLER','CLERK',7782,'1982-1-23 00:00:00',1300,NULL,10);
                                             ";
                     command.ExecuteNonQuery();
                 }

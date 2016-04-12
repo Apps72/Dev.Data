@@ -29,8 +29,7 @@ namespace Apps72.Dev.Data
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
         public static void AddValues<T>(this SqliteParameterCollection parameters, T values)
         {
-            // TODO: To complete
-            // Internal.DataParameter.AddValues<T, SqliteParameterCollection, SqliteParameter>(parameters, values);
+            Internal.DataParameter.AddValues<T, SqliteParameterCollection, SqliteParameter>(parameters, values);
         }
     }
 }

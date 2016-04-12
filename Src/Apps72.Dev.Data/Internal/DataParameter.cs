@@ -88,7 +88,13 @@ namespace Apps72.Dev.Data.Internal
             }
 
             // Add parameters found in Values properties
-            existingParameters.AddRange(newParameters.ToArray());
+            foreach (var param in newParameters)
+            {
+                if (!param.ParameterName.EndsWith("@"))
+                    param.ParameterName = $"@{param.ParameterName}";
+
+                existingParameters.Add(param);
+            }
         }
 
     }

@@ -43,8 +43,8 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
                 DataTable data = cmd.ExecuteTable();
 
-                Assert.AreEqual(data.Rows.Count, 14);
-                Assert.AreEqual(data.Columns.Count, 8);
+                Assert.AreEqual(14, data.Rows.Count);
+                Assert.AreEqual(8, data.Columns.Count);
             }
         }
 
@@ -61,8 +61,8 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
                 DataTable data = cmd.ExecuteTable();
 
-                Assert.AreEqual(data.Rows.Count, 14);
-                Assert.AreEqual(data.Columns.Count, 8);
+                Assert.AreEqual(14, data.Rows.Count);
+                Assert.AreEqual(8, data.Columns.Count);
             }
         }
 
@@ -75,7 +75,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
                 DataRow row = cmd.ExecuteRow();
 
-                Assert.AreEqual(row.ItemArray.Length, 8);
+                Assert.AreEqual(8, row.ItemArray.Length);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
                 EMP emp = cmd.ExecuteRow<EMP>();
 
-                Assert.AreEqual(emp.EmpNo, 7369);
+                Assert.AreEqual(7369, emp.EmpNo);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT EMPNO FROM EMP WHERE EMPNO = 7369");
                 int empno = cmd.ExecuteRow<int>();
 
-                Assert.AreEqual(empno, 7369);
+                Assert.AreEqual(7369, empno);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT COMM FROM EMP WHERE EMPNO = 7369");
                 int? comm = cmd.ExecuteRow<int?>();
 
-                Assert.AreEqual(comm, null);
+                Assert.AreEqual(null, comm);
             }
         }
 
@@ -127,7 +127,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
                 EMP emp = cmd.ExecuteRow<EMP>((row) => new EMP() { EmpNo = Convert.ToInt32(row["EMPNO"]) });
 
-                Assert.AreEqual(emp.EmpNo, 7369);
+                Assert.AreEqual(7369, emp.EmpNo);
             }
         }
 
@@ -140,7 +140,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
                 object data = cmd.ExecuteScalar();
 
-                Assert.AreEqual(data, 14);
+                Assert.AreEqual(14, data);
             }
         }
 
@@ -162,7 +162,7 @@ namespace Data.Tests
 
                 object data = cmd.ExecuteScalar();
 
-                Assert.AreEqual(data, "SMITH");
+                Assert.AreEqual("SMITH", data);
             }
         }
 
@@ -194,7 +194,7 @@ namespace Data.Tests
 
                 object data = cmd.ExecuteScalar();
 
-                Assert.AreEqual(data, "SMITH");
+                Assert.AreEqual("SMITH", data);
             }
         }
 
@@ -220,7 +220,7 @@ namespace Data.Tests
 
                 object data = cmd.ExecuteScalar();
 
-                Assert.AreEqual(data, "SMITH");
+                Assert.AreEqual("SMITH", data);
             }
         }
 
@@ -253,7 +253,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
                 int data = cmd.ExecuteScalar<int>();
 
-                Assert.AreEqual(data, 14);
+                Assert.AreEqual(14, data);
             }
         }
 
@@ -266,7 +266,7 @@ namespace Data.Tests
                 cmd.CommandText.AppendLineFormat(" SELECT COMM FROM EMP WHERE EMPNO = {0} ", 7369);
                 int? data = cmd.ExecuteScalar<int?>();
 
-                Assert.AreEqual(data, null);
+                Assert.AreEqual(null, data);
             }
         }
 
@@ -280,10 +280,10 @@ namespace Data.Tests
                 EMP[] data = cmd.ExecuteTable<EMP>().ToArray();
                 EMP smith = data.FirstOrDefault(i => i.EmpNo == 7369);
 
-                Assert.AreEqual(smith.EmpNo, EMP.Smith.EmpNo);
-                Assert.AreEqual(smith.EName, EMP.Smith.EName);
-                Assert.AreEqual(smith.HireDate, EMP.Smith.HireDate);
-                Assert.AreEqual(smith.Comm, EMP.Smith.Comm);
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
+                Assert.AreEqual(EMP.Smith.EName, smith.EName);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
+                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
             }
         }
 
@@ -306,10 +306,10 @@ namespace Data.Tests
                 });
                 EMP smith = data.FirstOrDefault(i => i.EmpNo == 7369);
 
-                Assert.AreEqual(smith.EmpNo, EMP.Smith.EmpNo);
-                Assert.AreEqual(smith.EName, EMP.Smith.EName);
-                Assert.AreEqual(smith.HireDate, EMP.Smith.HireDate);
-                Assert.AreEqual(smith.Comm, EMP.Smith.Comm);
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
+                Assert.AreEqual(EMP.Smith.EName, smith.EName);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
+                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
             }
         }
 
