@@ -260,7 +260,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 #### <a name="EntitiesGenerator"></a>Entities Generator
 
 You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformation_Toolkit">T4 file</a> to generate all classes associated to your database tables.
-Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Tests/UnitTests/Entities.tt) in your project and set your correct **Connection String**.
+Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/Apps72.Dev.Data.Tests/Entities.tt) in your project and set your correct **Connection String**.
 
     // UPDATE THIS CONNECTION STRING
     const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
