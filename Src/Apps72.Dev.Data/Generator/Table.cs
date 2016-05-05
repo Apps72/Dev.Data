@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Apps72.Dev.Data.Generator
 {
     /// <summary />
+    [System.Diagnostics.DebuggerDisplay("{Schema}.{Name}")]
     public class Table
     {
         /// <summary />

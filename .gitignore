@@ -30,3 +30,13 @@
 /Test/Apps72.Dev.Data.Sqlite.Tests/bin/x86/Release
 /Test/Apps72.Dev.Data.Sqlite.Tests/obj/x86/Release
 /packages/Dapper.1.50.0-beta9
+/Source/bin
+/Source/obj
+/Src/Apps72.Dev.Data.Sqlite/obj/Release
+/Tests/TestsSqlServer/obj
+/Tests/UnitTests/bin
+/Tests/UnitTests/obj/Debug
+/Tests/UnitTests/obj/Release
+/Tests/TestsSqlServer/bin/Release/Apps72.Dev.Data.SqlServer.xml
+/Src/Apps72.Dev.Data.Sqlite/bin
+/Src/Apps72.Dev.Data.Sqlite/obj/Debug

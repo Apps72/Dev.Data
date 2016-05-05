@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 
 namespace Apps72.Dev.Data.Generator
 {
     /// <summary />
+    [System.Diagnostics.DebuggerDisplay("{Name} {SqlType}")]
     public class Column
     {
         /// <summary />
@@ -43,6 +45,23 @@ namespace Apps72.Dev.Data.Generator
                     return Convertor.DataTypedConvertor.ToNetType(sqlDbType.Value).Name;
                 else
                     return "Object";
+            }
+        }
+        /// <summary />
+        public string CSharpTypeNullable
+        {
+            get
+            {
+                if (this.IsNullable &&
+                    String.Compare(this.CSharpType, "String", ignoreCase: true) == 0 &&
+                    String.Compare(this.CSharpType, "Byte[]", ignoreCase: true) == 0)
+                {
+                    return this.CSharpType + "?";
+                }
+                else
+                {
+                    return this.CSharpType;
+                }
             }
         }
 #endif

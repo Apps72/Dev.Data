@@ -37,7 +37,7 @@ foreach(var table in entitiesGenerator.Tables)
 <# foreach(var column in table.Columns)
    { #>
         /// <summary />
-        public virtual <#= column.CSharpType #><#= column.IsNullable && column.CSharpType != "String" ? "?" : "" #> <#= column.Name #> { get; set; }
+        public virtual <#= column.CSharpTypeNullable #> <#= column.Name #> { get; set; }
 <# }#>
     }
 <# }#>

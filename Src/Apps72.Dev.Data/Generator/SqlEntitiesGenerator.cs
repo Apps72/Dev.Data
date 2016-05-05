@@ -56,14 +56,14 @@ namespace Apps72.Dev.Data.Generator
                 cmd.CommandText.AppendLine(" SELECT sys.schemas.name AS SchemaName, ");
                 cmd.CommandText.AppendLine("        sys.tables.name AS TableName, ");
                 cmd.CommandText.AppendLine("        sys.columns.name AS ColumnName, ");
-                cmd.CommandText.AppendLine("        sys.systypes.name AS ColumnType, ");
+                cmd.CommandText.AppendLine("        sys.types.name AS ColumnType, ");
                 cmd.CommandText.AppendLine("        sys.columns.max_length AS ColumnSize, ");
                 cmd.CommandText.AppendLine("        sys.columns.is_nullable AS IsColumnNullable, ");
                 cmd.CommandText.AppendLine("        CAST(0 AS BIT) AS IsView ");
                 cmd.CommandText.AppendLine(" FROM   sys.tables ");
-                cmd.CommandText.AppendLine("        INNER JOIN sys.schemas ON sys.tables.schema_id = sys.schemas.schema_id ");
-                cmd.CommandText.AppendLine("        INNER JOIN sys.columns ON sys.tables.object_id = sys.columns.object_id ");
-                cmd.CommandText.AppendLine("        INNER JOIN sys.systypes ON sys.systypes.xtype = sys.columns.system_type_id ");
+                cmd.CommandText.AppendLine("        INNER JOIN sys.schemas ON sys.tables.schema_id   = sys.schemas.schema_id ");
+                cmd.CommandText.AppendLine("        INNER JOIN sys.columns ON sys.tables.object_id   = sys.columns.object_id ");
+                cmd.CommandText.AppendLine("        INNER JOIN sys.types   ON sys.types.user_type_id = sys.columns.user_type_id  ");
                 cmd.CommandText.AppendLine(" ORDER BY SchemaName, TableName, column_id ");
 
                 tableAndColumns = cmd.ExecuteTable<TableAndColumn>();
@@ -94,6 +94,27 @@ namespace Apps72.Dev.Data.Generator
             }
 
             this.Tables = tablesFound.Where(t => t.IsView == false);
+
+            // Remove extra chars
+            foreach (var table in this.Tables)
+            {
+                table.Name = RemoveExtraChars(table.Name);
+                table.Schema = RemoveExtraChars(table.Schema);
+                foreach (var col in table.Columns)
+                {
+                    col.Name = RemoveExtraChars(col.Name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove invalid chars for CSharp class and property names.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string RemoveExtraChars(string name)
+        {
+            return name.Replace(" ", string.Empty);     // TODO: Remove all others chars
         }
 
         /// <summary>
