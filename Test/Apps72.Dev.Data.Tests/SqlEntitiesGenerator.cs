@@ -18,9 +18,9 @@ namespace Data.Tests
             Apps72.Dev.Data.Generator.SqlEntitiesGenerator entitiesGenerator = new Apps72.Dev.Data.Generator.SqlEntitiesGenerator(CONNECTION_STRING);
             Apps72.Dev.Data.Generator.Table table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
 
-            Assert.AreEqual("EMP", table.Name);
-            Assert.AreEqual("dbo", table.Schema);
-            Assert.AreEqual(false, table.IsView);
+            Assert.AreEqual("EMP", table.Name, "Name=EMP");
+            Assert.AreEqual("dbo", table.Schema, "Schema=dbo");
+            Assert.AreEqual(false, table.IsView, "IsView=false");
         }
 
         [TestMethod]
@@ -33,14 +33,14 @@ namespace Data.Tests
             Assert.AreEqual(false, table.Columns.First(c => c.Name == "EMPNO").IsNullable);
             Assert.AreEqual(true, table.Columns.First(c => c.Name == "ENAME").IsNullable);
 
-            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "EMPNO").CSharpType);
-            Assert.AreEqual("String", table.Columns.First(c => c.Name == "ENAME").CSharpType);
-            Assert.AreEqual("String", table.Columns.First(c => c.Name == "JOB").CSharpType);
-            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "MGR").CSharpType);
-            Assert.AreEqual("DateTime", table.Columns.First(c => c.Name == "HIREDATE").CSharpType);
-            Assert.AreEqual("Decimal", table.Columns.First(c => c.Name == "SAL").CSharpType);
-            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "COMM").CSharpType);
-            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "DEPTNO").CSharpType);
+            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "EMPNO").CSharpType, "EMPNO");
+            Assert.AreEqual("String", table.Columns.First(c => c.Name == "ENAME").CSharpType, "ENAME");
+            Assert.AreEqual("String", table.Columns.First(c => c.Name == "JOB").CSharpType, "JOB");
+            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "MGR").CSharpType, "MGR");
+            Assert.AreEqual("DateTime", table.Columns.First(c => c.Name == "HIREDATE").CSharpType, "HIREDATE");
+            Assert.AreEqual("Decimal", table.Columns.First(c => c.Name == "SAL").CSharpType, "SAL");
+            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "COMM").CSharpType, "COMM");
+            Assert.AreEqual("Int32", table.Columns.First(c => c.Name == "DEPTNO").CSharpType, "DEPTNO");
         }
 
     }
