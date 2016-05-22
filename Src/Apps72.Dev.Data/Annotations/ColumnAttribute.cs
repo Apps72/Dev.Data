@@ -41,7 +41,7 @@ namespace Apps72.Dev.Data.Annotations
         /// <returns>Column attribute or null if not found</returns>
         internal static ColumnAttribute GetColumnAttribute(PropertyInfo property)
         {
-            var customAttributes = property.GetCustomAttributes(typeof(ColumnAttribute));
+            var customAttributes = property.GetCustomAttributes(typeof(ColumnAttribute), true);
 
             return customAttributes?.FirstOrDefault(a => a is ColumnAttribute) as ColumnAttribute;
         }

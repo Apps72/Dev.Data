@@ -47,7 +47,7 @@ namespace Apps72.Dev.Data.Internal
                 _rowValues = new object[properties.Length];
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    _rowValues[i] = properties[i].GetValue(values);
+                    _rowValues[i] = properties[i].GetValue(values, null);
                 }                
             }
         }

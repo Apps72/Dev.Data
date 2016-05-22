@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{D88D530C-6B56-4F4E-BC62-D119E28F2B91}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Sqlite", "Src\Apps72.Dev.Data.Sqlite\Data.Sqlite.csproj", "{63AD2394-F8C9-41B7-A92F-EF0F15566748}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Sqlite.Tests", "Test\Apps72.Dev.Data.Sqlite.Tests\Data.Sqlite.Tests.csproj", "{EFF0DCBF-87B1-4E17-853B-6B2B801C7935}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Oracle", "Src\Apps72.Dev.Data.Oracle\Data.Oracle.csproj", "{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,22 @@ Global
 		{EFF0DCBF-87B1-4E17-853B-6B2B801C7935}.Release|x86.ActiveCfg = Release|x86
 		{EFF0DCBF-87B1-4E17-853B-6B2B801C7935}.Release|x86.Build.0 = Release|x86
 		{EFF0DCBF-87B1-4E17-853B-6B2B801C7935}.Release|x86.Deploy.0 = Release|x86
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|x64.Build.0 = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Debug|x86.Build.0 = Debug|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|ARM.Build.0 = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|x64.ActiveCfg = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|x64.Build.0 = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|x86.ActiveCfg = Release|Any CPU
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,5 +147,6 @@ Global
 		{D420E2C8-3257-4557-A767-4468F3BBB6D0} = {A2298513-AFE2-430D-9409-4E9B96D8CA5E}
 		{63AD2394-F8C9-41B7-A92F-EF0F15566748} = {D88D530C-6B56-4F4E-BC62-D119E28F2B91}
 		{EFF0DCBF-87B1-4E17-853B-6B2B801C7935} = {A2298513-AFE2-430D-9409-4E9B96D8CA5E}
+		{2448AEC3-2E78-4DFD-BE34-367E5BB3CB33} = {D88D530C-6B56-4F4E-BC62-D119E28F2B91}
 	EndGlobalSection
 EndGlobal
