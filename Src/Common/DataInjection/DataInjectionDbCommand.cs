@@ -56,9 +56,9 @@ namespace Apps72.Dev.Data
         /// Returns the array of values converted as a DataTable
         /// </summary>
         /// <returns></returns>
-        internal Internal.DataTable GetDataTable()
+        internal Schema.DataTable GetDataTable()
         {
-            var table = new Internal.DataTable();
+            var table = new Schema.DataTable();
             table.Load(_values, firstRowOnly: false);
             return table;
         }
@@ -67,9 +67,9 @@ namespace Apps72.Dev.Data
         /// Returns the array of values converted as a DataRow
         /// </summary>
         /// <returns></returns>
-        internal Internal.DataRow GetDataRow()
+        internal Schema.DataRow GetDataRow()
         {
-            var table = new Internal.DataTable();
+            var table = new Schema.DataTable();
             table.Load(_values, firstRowOnly: true);
             return table.Rows[0];
         }
@@ -80,7 +80,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         internal object GetScalar()
         {
-            var table = new Internal.DataTable();
+            var table = new Schema.DataTable();
             table.Load(_values, firstRowOnly: true);
             return table.Rows[0][0];
         }

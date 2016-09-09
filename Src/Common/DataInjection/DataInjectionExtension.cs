@@ -19,6 +19,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="action"></param>
+        [Obsolete()]
         public static void DefineDataInjection(this DbConnection connection, Action<DataInjectionDbCommand> action)
         {
             _listOfActions.Add(connection.GetHashCode(), action);

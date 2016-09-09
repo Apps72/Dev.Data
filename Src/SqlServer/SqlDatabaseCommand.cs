@@ -135,7 +135,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        internal override Internal.DataTable ExecuteInternalDataTable(bool firstRowOnly)
+        internal override Schema.DataTable ExecuteInternalDataTable(bool firstRowOnly)
         {
             return this.ExecuteCommandOrRetryIfErrorOccured(() =>
             {

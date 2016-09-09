@@ -47,7 +47,7 @@ namespace Apps72.Dev.Data.Generator
         /// <summary>
         /// Gets all tables founds
         /// </summary>
-        public virtual IEnumerable<Table> Tables { get; protected set; }
+        public virtual IEnumerable<Schema.DataTable> Tables { get; protected set; }
 
         /// <summary>
         /// Search all table names and columns names in SQL Server

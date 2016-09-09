@@ -4,25 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Apps72.Dev.Data.Internal
+namespace Apps72.Dev.Data.Schema
 {
     /// <summary>
-    /// Description of a Data Row
+    /// Represents a row of data in a DataTable
     /// </summary>
-    internal class DataRow : IEnumerable
+    public class DataRow : IEnumerable
     {
-        private object[] _rowValues = null;
-        private DataTable _table = null;
+        #region CONSTRUCTORS
 
         /// <summary>
         /// Initializes a new instance of a DataRow with an array os simple item
         /// </summary>
         /// <param name="table"></param>
         /// <param name="values"></param>
-        public DataRow(DataTable table, object[] values)
+        internal DataRow(DataTable table, object[] values)
         {
-            _rowValues = values;
-            _table = table;
+            this.ItemArray = values;
+            this.Table = table;
         }
 
         /// <summary>
@@ -30,27 +29,31 @@ namespace Apps72.Dev.Data.Internal
         /// </summary>
         /// <param name="table"></param>
         /// <param name="values"></param>
-        public DataRow(DataTable table, object values)
+        internal DataRow(DataTable table, object values)
         {
-            _table = table;
+            this.Table = table;
 
             // Simple value type
-            if (Convertor.TypeExtension.IsPrimitive(values.GetType()))
+            if (Apps72.Dev.Data.Convertor.TypeExtension.IsPrimitive(values.GetType()))
             {
-                _rowValues = new object[] { values };
+                this.ItemArray = new object[] { values };
             }
 
             // Complex values type
             else
             {
                 PropertyInfo[] properties = values.GetType().GetProperties();
-                _rowValues = new object[properties.Length];
+                this.ItemArray = new object[properties.Length];
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    _rowValues[i] = properties[i].GetValue(values, null);
-                }                
+                    this.ItemArray[i] = properties[i].GetValue(values, null);
+                }
             }
         }
+
+        #endregion
+
+        #region PROPERTIES
 
         /// <summary>
         /// Gets the data value for this column index
@@ -61,7 +64,7 @@ namespace Apps72.Dev.Data.Internal
         {
             get
             {
-                return _rowValues[index];
+                return this.ItemArray[index];
             }
         }
 
@@ -74,13 +77,27 @@ namespace Apps72.Dev.Data.Internal
         {
             get
             {
-                int? index = _table.Columns.FirstOrDefault(c => c.ColumnName == columnName)?.Ordinal;
+                int? index = this.Table.Columns.FirstOrDefault(c => c.ColumnName == columnName)?.Ordinal;
                 if (index != null)
-                    return _rowValues[index.Value];
+                    return this.ItemArray[index.Value];
                 else
                     throw new ArgumentException($"The ColumnName '{columnName}' doesn't exist in this table.");
             }
         }
+
+        /// <summary>
+        /// Gets all values as an Array of objects
+        /// </summary>
+        public object[] ItemArray { get; private set; }
+
+        /// <summary>
+        /// Gets the System.Data.DataTable to which the column belongs to.
+        /// </summary>
+        public DataTable Table { get; private set; }
+
+        #endregion
+
+        #region METHODS
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -88,7 +105,7 @@ namespace Apps72.Dev.Data.Internal
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return _rowValues.GetEnumerator();
+            return this.ItemArray.GetEnumerator();
         }
 
         /// <summary>
@@ -113,9 +130,9 @@ namespace Apps72.Dev.Data.Internal
             Type type = typeof(T);
 
             // For anonymous type, creates a new instance and sets all data row values to this new object.
-            if (Convertor.TypeExtension.IsAnonymousType(type))
+            if (Apps72.Dev.Data.Convertor.TypeExtension.IsAnonymousType(type))
             {
-                object newItem = Activator.CreateInstance(type, _rowValues);
+                object newItem = Activator.CreateInstance(type, this.ItemArray);
                 return (T)newItem;
             }
 
@@ -135,14 +152,14 @@ namespace Apps72.Dev.Data.Internal
                 properties.AddRange(type.GetProperties(BindingFlags.Public | BindingFlags.Instance));
 
                 // Check all columns values
-                foreach (DataColumn column in _table.Columns)
+                foreach (DataColumn column in this.Table.Columns)
                 {
                     PropertyInfo property = null;
 
                     // Gets the first property with correct Column attribute name
                     if (property == null)
                     {
-                        property = properties.FirstOrDefault(p => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(p), column.ColumnName, true) == 0 && p.CanWrite);
+                        property = properties.FirstOrDefault(p => String.Compare(Apps72.Dev.Data.Annotations.ColumnAttribute.GetColumnAttributeName(p), column.ColumnName, true) == 0 && p.CanWrite);
                     }
 
                     // If not found, gets the first property with corrct name
@@ -163,16 +180,7 @@ namespace Apps72.Dev.Data.Internal
 
         }
 
-        /// <summary>
-        /// Gets all values as an Array of objects
-        /// </summary>
-        public object[] ItemArray
-        {
-            get
-            {
-                return _rowValues;
-            }
-        }
+        #endregion
 
     }
 }

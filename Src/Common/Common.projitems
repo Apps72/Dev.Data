@@ -18,14 +18,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataInjection\DataInjectionDbCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataInjection\DataInjectionExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataColumn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataRow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionOccuredEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Generator\Column.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\SqlEntitiesGeneratorBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Generator\Table.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDatabaseCommandBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Internal\DataColumn.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Internal\DataParameter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Internal\DataRow.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Internal\DataTable.cs" />
   </ItemGroup>
 </Project>

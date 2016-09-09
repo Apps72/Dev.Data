@@ -32,7 +32,7 @@ namespace Apps72.Dev.Data
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
         public static void AddValues<T>(this SqlParameterCollection parameters, T values)
         {
-            Internal.DataParameter.AddValues<T, SqlParameterCollection, SqlParameter>(parameters, values);
+            Schema.DataParameter.AddValues<T, SqlParameterCollection, SqlParameter>(parameters, values);
         }
 
     }

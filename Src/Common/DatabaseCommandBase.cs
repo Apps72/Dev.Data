@@ -408,7 +408,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>()
         {
-            Internal.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
+            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
             return table.ConvertTo<T>();
         }
 
@@ -479,7 +479,7 @@ namespace Apps72.Dev.Data
             }
             else
             {
-                Internal.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
+                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
                 if (table.Rows.Length > 0)
                     return table.Rows[0].ConvertTo<T>(itemOftype);
                 else
@@ -633,7 +633,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        internal virtual IEnumerable<Internal.DataTable> ExecuteInternalDataSet(bool firstRowOnly)
+        internal virtual IEnumerable<Schema.DataTable> ExecuteInternalDataSet(bool firstRowOnly)
         {
             ResetException();
 
@@ -650,18 +650,18 @@ namespace Apps72.Dev.Data
                 if (this.Connection.ContainsDataInjectionDataTable())
                 {
                     DataInjectionDbCommand command = this.Connection.InvokeAndReturnData(this);
-                    return new Internal.DataTable[] { command.GetDataTable() };
+                    return new Schema.DataTable[] { command.GetDataTable() };
                 }
                 else
                 {
-                    var tables = new List<Internal.DataTable>();
+                    var tables = new List<Schema.DataTable>();
 
                     // Send the request to the Database server
                     using (DbDataReader dr = this.Command.ExecuteReader())
                     {
                         do
                         {
-                            tables.Add(new Internal.DataTable(dr, firstRowOnly));
+                            tables.Add(new Schema.DataTable(dr, firstRowOnly));
                         }
                         while (!firstRowOnly && dr.NextResult());
                     }
@@ -671,7 +671,7 @@ namespace Apps72.Dev.Data
             }
             catch (DbException ex)
             {
-                return ThrowSqlExceptionOrDefaultValue<IEnumerable<Internal.DataTable>>(ex);
+                return ThrowSqlExceptionOrDefaultValue<IEnumerable<Schema.DataTable>>(ex);
             }
 
         }
@@ -681,7 +681,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        internal virtual Internal.DataTable ExecuteInternalDataTable(bool firstRowOnly)
+        internal virtual Schema.DataTable ExecuteInternalDataTable(bool firstRowOnly)
         {
             return this.ExecuteInternalDataSet(firstRowOnly).FirstOrDefault();
         }

@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
-namespace Apps72.Dev.Data.Generator
+namespace Apps72.Dev.Data.Schema
 {
     /// <summary />
-    public partial class Column
+    [DebuggerDisplay("{ColumnName} {SqlType}")]
+    public partial class DataColumn
     {
-        /// <summary />
+        /// <summary>
+        /// Gets the Original SQL DataType 
+        /// </summary>
+        public string SqlType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public System.Data.SqlDbType? SqlDbType
         {
             get
@@ -26,6 +35,7 @@ namespace Apps72.Dev.Data.Generator
                 }
             }
         }
+
         /// <summary />
         public string CSharpType
         {
@@ -38,6 +48,7 @@ namespace Apps72.Dev.Data.Generator
                     return "Object";
             }
         }
+
         /// <summary />
         public string CSharpTypeNullable
         {

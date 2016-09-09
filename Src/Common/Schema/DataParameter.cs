@@ -5,9 +5,12 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 
-namespace Apps72.Dev.Data.Internal
+namespace Apps72.Dev.Data.Schema
 {
-    internal class DataParameter
+    /// <summary>
+    /// Tools to manage DbParameters 
+    /// </summary>
+    internal partial class DataParameter
     {
         /// <summary>
         /// Creates a new instance of DbParameter[] with ParameterName, Value and IsNullable properties 
@@ -55,7 +58,7 @@ namespace Apps72.Dev.Data.Internal
                         parameter.DbType = DataTypedConvertor.ToDbType(propType);
 
                         // Parameter name
-                        string attribute = Annotations.ColumnAttribute.GetColumnAttributeName(property);
+                        string attribute = Apps72.Dev.Data.Annotations.ColumnAttribute.GetColumnAttributeName(property);
                         if (string.IsNullOrEmpty(attribute))
                         {
                             parameter.ParameterName = property.Name;

@@ -1,4 +1,4 @@
-﻿using Apps72.Dev.Data.Internal;
+﻿using Apps72.Dev.Data.Schema;
 using System;
 using System.Linq;
 
@@ -6,7 +6,7 @@ namespace Apps72.Dev.Data
 {
     internal static class DataTableExtensions
     {
-        public static System.Data.DataTable ConvertToSystemDataTable(this Internal.DataTable internalTable)
+        public static System.Data.DataTable ConvertToSystemDataTable(this DataTable internalTable)
         {
             System.Data.DataTable table = new System.Data.DataTable();
             table.TableName = "DataTable";
@@ -17,7 +17,7 @@ namespace Apps72.Dev.Data
                                             {
                                                 ColumnName = c.ColumnName,
                                                 AllowDBNull = c.IsNullable,
-                                                DataType = c.ColumnType
+                                                DataType = c.DataType
                                             }).ToArray());
             // Rows
             foreach (DataRow row in internalTable.Rows)

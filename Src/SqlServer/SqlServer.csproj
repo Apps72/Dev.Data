@@ -41,9 +41,8 @@
     <Compile Include="DatabaseCommandBase.cs" />
     <Compile Include="Extension\DataExtensions.cs" />
     <Compile Include="Extension\DataTableExtensions.cs" />
-    <Compile Include="Generator\Column.cs" />
+    <Compile Include="Generator\DataColumn.cs" />
     <Compile Include="Generator\SqlEntitiesGenerator.cs" />
-    <Compile Include="Generator\TableAndColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDatabaseCommand.cs" />
     <Compile Include="SqlDatabaseRetryExceptions.cs" />

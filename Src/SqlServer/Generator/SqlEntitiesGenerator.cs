@@ -40,7 +40,7 @@ namespace Apps72.Dev.Data.Generator
         /// Initializes a new instance of EntitiesGenerator
         /// </summaryconnection
         /// <param name="connectionString">ConnectionString to retrieve all tables and columns</param>
-        public SqlEntitiesGenerator(SqlConnection connection) : base (connection)
+        public SqlEntitiesGenerator(SqlConnection connection) : base(connection)
         {
         }
 
@@ -49,7 +49,6 @@ namespace Apps72.Dev.Data.Generator
         /// </summary>
         protected override void FillAllTablesAndColumns()
         {
-            List<Table> tablesFound = new List<Table>();
             IEnumerable<TableAndColumn> tableAndColumns;
 
             using (SqlDatabaseCommand cmd = this.GetDatabaseCommand())
@@ -70,41 +69,37 @@ namespace Apps72.Dev.Data.Generator
                 tableAndColumns = cmd.ExecuteTable<TableAndColumn>();
             }
 
-            foreach (TableAndColumn column in tableAndColumns)
+            // Select all tables
+            var tables = tableAndColumns.GroupBy(i => new { i.TableName, i.SchemaName, i.IsView })
+                                        .Select(i => new Schema.DataTable()
+                                        {
+                                            Schema = i.Key.SchemaName,
+                                            Name = i.Key.TableName,
+                                            IsView = i.Key.IsView
+                                        })
+                                        .ToArray();
+
+            // Assign all columns
+            for (int i = 0; i < tables.Length; i++)
             {
-                // If this table is not already existing, create it.
-                if (!tablesFound.Any(t => t.Name == column.TableName && t.Schema == column.SchemaName))
-                {
-                    tablesFound.Add(new Table()
-                    {
-                        Schema = column.SchemaName,
-                        Name = column.TableName,
-                        IsView = column.IsView,
-                        Columns = new List<Column>()
-                    });
-                }
-
-                // Fill all columns
-                List<Column> columns = tablesFound.First(t => t.Name == column.TableName && t.Schema == column.SchemaName).Columns as List<Column>;
-                columns.Add(new Column()
-                {
-                    Name = column.ColumnName,
-                    SqlType = column.ColumnType,
-                    IsNullable = column.IsColumnNullable
-                });
+                var table = tables[i];
+                table.Columns = tableAndColumns.Where(c => c.SchemaName == table.Schema && c.TableName == table.Name)
+                                               .Select(c => new Schema.DataColumn(table)
+                                               {
+                                                   ColumnName = RemoveExtraChars(c.ColumnName),
+                                                   SqlType = c.ColumnType,
+                                                   IsNullable = c.IsColumnNullable
+                                               })
+                                               .ToArray();
             }
-
-            this.Tables = tablesFound.Where(t => t.IsView == false);
+            
+            this.Tables = tables.Where(t => t.IsView == false);
 
             // Remove extra chars
             foreach (var table in this.Tables)
             {
                 table.Name = RemoveExtraChars(table.Name);
                 table.Schema = RemoveExtraChars(table.Schema);
-                foreach (var col in table.Columns)
-                {
-                    col.Name = RemoveExtraChars(col.Name);
-                }
             }
         }
 
@@ -127,6 +122,25 @@ namespace Apps72.Dev.Data.Generator
             SqlDatabaseCommand command = this.Connection == null ? new SqlDatabaseCommand(this.ConnectionString) : new SqlDatabaseCommand((SqlConnection)this.Connection);
             command.ThrowException = false;
             return command;
+        }
+
+        /// <summary />
+        private class TableAndColumn
+        {
+            /// <summary />
+            public string SchemaName { get; set; }
+            /// <summary />
+            public string TableName { get; set; }
+            /// <summary />
+            public string ColumnName { get; set; }
+            /// <summary />
+            public string ColumnType { get; set; }
+            /// <summary />
+            public int ColumnSize { get; set; }
+            /// <summary />
+            public bool IsColumnNullable { get; set; }
+            /// <summary />
+            public bool IsView { get; set; }
         }
     }
 }

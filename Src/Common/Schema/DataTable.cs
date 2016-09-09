@@ -4,13 +4,16 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 
-namespace Apps72.Dev.Data.Internal
+namespace Apps72.Dev.Data.Schema
 {
     /// <summary>
-    /// Internal DataTable filled with all data from the Server.
+    /// Represents one table of in-memory data.
     /// </summary>
-    internal class DataTable
+    [System.Diagnostics.DebuggerDisplay("{Schema}.{Name}")]
+    public partial class DataTable
     {
+        #region CONSTRUCTORS
+
         /// <summary>
         /// Initialize a new instance of DataTable
         /// </summary>
@@ -26,17 +29,93 @@ namespace Apps72.Dev.Data.Internal
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="firstRowOnly"></param>
-        public DataTable(DbDataReader reader, bool firstRowOnly) : this()
+        internal DataTable(DbDataReader reader, bool firstRowOnly) : this()
         {
             this.Load(reader, firstRowOnly);
         }
+
+        #endregion
+
+        #region PROPERTIES
+
+        /// <summary>
+        /// Gets the name of this Table
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets the Schema of this table
+        /// </summary>
+        public string Schema { get; set; }
+
+        /// <summary>
+        /// Gets True if this 'Table' is a View
+        /// </summary>
+        public bool IsView { get; set; }
+
+        /// <summary>
+        /// Gets the Columns properties
+        /// </summary>
+        public DataColumn[] Columns { get; internal set; }
+
+        /// <summary>
+        /// Gets all Rows values
+        /// </summary>
+        public DataRow[] Rows { get; internal set; }
+
+        #endregion
+
+        #region METHODS
+
+        /// <summary>
+        /// Creates a new instance of T type and sets all row values to the new T properties.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public T[] ConvertTo<T>()
+        {
+            T[] results = new T[this.Rows.Count()];
+
+            // If is Primitive type (string, int, ...)
+            if (Apps72.Dev.Data.Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            {
+                int i = 0;
+                foreach (var row in this.Rows)
+                {
+                    object scalar = row[0];
+                    if (scalar == null || scalar == DBNull.Value)
+                        results[i] = default(T);
+                    else
+                        results[i] = (T)scalar;
+                    i++;
+                }
+            }
+
+            // If is Complex type (class)
+            else
+            {
+                int i = 0;
+                foreach (var row in this.Rows)
+                {
+                    results[i] = row.ConvertTo<T>();
+                    i++;
+                }
+            }
+
+            return results;
+        }
+
+        #endregion
+
+        #region PRIVATES
 
         /// <summary>
         /// Load and fill all data (Rows and Columns) from the DbDataReader.
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="firstRowOnly"></param>
-        public void Load(DbDataReader reader, bool firstRowOnly)
+        internal void Load(DbDataReader reader, bool firstRowOnly)
         {
             List<DataRow> data = new List<DataRow>();
             int fieldCount = 0;
@@ -82,7 +161,7 @@ namespace Apps72.Dev.Data.Internal
         /// </summary>
         /// <param name="values"></param>
         /// <param name="firstRowOnly"></param>
-        public void Load(IEnumerable<object[]> arrayOfvalues, bool firstRowOnly)
+        internal void Load(IEnumerable<object[]> arrayOfvalues, bool firstRowOnly)
         {
             this.FillColumnsProperties(arrayOfvalues.First());
             this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();
@@ -94,7 +173,7 @@ namespace Apps72.Dev.Data.Internal
         /// <typeparam name="T"></typeparam>
         /// <param name="arrayOfvalues"></param>
         /// <param name="firstRowOnly"></param>
-        public void Load<T>(IEnumerable<T> arrayOfvalues, bool firstRowOnly)
+        internal void Load<T>(IEnumerable<T> arrayOfvalues, bool firstRowOnly)
         {
             this.FillColumnsProperties(arrayOfvalues.First());
             this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();
@@ -113,11 +192,11 @@ namespace Apps72.Dev.Data.Internal
 
             for (int i = 0; i < fieldCount; i++)
             {
-                columns[i] = new DataColumn()
+                columns[i] = new DataColumn(this)
                 {
-                    Ordinal = i,
                     ColumnName = reader.GetName(i),
-                    ColumnType = reader.GetFieldType(i),
+                    DataType = reader.GetFieldType(i),
+                    Ordinal = i,
                     IsNullable = reader.IsDBNull(i)
                 };
             }
@@ -137,15 +216,15 @@ namespace Apps72.Dev.Data.Internal
             if (data != null)
             {
                 // Simple type
-                if (Convertor.TypeExtension.IsPrimitive(data.GetType()))
+                if (Apps72.Dev.Data.Convertor.TypeExtension.IsPrimitive(data.GetType()))
                 {
                     Type columnType = data.GetType();
-                    var column = new DataColumn()
+                    var column = new DataColumn(this)
                     {
                         Ordinal = 0,
                         ColumnName = "NoName",
-                        ColumnType = Convertor.TypeExtension.GetNullableSubType(columnType),
-                        IsNullable = Convertor.TypeExtension.IsNullable(columnType)
+                        DataType = Apps72.Dev.Data.Convertor.TypeExtension.GetNullableSubType(columnType),
+                        IsNullable = Apps72.Dev.Data.Convertor.TypeExtension.IsNullable(columnType)
                     };
 
                     this.Columns = new DataColumn[] { column };
@@ -160,12 +239,12 @@ namespace Apps72.Dev.Data.Internal
                     for (int i = 0; i < properties.Length; i++)
                     {
                         Type columnType = properties[i].PropertyType;
-                        columns[i] = new DataColumn()
+                        columns[i] = new DataColumn(this)
                         {
                             Ordinal = i,
                             ColumnName = properties[i].Name,
-                            ColumnType = Convertor.TypeExtension.GetNullableSubType(columnType),
-                            IsNullable = Convertor.TypeExtension.IsNullable(columnType)
+                            DataType = Apps72.Dev.Data.Convertor.TypeExtension.GetNullableSubType(columnType),
+                            IsNullable = Apps72.Dev.Data.Convertor.TypeExtension.IsNullable(columnType)
                         };
                     }
 
@@ -180,54 +259,6 @@ namespace Apps72.Dev.Data.Internal
             }
         }
 
-        /// <summary>
-        /// Gets the Columns properties
-        /// </summary>
-        public DataColumn[] Columns { get; private set; }
-
-        /// <summary>
-        /// Gets all Rows values
-        /// </summary>
-        public DataRow[] Rows { get; private set; }
-
-        /// <summary>
-        /// Creates a new instance of T type and sets all row values to the new T properties.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        public T[] ConvertTo<T>()
-        {
-            T[] results = new T[this.Rows.Count()];
-
-            // If is Primitive type (string, int, ...)
-            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
-            {
-                int i = 0;
-                foreach (DataRow row in this.Rows)
-                {
-                    object scalar = row[0];
-                    if (scalar == null || scalar == DBNull.Value)
-                        results[i] = default(T);
-                    else
-                        results[i] = (T)scalar;
-                    i++;
-                }
-            }
-
-            // If is Complex type (class)
-            else
-            {
-                int i = 0;
-                foreach (DataRow row in this.Rows)
-                {
-                    results[i] = row.ConvertTo<T>();
-                    i++;
-                }
-            }
-
-            return results;
-        }
+        #endregion
     }
-
 }
