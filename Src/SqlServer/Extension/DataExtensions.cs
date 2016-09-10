@@ -15,7 +15,7 @@ namespace Apps72.Dev.Data
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <returns>A System.Data.SqlClient.SqlParameter object.</returns>
-        public static System.Data.SqlClient.SqlParameter AddWithValueOrDBNull(this System.Data.SqlClient.SqlParameterCollection parameters, string parameterName, object value)
+        public static SqlParameter AddWithValueOrDBNull(this SqlParameterCollection parameters, string parameterName, object value)
         {
             if (parameters != null)
             {

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServer", "Test\SqlServer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle", "Src\Oracle\Oracle.csproj", "{81281DDB-CE7D-4D4E-8122-A2A20E792C3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle", "Test\Oracle\Oracle.csproj", "{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Src\Common\Common.projitems*{81281ddb-ce7d-4d4e-8122-a2a20e792c3e}*SharedItemsImports = 4
@@ -38,6 +40,10 @@ Global
 		{81281DDB-CE7D-4D4E-8122-A2A20E792C3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81281DDB-CE7D-4D4E-8122-A2A20E792C3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81281DDB-CE7D-4D4E-8122-A2A20E792C3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,5 +53,6 @@ Global
 		{C87BF302-A142-438E-93D7-51EAB7F2C377} = {3386B008-3FA8-43BA-95AE-8E3AC9B45994}
 		{F63108D4-A298-44B4-86AE-3AAB86AAB876} = {A50066B3-982F-45A5-BA11-ED2C8F6E14C2}
 		{81281DDB-CE7D-4D4E-8122-A2A20E792C3E} = {3386B008-3FA8-43BA-95AE-8E3AC9B45994}
+		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79} = {A50066B3-982F-45A5-BA11-ED2C8F6E14C2}
 	EndGlobalSection
 EndGlobal

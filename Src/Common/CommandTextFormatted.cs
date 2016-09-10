@@ -54,7 +54,9 @@ namespace Apps72.Dev.Data
             foreach (DbParameter param in command.Parameters.Cast<DbParameter>().OrderByDescending(i => i.ParameterName))
             {
                 string paramName = param.ParameterName;
-                if (!paramName.StartsWith("@")) paramName = "@" + paramName;
+                string prefix = Schema.DataParameter.GetPrefixParameter(command);
+
+                if (!paramName.StartsWith(prefix)) paramName = prefix + paramName;
 
                 commandText = Regex.Replace(commandText, paramName, GetValueFormatted(param), RegexOptions.IgnoreCase);
             }
@@ -132,7 +134,7 @@ namespace Apps72.Dev.Data
         /// <returns>Parameter value formatted</returns>
         protected virtual string GetValueFormatted(DbParameter parameter)
         {
-            if (parameter.Value == DBNull.Value)
+            if (parameter.Value == DBNull.Value || parameter.Value == null)
             {
                 return "NULL";
             }

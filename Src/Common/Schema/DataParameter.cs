@@ -12,6 +12,8 @@ namespace Apps72.Dev.Data.Schema
     /// </summary>
     internal partial class DataParameter
     {
+        private static string _prefixParameter = String.Empty;
+
         /// <summary>
         /// Creates a new instance of DbParameter[] with ParameterName, Value and IsNullable properties 
         /// sets to value's properties.
@@ -79,12 +81,14 @@ namespace Apps72.Dev.Data.Schema
 
         private static void AddOrRemplaceParameters<U>(DbParameterCollection existingParameters, IEnumerable<U> newParameters) where U : DbParameter, new()
         {
+            string prefix = DataParameter.GetPrefixParameter(existingParameters);
+
             // Remove existing parameters found in Values properties
             for (int i = existingParameters.Count - 1; i >= 0; i--)
             {
                 string parameterName = existingParameters[i].ParameterName;
                 if (newParameters.Any(p => String.Compare(p.ParameterName, parameterName, true) == 0 ||
-                                           String.Compare($"@{p.ParameterName}", parameterName, true) == 0))
+                                           String.Compare($"{prefix}{p.ParameterName}", parameterName, true) == 0))
                 {
                     existingParameters.RemoveAt(i);
                 }
@@ -93,12 +97,47 @@ namespace Apps72.Dev.Data.Schema
             // Add parameters found in Values properties
             foreach (var param in newParameters)
             {
-                if (!param.ParameterName.EndsWith("@"))
-                    param.ParameterName = $"@{param.ParameterName}";
+                if (!param.ParameterName.EndsWith(prefix))
+                    param.ParameterName = $"{prefix}{param.ParameterName}";
 
                 existingParameters.Add(param);
             }
         }
 
+        internal static string GetPrefixParameter(DbParameterCollection parameters)
+        {
+            if (_prefixParameter == String.Empty)
+            {
+                switch (parameters.GetType().Name)
+                {
+                    case "OracleParameterCollection":
+                        _prefixParameter = ":";
+                        break;
+                    default:
+                        _prefixParameter = "@";
+                        break;
+                }
+            }
+
+            return _prefixParameter;
+        }
+
+        internal static string GetPrefixParameter(DbCommand command)
+        {
+            if (_prefixParameter == String.Empty)
+            {
+                switch (command.GetType().Name)
+                {
+                    case "OracleCommand":
+                        _prefixParameter = ":";
+                        break;
+                    default:
+                        _prefixParameter = "@";
+                        break;
+                }
+            }
+
+            return _prefixParameter;
+        }
     }
 }

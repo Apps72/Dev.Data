@@ -6,7 +6,7 @@ namespace Apps72.Dev.Data
 {
     internal static class DataTableExtensions
     {
-        public static System.Data.DataTable ConvertToSystemDataTable(this DataTable internalTable)
+        internal static System.Data.DataTable ConvertToSystemDataTable(this DataTable internalTable)
         {
             System.Data.DataTable table = new System.Data.DataTable();
             table.TableName = "DataTable";

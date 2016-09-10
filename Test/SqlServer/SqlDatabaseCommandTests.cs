@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace Data.Tests
 {
-    /// <summary>
-    /// https://github.com/StackExchange/dapper-dot-net
-    /// </summary>
     [TestClass]
     public class SqlDatabaseCommandTests
     {
