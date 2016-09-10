@@ -250,7 +250,7 @@ namespace Data.Tests
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                cmd.CommandText.AppendLineFormat(" SELECT COUNT(*) FROM EMP ");
                 int data = cmd.ExecuteScalar<int>();
 
                 Assert.AreEqual(14, data);
