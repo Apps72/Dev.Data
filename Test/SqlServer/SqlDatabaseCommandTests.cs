@@ -268,6 +268,19 @@ namespace Data.Tests
         }
 
         [TestMethod]
+        public void ExecuteScalarWhereNoDataFound_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLineFormat(" SELECT COMM FROM EMP WHERE EMPNO = 99999 ");
+                int? data = cmd.ExecuteScalar<int?>();
+
+                Assert.AreEqual(null, data);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteTableTyped_Test()
         {
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
