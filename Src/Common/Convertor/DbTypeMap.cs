@@ -26,7 +26,7 @@ namespace Apps72.Dev.Data.Convertor
         /// </summary>
         public static void FillDbTypeList()
         {
-#if NET451
+#if NET451 || SQL_CLR
             _dbTypeList.Add(new DbTypeMapEntry(typeof(Int16), DbType.Int16, SqlDbType.SmallInt));
             _dbTypeList.Add(new DbTypeMapEntry(typeof(Int32), DbType.Int32, SqlDbType.Int));
             _dbTypeList.Add(new DbTypeMapEntry(typeof(Int64), DbType.Int64, SqlDbType.BigInt));
@@ -129,7 +129,7 @@ namespace Apps72.Dev.Data.Convertor
     /// </summary>
     internal struct DbTypeMapEntry
     {
-#if NET451
+#if NET451 || SQL_CLR 
         public DbTypeMapEntry(Type type, DbType dbType, SqlDbType sqlDbType)
         {
             this.Type = type;

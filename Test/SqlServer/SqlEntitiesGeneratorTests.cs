@@ -12,7 +12,6 @@ namespace Data.Tests
     [TestClass]
     public class SqlEntitiesGeneratorTests
     {
-        private static readonly string CONNECTION_STRING_NAME = "Scott";
         private static readonly string CONNECTION_STRING = SqlDatabaseCommandTests.CONNECTION_STRING;
 
         #region RemoveExtraChars

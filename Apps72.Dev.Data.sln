@@ -17,8 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle", "Src\Oracle\Oracle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oracle", "Test\Oracle\Oracle.csproj", "{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServer.Clr", "Src\SqlServer.Clr\SqlServer.Clr.csproj", "{7555398B-C167-4D8A-A3AC-282825FB70E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlServerClr", "Test\SqlServer.Clr\SqlServerClr.csproj", "{65B3C4FE-0255-4128-81F4-D12E460C7736}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Src\Common\Common.projitems*{7555398b-c167-4d8a-a3ac-282825fb70e5}*SharedItemsImports = 4
 		Src\Common\Common.projitems*{81281ddb-ce7d-4d4e-8122-a2a20e792c3e}*SharedItemsImports = 4
 		Src\Common\Common.projitems*{9c18d77b-d33e-4d5e-b44b-dbf82b9726d4}*SharedItemsImports = 4
 		Src\Common\Common.projitems*{c87bf302-a142-438e-93d7-51eab7f2c377}*SharedItemsImports = 13
@@ -44,6 +49,14 @@ Global
 		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7555398B-C167-4D8A-A3AC-282825FB70E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7555398B-C167-4D8A-A3AC-282825FB70E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7555398B-C167-4D8A-A3AC-282825FB70E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7555398B-C167-4D8A-A3AC-282825FB70E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B3C4FE-0255-4128-81F4-D12E460C7736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B3C4FE-0255-4128-81F4-D12E460C7736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B3C4FE-0255-4128-81F4-D12E460C7736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B3C4FE-0255-4128-81F4-D12E460C7736}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,5 +67,7 @@ Global
 		{F63108D4-A298-44B4-86AE-3AAB86AAB876} = {A50066B3-982F-45A5-BA11-ED2C8F6E14C2}
 		{81281DDB-CE7D-4D4E-8122-A2A20E792C3E} = {3386B008-3FA8-43BA-95AE-8E3AC9B45994}
 		{B2CE2E4E-2BFA-46C7-B53A-50987E736F79} = {A50066B3-982F-45A5-BA11-ED2C8F6E14C2}
+		{7555398B-C167-4D8A-A3AC-282825FB70E5} = {3386B008-3FA8-43BA-95AE-8E3AC9B45994}
+		{65B3C4FE-0255-4128-81F4-D12E460C7736} = {A50066B3-982F-45A5-BA11-ED2C8F6E14C2}
 	EndGlobalSection
 EndGlobal

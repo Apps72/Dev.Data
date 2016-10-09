@@ -12,8 +12,6 @@ namespace Apps72.Dev.Data.Schema
     /// </summary>
     internal partial class DataParameter
     {
-        private static string _prefixParameter = String.Empty;
-
         /// <summary>
         /// Creates a new instance of DbParameter[] with ParameterName, Value and IsNullable properties 
         /// sets to value's properties.
@@ -104,6 +102,12 @@ namespace Apps72.Dev.Data.Schema
             }
         }
 
+#if SQL_CLR
+        internal static string GetPrefixParameter(DbParameterCollection parameters) { return "@"; }
+        internal static string GetPrefixParameter(DbCommand command) { return "@"; }
+#else
+        private static string _prefixParameter = String.Empty;
+
         internal static string GetPrefixParameter(DbParameterCollection parameters)
         {
             if (_prefixParameter == String.Empty)
@@ -139,5 +143,7 @@ namespace Apps72.Dev.Data.Schema
 
             return _prefixParameter;
         }
+#endif
+
     }
 }
