@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.SqlClient;
+using System.Text;
+using System.Configuration;
 
 namespace Apps72.Dev.Data.Generator
 {
@@ -14,7 +16,7 @@ namespace Apps72.Dev.Data.Generator
         /// Initializes a new instance of EntitiesGenerator
         /// </summary>
         /// <param name="connectionString">ConnectionString to retrieve all tables and columns</param>
-        public SqlEntitiesGenerator(string connectionString) : base(connectionString)
+        public SqlEntitiesGenerator(string connectionString) : this(connectionString, null)
         {
         }
 
@@ -22,19 +24,22 @@ namespace Apps72.Dev.Data.Generator
         /// Initializes a new instance of EntitiesGenerator
         /// </summary>
         /// <param name="connectionStringName">ConnectionString or App.Config Name of the ConnectionString to retrieve all tables and columns</param>
-        //public SqlEntitiesGenerator(string connectionStringName, bool isConnectionStringNameOnly) : base()
-        //{
-        //    if (isConnectionStringNameOnly)
-        //    {
-        //        var appConfig = new System.Configuration.AppSettingsReader();
-        //        this.ConnectionString =
-        //    }
-        //    else
-        //    {
-        //        this.ConnectionString = connectionStringName;
-        //    }
-        //    this.FillAllTablesAndColumns();
-        //}
+        /// <param name="appConfig">Path and name of the App.Config file where the connection string is written</param>
+        public SqlEntitiesGenerator(string connectionStringName, string appConfig) : base()
+        {
+            if (!String.IsNullOrEmpty(appConfig))
+            {
+                ExeConfigurationFileMap configFile = new ExeConfigurationFileMap();
+                configFile.ExeConfigFilename = appConfig;
+                var configuration = ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+                this.ConnectionString = configuration.ConnectionStrings.ConnectionStrings[connectionStringName].ConnectionString;
+            }
+            else
+            {
+                this.ConnectionString = connectionStringName;
+            }
+            this.FillAllTablesAndColumns();
+        }
 
         /// <summary>
         /// Initializes a new instance of EntitiesGenerator
@@ -108,9 +113,48 @@ namespace Apps72.Dev.Data.Generator
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        /// <remarks>See https://msdn.microsoft.com/en-us/library/gg615485.aspx </remarks>
         private string RemoveExtraChars(string name)
         {
-            return name.Replace(" ", string.Empty);     // TODO: Remove all others chars
+            StringBuilder newName = new StringBuilder();
+            int ascii = 0;
+
+            // Keep only digits, letters or underscore
+            foreach (char c in name)
+            {
+                // Ascii code of the current Char
+                ascii = (int)c;
+
+                // 0 .. 9, A .. Z, a .. z, _
+                if (ascii >= 48 && ascii <= 57 ||
+                    ascii >= 65 && ascii <= 90 ||
+                    ascii >= 97 && ascii <= 122 ||
+                    ascii == 95)
+                {
+                    newName.Append(c);
+                }
+            }
+
+            // First char must be a letter or underscore
+            if (newName.Length > 0)
+            {
+                ascii = (int)newName[0];
+                if (ascii >= 65 && ascii <= 90 ||
+                    ascii >= 97 && ascii <= 122 ||
+                    ascii == 95)
+                {
+                    return newName.ToString();
+                }
+                else
+                {
+                    return $"_{newName.ToString()}";
+                }
+            }
+            else
+            {
+                return $"__{Guid.NewGuid().ToString().Replace('-', '_')}";
+            }
+            
         }
 
         /// <summary>

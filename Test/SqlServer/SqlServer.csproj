@@ -56,10 +56,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Data\Scott.cs" />
-    <Compile Include="Entities\Nothwind.cs">
+    <Compile Include="Entities\Northwind.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Nothwind.tt</DependentUpon>
+      <DependentUpon>Northwind.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Scott.cs">
       <AutoGen>True</AutoGen>
@@ -76,9 +76,9 @@
     <Compile Include="ConvertorTypeExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Entities\Nothwind.tt">
+    <Content Include="Entities\Northwind.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Nothwind.cs</LastGenOutput>
+      <LastGenOutput>Northwind.cs</LastGenOutput>
     </Content>
     <Content Include="Entities\Scott.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

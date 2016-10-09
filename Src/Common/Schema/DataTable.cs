@@ -9,7 +9,7 @@ namespace Apps72.Dev.Data.Schema
     /// <summary>
     /// Represents one table of in-memory data.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Schema}.{Name}")]
+    [System.Diagnostics.DebuggerDisplay("{SchemaAndName}")]
     public partial class DataTable
     {
         #region CONSTRUCTORS
@@ -37,7 +37,7 @@ namespace Apps72.Dev.Data.Schema
         #endregion
 
         #region PROPERTIES
-
+    
         /// <summary>
         /// Gets the name of this Table
         /// </summary>
@@ -47,6 +47,17 @@ namespace Apps72.Dev.Data.Schema
         /// Gets the Schema of this table
         /// </summary>
         public string Schema { get; set; }
+
+        /// <summary>
+        /// Gets the Schema and the Name of this table, separated by an underscore.
+        /// </summary>
+        public string SchemaAndName
+        {
+            get
+            {
+                return $"{Schema}_{Name}";
+            }
+        }
 
         /// <summary>
         /// Gets True if this 'Table' is a View

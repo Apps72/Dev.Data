@@ -1,11 +1,9 @@
 ﻿<# 
-
    // UPDATE THIS CONNECTION STRING
-   string CONNECTION_STRING = @"Server=(localdb)\ProjectsV13;Database=Scott;Integrated Security=true;";
-
-   // True to generate class names prefixed with the Table Schema (ex. "dbo_EMP")
-   const bool INCLUDE_SCHEMA_PREFIX = false;
-   
+     string CONNECTION_STRING   = "Scott";	// Name used in App.Config
+     string CONFIG_FILE         = this.Host.ResolvePath("../App.config");
+   //string CONNECTION_STRING   = "Server=(localdb)\\ProjectsV13;Database=Scott;Integrated Security=true;";
+   //string CONFIG_FILE         = null;
 #>
 <#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
@@ -14,39 +12,30 @@
 <#@ assembly name="System.Data" #>
 <#@ assembly name="System.Configuration" #>
 <#
-    string fileNameSpace = System.IO.Path.GetFileNameWithoutExtension(this.Host.TemplateFile);
-
-    if (!String.IsNullOrEmpty(CONNECTION_STRING))
+    try
     {
+		var entitiesGenerator = new Apps72.Dev.Data.Generator.SqlEntitiesGenerator(CONNECTION_STRING, CONFIG_FILE);
 #>
 // *********************************************
 // Code Generated with Apps72.Dev.Data.Generator
 // *********************************************
 using System;
 
-namespace <#=System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint")#>.<#= fileNameSpace #>
+namespace <#=System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint")#>.<#= System.IO.Path.GetFileNameWithoutExtension(this.Host.TemplateFile) #>
 {
-<# 
-Apps72.Dev.Data.Generator.SqlEntitiesGenerator entitiesGenerator = new Apps72.Dev.Data.Generator.SqlEntitiesGenerator(CONNECTION_STRING);
-foreach(var table in entitiesGenerator.Tables)
-  { #>
-    /// <summary />
-    public partial class <#= INCLUDE_SCHEMA_PREFIX ? table.Schema + "_" : "" #><#= table.Name #>
+<# foreach(var table in entitiesGenerator.Tables) { #>
+	/// <summary />
+    public partial class <#= table.Name #>	<# // Or table.SchemaAndName #>
     {
-<# foreach(var column in table.Columns)
-   { #>
-        /// <summary />
-        public virtual <#= column.CSharpTypeNullable #> <#= column.Name #> { get; set; }
-<# }#>
-    }
+<# foreach(var column in table.Columns) { #>
+		/// <summary />
+		public virtual <#= column.CSharpTypeNullable #> <#= column.ColumnName #> { get; set; }
+<# } #>
+	}
 <# }#>
 }
-<# 
-}
-else
-{
-#>
+<# } catch (Exception ex) { #>
 // CHECK THE 'CONNECTION_STRING_NAME' PARAMETER IN TOP OF THE .TT FILE
-<#
-}
-#>
+// <#= ex.Message.Replace(Environment.NewLine, Environment.NewLine + "// ") #>
+// <#= ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + "// ") #>
+<# } #>

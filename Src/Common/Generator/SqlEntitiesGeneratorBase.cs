@@ -37,7 +37,7 @@ namespace Apps72.Dev.Data.Generator
         /// <summary>
         /// Gets the connection string to the database
         /// </summary>
-        protected virtual string ConnectionString { get; set; }
+        public virtual string ConnectionString { get; protected set; }
 
         /// <summary>
         /// Gets the DbConnection connected to the database
