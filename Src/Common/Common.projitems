@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c87bf302-a142-438e-93d7-51eab7f2c377</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Common</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Annotations\ColumnAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandTextFormatted.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convertor\DataTypedConvertor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convertor\DbTypeMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convertor\TypeExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataInjection\DataInjectionDbCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataInjection\DataInjectionExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataColumn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataRow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Schema\DataTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExceptionOccuredEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generator\SqlEntitiesGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDatabaseCommandBase.cs" />
+  </ItemGroup>
+</Project>
