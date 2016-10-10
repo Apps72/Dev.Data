@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>Apps72.Dev.Data</id>
+    <id>Apps72.Dev.Data.SqlServerClr</id>
     <version>2.0.0</version>
-    <title>SqlDatabaseCommand</title>
+    <title>SqlDatabaseCommand - CLR</title>
     <authors>Denis Voituron</authors>
     <owners>Denis Voituron</owners>
     <projectUrl>https://github.com/Apps72/Dev.Data</projectUrl>
