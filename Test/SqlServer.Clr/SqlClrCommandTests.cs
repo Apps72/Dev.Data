@@ -8,29 +8,45 @@ namespace Data.SqlServerClr.Tests
     [TestClass]
     public class SqlClrCommandTests
     {
-        public static readonly string CONNECTION_STRING = System.Configuration.ConfigurationManager.ConnectionStrings["Scott"].ConnectionString;
-
         [TestInitialize]
         public void Initialize()
         {
-
-            using (var cmd = new SqlDatabaseCommand(CONNECTION_STRING))
-            {
-                var procedures = new List<ProcedureDefinition>();
-                procedures.Add(new ProcedureDefinition("HelloWorld", ProcedureType.Procedure, string.Empty, string.Empty));
-
-                cmd.CommandText.Append(SetupDeployment.GetInitializeScript(procedures));
-                cmd.ExecuteNonQuery();
-            }
+            SetupDeployment.Run();            
         }
 
         [TestMethod]
         public void Simple_HelloWorld_Test()
         {
-            using (var cmd = new SqlDatabaseCommand(CONNECTION_STRING))
+            using (var cmd = new SqlDatabaseCommand(SetupDeployment.CONNECTION_STRING))
             {
                 cmd.CommandText.AppendLine(" EXEC HelloWorld ");
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        [TestMethod]
+        public void Simple_NoArguments_ReturnsScalar_Test()
+        {
+            using (var cmd = new SqlDatabaseCommand(SetupDeployment.CONNECTION_STRING))
+            {
+                cmd.CommandText.AppendLine(" SELECT dbo.GetNumberOfEmployees() ");
+                var count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
+        [TestMethod]
+        public void Simple_OneArgument_ReturnsScalar_Test()
+        {
+            using (var cmd = new SqlDatabaseCommand(SetupDeployment.CONNECTION_STRING))
+            {
+                cmd.CommandText.AppendLine(" SELECT dbo.GetNumberOfEmployeesInDepartement(@DeptNo) ");
+                cmd.Parameters.AddWithValue("@DeptNo", 20);
+
+                var count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(5, count);
             }
         }
     }

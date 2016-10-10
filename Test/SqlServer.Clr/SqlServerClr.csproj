@@ -56,7 +56,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="SampleStoredProcedures.cs" />
-    <Compile Include="SetupDeployment.cs" />
+    <Compile Include="Setup\ProcedureDefinition.cs" />
+    <Compile Include="Setup\SetupDeployment.cs" />
     <Compile Include="SqlClrCommandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
