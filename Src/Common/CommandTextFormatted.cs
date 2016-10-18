@@ -205,7 +205,7 @@ namespace Apps72.Dev.Data
 
                     // GUID
                     case System.Data.DbType.Guid:
-                        return String.Format("'{{{0}}}'", parameter.Value).ToLower();
+                        return String.Format("'{0}'", parameter.Value).ToLower();
 
                     default:
                         return String.Empty;

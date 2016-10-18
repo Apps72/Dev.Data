@@ -635,15 +635,16 @@ namespace Data.Tests
         {
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
             {
-                cmd.CommandText.Append(" SELECT * FROM EMP WHERE EMPNO = @EmpNo AND ENAME LIKE @Ename AND HIREDATE > @Hire AND COMM = @Comm ");
-                cmd.Parameters.AddWithValue("@EmpNo", 7369);                                    // Parameter normal
-                cmd.Parameters.AddWithValue("@ENAME", "%SM%");                                  // Parameter in Upper Case
-                cmd.Parameters.AddWithValue("Hire", new DateTime(1970, 05, 04, 14, 15, 16));    // Parameter without @
-                cmd.Parameters.AddWithValueOrDBNull("@Comm", null);                             // Parameter NULL
+                cmd.CommandText.Append(" SELECT *, @MyGuid FROM EMP WHERE EMPNO = @EmpNo AND ENAME LIKE @Ename AND HIREDATE > @Hire AND COMM = @Comm ");
+                cmd.Parameters.AddWithValue("@EmpNo", 7369);                                                  // Parameter normal
+                cmd.Parameters.AddWithValue("@ENAME", "%SM%");                                                // Parameter in Upper Case
+                cmd.Parameters.AddWithValue("Hire", new DateTime(1970, 05, 04, 14, 15, 16));                  // Parameter without @
+                cmd.Parameters.AddWithValueOrDBNull("@Comm", null);                                           // Parameter NULL
+                cmd.Parameters.AddWithValue("@MyGuid", new Guid("2fff1b89-b5f9-4a33-ac5b-a3ffee3e8b82"));     // Parameter GUID
 
                 string formatted = cmd.GetCommandTextFormatted(QueryFormat.Text);
 
-                Assert.AreEqual(formatted, " SELECT * FROM EMP WHERE EMPNO = 7369 AND ENAME LIKE '%SM%' AND HIREDATE > '1970-05-04 14:15:16' AND COMM = NULL ");
+                Assert.AreEqual(" SELECT *, '2fff1b89-b5f9-4a33-ac5b-a3ffee3e8b82' FROM EMP WHERE EMPNO = 7369 AND ENAME LIKE '%SM%' AND HIREDATE > '1970-05-04 14:15:16' AND COMM = NULL ", formatted);
             }
         }
 
