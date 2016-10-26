@@ -37,6 +37,18 @@ namespace Data.SqlServerClr.Tests
         }
 
         [TestMethod]
+        public void ExecuteWithAnonymousType_Test()
+        {
+            using (var cmd = new SqlDatabaseCommand(SetupDeployment.CONNECTION_STRING))
+            {
+                cmd.CommandText.AppendLine(" SELECT dbo.ExecuteWithAnonymousType() ");
+                var empno = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(7369, empno);
+            }
+        }
+
+        [TestMethod]
         public void Simple_OneArgument_ReturnsScalar_Test()
         {
             using (var cmd = new SqlDatabaseCommand(SetupDeployment.CONNECTION_STRING))

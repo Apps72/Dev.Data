@@ -243,6 +243,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
         /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
         /// <returns>List of array of typed results</returns>
         /// <example>
         /// <code>
@@ -452,7 +453,7 @@ namespace Apps72.Dev.Data
         {
             return this.ExecuteRow<T>(default(T));
         }
-
+        
         /// <summary>
         /// Execute the query and fill the specified T object with the first row of results
         /// </summary>
@@ -624,9 +625,9 @@ namespace Apps72.Dev.Data
 
 #endif
 
-        #endregion
+#endregion
 
-        #region PRIVATE
+#region PRIVATE
 
         /// <summary>
         /// Execute the query and return an internal DataTable with all data.
@@ -715,6 +716,6 @@ namespace Apps72.Dev.Data
             return default(T);
         }
 
-        #endregion
+#endregion
     }
 }

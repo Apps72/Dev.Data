@@ -90,6 +90,44 @@ namespace Data.Tests
         }
 
         [TestMethod]
+        public void ExecuteRowAnonymousTyped_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
+                var emp = cmd.ExecuteRow(new
+                {
+                    EmpNo = 0,
+                    Ename = string.Empty,
+                    HireDate = (DateTime?)null
+                });
+
+                Assert.AreEqual(7369, emp.EmpNo);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
+        public void ExecuteRowAnonymousTypedWithExtraProperty_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
+                var emp = cmd.ExecuteRow(new
+                {
+                    EmpNo = 0,
+                    Ename = string.Empty,
+                    HireDate = (DateTime?)null,
+                    UnknowProperty = 0
+                });
+
+                Assert.AreEqual(7369, emp.EmpNo);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteRowPrimitive_Test()
         {
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
@@ -320,6 +358,29 @@ namespace Data.Tests
                 Assert.AreEqual(EMP.Smith.EName, smith.EName);
                 Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
                 Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
+        public void ExecuteTableCustomedAnonymousTyped_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP ");
+                var data = cmd.ExecuteTable(new
+                    {
+                        EmpNo = 0,
+                        EName = String.Empty,
+                        HireDate = DateTime.Today,
+                        MyVar = ""
+                    });
+                var smith = data.FirstOrDefault(i => i.EmpNo == 7369);
+
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
+                Assert.AreEqual(EMP.Smith.EName, smith.EName);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
             }
         }
 

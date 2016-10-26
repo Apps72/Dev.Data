@@ -34,6 +34,13 @@ namespace Data.SqlServerClr.Tests
                     string.Empty, 
                     "INT"));
 
+                // ExecuteWithAnonymousType
+                procedures.Add(new ProcedureDefinition(
+                    "ExecuteWithAnonymousType",
+                    ProcedureType.FunctionScalar,
+                    string.Empty,
+                    "INT"));
+
                 // GetNumberOfEmployeesInDepartement
                 procedures.Add(new ProcedureDefinition(
                     "GetNumberOfEmployeesInDepartement",
@@ -54,6 +61,7 @@ namespace Data.SqlServerClr.Tests
         public static string GetInitializeScript(IEnumerable<ProcedureDefinition> procedures)
         {
             string assemblyFilename = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\SampleStoredProcedures.dll";
+            string debugFilename = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\SampleStoredProcedures.pdb";
             string assemblyName = "SampleStoredProcedures";
             string className = "SampleStoredProcedures";
 
@@ -89,7 +97,7 @@ namespace Data.SqlServerClr.Tests
             sql.AppendLine($" CREATE ASSEMBLY [{assemblyName}]  ");
             sql.AppendLine($"   FROM '{assemblyFilename}'  ");
             sql.AppendLine($"   WITH PERMISSION_SET = SAFE; ");
-
+            sql.AppendLine($" ALTER ASSEMBLY [{assemblyName}] ADD FILE FROM '{debugFilename}'; ");
             // Registering CLR Procedures
             foreach (var item in procedures)
             {

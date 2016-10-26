@@ -132,8 +132,16 @@ namespace Apps72.Dev.Data.Schema
             // For anonymous type, creates a new instance and sets all data row values to this new object.
             if (Apps72.Dev.Data.Convertor.TypeExtension.IsAnonymousType(type))
             {
-                object newItem = Activator.CreateInstance(type, this.ItemArray);
-                return (T)newItem;
+                try
+                {
+                    object newItem = Activator.CreateInstance(type, this.ItemArray);
+                    return (T)newItem;
+                }
+                catch (MissingMethodException ex)
+                {
+                    throw new MissingMethodException("Properties of your anonymous class must be in the same type and same order of your SQL Query.", ex);
+                }
+
             }
 
             // For defined type, creates a new instance and fill all data row values to this new object.

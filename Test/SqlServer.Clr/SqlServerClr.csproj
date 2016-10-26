@@ -96,7 +96,7 @@
     <SsdtUnitTestVersion>2.0</SsdtUnitTestVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:$(TargetDir)SampleStoredProcedures.dll /t:library /r:$(TargetDir)Apps72.Dev.Data.SqlServer.dll $(ProjectDir)SampleStoredProcedures.cs</PostBuildEvent>
+    <PostBuildEvent>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:$(TargetDir)SampleStoredProcedures.dll /debug /pdb:$(TargetDir)SampleStoredProcedures.pdb /t:library /r:$(TargetDir)Apps72.Dev.Data.SqlServer.dll $(ProjectDir)SampleStoredProcedures.cs</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
