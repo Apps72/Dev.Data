@@ -294,7 +294,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 #### <a name="EntitiesGenerator"></a>Entities Generator
 
 You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformation_Toolkit">T4 file</a> to generate all classes associated to your database tables.
-Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/Apps72.Dev.Data.Tests/Entities.tt) in your project and set your correct **Connection String**. Check if the .tt file properties are **Build Action** = Content and **Custom Tool = TextTemplatingFileGenerator**.
+Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/SqlServer/Entities/Scott.tt) in your project and set your correct **Connection String**. Check if the .tt file properties are **Build Action** = Content and **Custom Tool = TextTemplatingFileGenerator**.
 
 ```cs
     // UPDATE THIS CONNECTION STRING
