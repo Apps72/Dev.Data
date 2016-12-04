@@ -5,8 +5,10 @@
 This C# library simplify all SQL Queries to external databases. An implementation for SQL Server is included.
 The version 1.5 was rebuild using the CoreCLR runtime (https://dotnet.github.io).
 
+```cs
     int count = cmd.ExecuteScalar<int>();
     var emps = cmd.ExecuteTable<Employee>();
+```
 
 First, you need to create a SqlConnection or to use a ConnectionString. 
 The SqlConnection will be not closed by this library
@@ -32,14 +34,17 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 
 #### <a name="ExecuteTable"></a>ExecuteTable
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
 	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
 	    var emps = cmd.ExecuteTable<Employee>();
     }
+```
 
 #### ExecuteTable customized
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT EMPNO, HIREDATE FROM EMP ");
@@ -52,9 +57,11 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
             };
         });
     }
+```
 
 #### <a name="ExecuteTableWithParameters"></a>ExecuteTable with parameters
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
 	    cmd.CommandText.AppendLine(" SELECT * ")
@@ -70,17 +77,21 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 
 	    var emps = cmd.ExecuteTable<Employee>();
     }
+```
 
 #### <a name="ExecuteRow"></a>ExecuteRow
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
         EMP emp = cmd.ExecuteRow<EMP>();
     }
+```
 
 #### ExecuteRow customized
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
@@ -93,17 +104,21 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
             };
         });
     }
+```
 
 #### <a name="ExecuteScalar"></a>ExecuteScalar
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
         int data = cmd.ExecuteScalar<int>();
     }
+```
 
 #### <a name="TransactionBegin"></a>TransactionBegin
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" DELETE FROM EMP ");
@@ -112,9 +127,11 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
         cmd.ExecuteNonQuery();
         cmd.TransactionRollback();
     }
+```
 
 Other sample
 
+```cs
     using (SqlDatabaseCommand cmd1 = new SqlDatabaseCommand(_connection))
     {
         cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
@@ -127,10 +144,12 @@ Other sample
         }
         cmd1.TransactionRollback();
     }
+```
 
 #### <a name="Logging"></a>Logging
 All SQL queries can be traced via the <b>.log</b> property.
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         // Easy
@@ -142,17 +161,21 @@ All SQL queries can be traced via the <b>.log</b> property.
             Console.WriteLine(cmd.GetCommandTextFormatted(QueryFormat.Html));
         };
     }
+```
 
 #### <a name="ThrowException"></a>ThrowException
 
+```cs
     cmd.ThrowException = false;
     cmd1.ExceptionOccured += (sender, e) =>
     {
         // Manage SQL Exceptions
     };
+```
 
 #### <a name="RetryIfExceptionsOccured"></a>RetryIfExceptionsOccured
 
+```cs
     using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.RetryIfExceptionsOccured.SetDeadLockCodes();
@@ -160,19 +183,25 @@ All SQL queries can be traced via the <b>.log</b> property.
         cmd.CommandText.AppendLine(" DELETE FROM EMP ");
         cmd.ExecuteNonQuery();
     }
+```
 
 #### <a name="Extensions"></a>using DBNull values
 
 To add a <b>null</b> parameter to convert to <b>DBNull.Value</b> :
 
+```cs
     cmd.Parameters.AddWithValueOrDBNull("@Comm", null);
+```
 
 To convert a <b>null</b> parameter to <b>DBNull.Value</b> :
 
+```cs
     cmd.Parameters.AddWithValue("@Comm", null).ConvertToDBNull();
+```
 
 #### <a name="DataInjection"></a>Data Injection - For Unit testing
 
+```cs
     // Intercept Query executions to set predefined data.
     _connection.DefineDataInjection((cmd) =>
     {
@@ -189,6 +218,7 @@ To convert a <b>null</b> parameter to <b>DBNull.Value</b> :
         if (cmd.ExecuteTable().Rows.Count >= 2)
             ...
     }
+```
 
 #### <a name="BestPractices"></a>Best practices
 
@@ -196,6 +226,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 
 #####1. Using ConnectionString for all applications or threads (ex. Web Applications, WebAPI, Web Services, ...)
 
+```cs
         public class DataService : IDataService
         {
             public SqlDatabaseCommand GetDatabaseCommand()
@@ -208,9 +239,11 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
                 return new SqlDatabaseCommand(transaction.Connection, transaction);
             }
         }
+```
 
 #####2. Using One SqlConnection for the application (ex. Desktop Apps, Universal Apps, ...)
 
+```cs
         public class DataService : IDataService, IDisposable
         {
             private SqlConnection _connection = null;
@@ -256,19 +289,23 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
             }
         }
     }   
+```
 
 #### <a name="EntitiesGenerator"></a>Entities Generator
 
 You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformation_Toolkit">T4 file</a> to generate all classes associated to your database tables.
 Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/Apps72.Dev.Data.Tests/Entities.tt) in your project and set your correct **Connection String**. Check if the .tt file properties are **Build Action** = Content and **Custom Tool = TextTemplatingFileGenerator**.
 
+```cs
     // UPDATE THIS CONNECTION STRING
     const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
+```
 
 Each time you save this .tt file, you create an equivalent .cs file with all classes.
 
 For example:
 
+```cs
     // *********************************************
     // Code Generated with Apps72.Dev.Data.Generator
     // *********************************************
@@ -303,6 +340,7 @@ For example:
             public virtual Int32? DEPTNO { get; set; }
         }
     }
+```
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
@@ -326,3 +364,9 @@ For example:
 ### Version 1.5.2
 
 * Fix using a Transaction in constructors: the transaction will be not disposed with the DatabaseCommandBase.
+
+### Version 2.0
+
+* Source code Refactoring.
+* Add the **ExecuteTableSet** method to get multiple tables, using multiple SELECT commands in one query.
+* Add OracleDatabaseCommand to manage Oracle Server databases (need the Oracle.ManagedDataAccess assembly).
