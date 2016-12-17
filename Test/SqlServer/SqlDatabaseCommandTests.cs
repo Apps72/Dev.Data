@@ -50,6 +50,43 @@ namespace Data.Tests
         #region EXECUTE METHODS
 
         [TestMethod]
+        public void Execute_Constructor1_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                int count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
+        [TestMethod]
+        public void Execute_Constructor2_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection, "SELECT COUNT(*) FROM EMP"))
+            {
+                cmd.Log = Console.WriteLine;
+                int count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
+        [TestMethod]
+        public void Execute_Constructor3_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(CONNECTION_STRING, "SELECT COUNT(*) FROM EMP"))
+            {
+                cmd.Log = Console.WriteLine;
+                int count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteTable_Test()
         {
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))

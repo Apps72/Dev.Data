@@ -106,6 +106,7 @@ namespace Apps72.Dev.Data
         {
             this.Connection = new SqlConnection(connectionString);
             this.Connection.Open();
+            this.CommandText = new System.Text.StringBuilder(commandText);
             this.Command = new SqlCommand(commandText, this.Connection as SqlConnection);
 
             if (commandTimeout >= 0)
