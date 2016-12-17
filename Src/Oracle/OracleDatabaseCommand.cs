@@ -103,6 +103,7 @@ namespace Apps72.Dev.Data.Oracle
         {
             this.Connection = new OracleConnection(connectionString);
             this.Connection.Open();
+            this.CommandText = new System.Text.StringBuilder(commandText);
             this.Command = new OracleCommand(commandText, this.Connection as OracleConnection)
             {
                 BindByName = true

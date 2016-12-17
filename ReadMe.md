@@ -370,3 +370,7 @@ For example:
 * Source code Refactoring.
 * Add the **ExecuteTableSet** method to get multiple tables, using multiple SELECT commands in one query.
 * Add OracleDatabaseCommand to manage Oracle Server databases (need the Oracle.ManagedDataAccess assembly).
+
+### Version 2.1
+
+* Fix using the constructor with ConnectionString and CommandText parameters (the CommandText was not correctly assigned).
