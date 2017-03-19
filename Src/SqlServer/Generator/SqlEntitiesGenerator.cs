@@ -43,8 +43,8 @@ namespace Apps72.Dev.Data.Generator
 
         /// <summary>
         /// Initializes a new instance of EntitiesGenerator
-        /// </summaryconnection
-        /// <param name="connectionString">ConnectionString to retrieve all tables and columns</param>
+        /// </summary>
+        /// <param name="connection">Connection to retrieve all tables and columns</param>
         public SqlEntitiesGenerator(SqlConnection connection) : base(connection)
         {
         }

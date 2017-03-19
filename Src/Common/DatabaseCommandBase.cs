@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace Apps72.Dev.Data
 {
+    /// <summary>
+    ///  Base class with common methods to retrieve or manage data.
+    /// </summary>
 
     [DebuggerDisplay("{CommandText}")]
     public abstract partial class DatabaseCommandBase : IDatabaseCommandBase
@@ -270,6 +273,8 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
         /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
         /// <returns>List of array of typed results</returns>
         /// <example>
         /// <code>
@@ -297,6 +302,9 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
         /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <typeparam name="X">Object type for fifth table</typeparam>
         /// <returns>List of array of typed results</returns>
         /// <example>
         /// <code>
@@ -343,6 +351,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
         /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
         /// <returns>List of array of typed results</returns>
         /// <example>
         /// <code>
@@ -361,6 +370,8 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
         /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
         /// <returns>List of array of typed results</returns>
         /// <example>
         /// <code>
@@ -379,6 +390,9 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
         /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <typeparam name="X">Object type for fifth table</typeparam>
         /// <returns>List of array of typed results</returns>
         /// <example>
         /// <code>

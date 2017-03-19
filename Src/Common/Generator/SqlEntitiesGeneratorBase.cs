@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Apps72.Dev.Data.Generator
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class SqlEntitiesGeneratorBase
     {
         /// <summary>
@@ -26,8 +29,8 @@ namespace Apps72.Dev.Data.Generator
 
         /// <summary>
         /// Initializes a new instance of EntitiesGenerator
-        /// </summaryconnection
-        /// <param name="connectionString">ConnectionString to retrieve all tables and columns</param>
+        /// </summary>
+        /// <param name="connection">Connection to retrieve all tables and columns</param>
         public SqlEntitiesGeneratorBase(DbConnection connection)
         {
             this.Connection = connection;

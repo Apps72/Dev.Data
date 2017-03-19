@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data.Convertor
 {
+    /// <summary>
+    /// Helper class to convert DbTypes to C# types
+    /// </summary>
     public static partial class DataTypedConvertor
     {
         /// <summary>
