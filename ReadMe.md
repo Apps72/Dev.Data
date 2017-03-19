@@ -35,7 +35,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### <a name="ExecuteTable"></a>ExecuteTable
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
 	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
 	    var emps = cmd.ExecuteTable<Employee>();
@@ -45,7 +45,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### ExecuteTable customized
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT EMPNO, HIREDATE FROM EMP ");
         var data = cmd.ExecuteTable<Employee>((row) =>
@@ -62,7 +62,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### <a name="ExecuteTableWithParameters"></a>ExecuteTable with parameters
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
 	    cmd.CommandText.AppendLine(" SELECT * ")
                        .AppendLine("   FROM EMP ")
@@ -82,7 +82,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### <a name="ExecuteRow"></a>ExecuteRow
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
         EMP emp = cmd.ExecuteRow<EMP>();
@@ -92,7 +92,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### ExecuteRow customized
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
         var emp = cmd.ExecuteRow((row) =>
@@ -109,7 +109,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### <a name="ExecuteScalar"></a>ExecuteScalar
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
         int data = cmd.ExecuteScalar<int>();
@@ -119,7 +119,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 #### <a name="TransactionBegin"></a>TransactionBegin
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" DELETE FROM EMP ");
 
@@ -132,12 +132,12 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 Other sample
 
 ```cs
-    using (SqlDatabaseCommand cmd1 = new SqlDatabaseCommand(_connection))
+    using (var cmd1 = new SqlDatabaseCommand(_connection))
     {
         cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
         cmd1.TransactionBegin();
         cmd1.ExecuteNonQuery();
-        using (SqlDatabaseCommand cmd2 = new SqlDatabaseCommand(_connection, cmd1.Transaction))
+        using (var cmd2 = new SqlDatabaseCommand(_connection, cmd1.Transaction))
         {
             cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
             int count = cmd2.ExecuteScalar<int>();
@@ -150,7 +150,7 @@ Other sample
 All SQL queries can be traced via the <b>.log</b> property.
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         // Easy
         cmd.Log = Console.WriteLine;
@@ -176,7 +176,7 @@ All SQL queries can be traced via the <b>.log</b> property.
 #### <a name="RetryIfExceptionsOccured"></a>RetryIfExceptionsOccured
 
 ```cs
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new SqlDatabaseCommand(_connection))
     {
         cmd.RetryIfExceptionsOccured.SetDeadLockCodes();
 
@@ -212,7 +212,7 @@ To convert a <b>null</b> parameter to <b>DBNull.Value</b> :
     });
 
     // Query executed in "main" program.
-    using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
+    using (var cmd = new SqlDatabaseCommand(conn))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
         if (cmd.ExecuteTable().Rows.Count >= 2)
