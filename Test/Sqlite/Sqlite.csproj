@@ -65,9 +65,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\Sqlite\Sqlite.csproj">
+    <ProjectReference Include="..\..\Src\Sqlite.NET4\Sqlite.NET4.csproj">
       <Project>{382f072e-e3c3-4ea2-839b-a7251c77f464}</Project>
-      <Name>Sqlite</Name>
+      <Name>Sqlite.NET4</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
