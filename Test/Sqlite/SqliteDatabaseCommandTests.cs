@@ -32,23 +32,22 @@ namespace Data.Sqlite.Tests
 
         #region TEMPORARY CONNECTION
 
-        //[TestMethod]
-        //public void OpenTemporaryConnection_Test()
-        //{
-        //    using (var cmd = new SqliteDatabaseCommand(CONNECTION_STRING, string.Empty, -1))
-        //    {
-        //        cmd.Log = (message) =>
-        //        {
-        //            Console.WriteLine(message);
-        //        };
+        [TestMethod]
+        public void OpenTemporaryConnection_Test()
+        {
+            using (var cmd = new SqliteDatabaseCommand(CONNECTION_STRING, string.Empty, -1))
+            {
+                cmd.Log = (message) =>
+                {
+                    Console.WriteLine(message);
+                };
 
-        //        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-        //        DataTable data = cmd.ExecuteTable();
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                var count = cmd.ExecuteScalar<long>();
 
-        //        Assert.AreEqual(14, data.Rows.Count);
-        //        Assert.AreEqual(8, data.Columns.Count);
-        //    }
-        //}
+                Assert.AreEqual(14, count);
+            }
+        }
 
         #endregion
 

@@ -18,7 +18,7 @@ namespace Apps72.Dev.Data.Sqlite
     public class SqliteDatabaseCommand : DatabaseCommandBase
     {
         private bool _mustAutoDisconnect = false;
-
+        
         /// <summary>
         /// Create a command for a Oracle Server connection
         /// </summary>
@@ -168,7 +168,7 @@ namespace Apps72.Dev.Data.Sqlite
 
             if (_mustAutoDisconnect)
             {
-                if (this.Connection.State != ConnectionState.Closed)
+                if (this.Connection != null && this.Connection.State != ConnectionState.Closed)
                 {
                     this.Connection.Close();
                     this.Connection.Dispose();
