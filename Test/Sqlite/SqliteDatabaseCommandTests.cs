@@ -90,32 +90,32 @@ namespace Data.Sqlite.Tests
             }
         }
 
-        //[TestMethod]
-        //public void ExecuteTable_Test()
-        //{
-        //    using (var cmd = new SqliteDatabaseCommand(_connection))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-        //        DataTable data = cmd.ExecuteTable();
+        [TestMethod]
+        public void ExecuteTable_Test()
+        {
+            using (var cmd = new SqliteDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+                DataTable data = cmd.ExecuteTable();
 
-        //        Assert.AreEqual(14, data.Rows.Count);
-        //        Assert.AreEqual(8, data.Columns.Count);
-        //    }
-        //}
+                Assert.AreEqual(14, data.Rows.Count);
+                Assert.AreEqual(8, data.Columns.Count);
+            }
+        }
 
-        //[TestMethod]
-        //public void ExecuteRow_Test()
-        //{
-        //    using (var cmd = new SqliteDatabaseCommand(_connection))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-        //        DataRow row = cmd.ExecuteRow();
+        [TestMethod]
+        public void ExecuteRow_Test()
+        {
+            using (var cmd = new SqliteDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+                DataRow row = cmd.ExecuteRow();
 
-        //        Assert.AreEqual(8, row.ItemArray.Length);
-        //    }
-        //}
+                Assert.AreEqual(8, row.ItemArray.Length);
+            }
+        }
 
         [TestMethod]
         public void ExecuteRowTyped_Test()
@@ -136,12 +136,12 @@ namespace Data.Sqlite.Tests
             using (var cmd = new SqliteDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
                 var emp = cmd.ExecuteRow(new
                 {
                     EmpNo = 0,
                     Ename = string.Empty,
-                    //HireDate = (DateTime?)null
+                    HireDate = (DateTime?)null
                 });
 
                 Assert.AreEqual(7369, emp.EmpNo);
@@ -194,18 +194,18 @@ namespace Data.Sqlite.Tests
             }
         }
 
-        //[TestMethod]
-        //public void ExecuteRowWithDelegate_Test()
-        //{
-        //    using (var cmd = new SqliteDatabaseCommand(_connection))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-        //        EMP emp = cmd.ExecuteRow<EMP>((row) => new EMP() { EmpNo = Convert.ToInt32(row["EMPNO"]) });
+        [TestMethod]
+        public void ExecuteRowWithDelegate_Test()
+        {
+            using (var cmd = new SqliteDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+                EMP emp = cmd.ExecuteRow<EMP>((row) => new EMP() { EmpNo = Convert.ToInt32(row["EMPNO"]) });
 
-        //        Assert.AreEqual(7369, emp.EmpNo);
-        //    }
-        //}
+                Assert.AreEqual(7369, emp.EmpNo);
+            }
+        }
 
         [TestMethod]
         public void ExecuteScalar_Test()
@@ -310,7 +310,6 @@ namespace Data.Sqlite.Tests
                 cmd.CommandText.AppendLine(" SELECT ENAME ")
                                .AppendLine("  FROM EMP ");
 
-
                 // Simple value are not autorized
                 cmd.Parameters.AddValues(123);
 
@@ -376,31 +375,31 @@ namespace Data.Sqlite.Tests
             }
         }
 
-        //[TestMethod]
-        //public void ExecuteTableCustomedTyped_Test()
-        //{
-        //    using (var cmd = new SqliteDatabaseCommand(_connection))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP ");
-        //        var data = cmd.ExecuteTable<EMP>((row) =>
-        //        {
-        //            return new EMP()
-        //            {
-        //                EmpNo = row.Field<int>("EMPNO"),
-        //                EName = row.Field<string>("ENAME"),
-        //                HireDate = row.Field<DateTime>("HIREDATE"),
-        //                Comm = row.Field<int?>("COMM")
-        //            };
-        //        });
-        //        EMP smith = data.FirstOrDefault(i => i.EmpNo == 7369);
+        [TestMethod]
+        public void ExecuteTableCustomedTyped_Test()
+        {
+            using (var cmd = new SqliteDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP ");
+                var data = cmd.ExecuteTable<EMP>((row) =>
+                {
+                    return new EMP()
+                    {
+                        EmpNo = row.Field<int>("EMPNO"),
+                        EName = row.Field<string>("ENAME"),
+                        HireDate = row.Field<DateTime>("HIREDATE"),
+                        Comm = row.Field<int?>("COMM")
+                    };
+                });
+                EMP smith = data.FirstOrDefault(i => i.EmpNo == 7369);
 
-        //        Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
-        //        Assert.AreEqual(EMP.Smith.EName, smith.EName);
-        //        Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
-        //        Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
-        //    }
-        //}
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
+                Assert.AreEqual(EMP.Smith.EName, smith.EName);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
+                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
+            }
+        }
 
         [TestMethod]
         [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
@@ -526,195 +525,76 @@ namespace Data.Sqlite.Tests
             }
         }
 
-        //[TestMethod]
-        //public void ExecuteNonQuery_DefineTransactionBefore_Test()
-        //{
-        //    using (SQLiteTransaction transaction = _connection.BeginTransaction())
-        //    {
-        //        using (var cmd = new SqliteDatabaseCommand(_connection, transaction))
-        //        {
-        //            cmd.Log = Console.WriteLine;
-        //            cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (1234, 'ABC') ");
-        //            cmd.ExecuteNonQuery();
-        //        }
+        [TestMethod]
+        public void ExecuteNonQuery_DefineTransactionBefore_Test()
+        {
+            using (SQLiteTransaction transaction = _connection.BeginTransaction())
+            {
+                using (var cmd = new SqliteDatabaseCommand(_connection, transaction))
+                {
+                    cmd.Log = Console.WriteLine;
+                    cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (1234, 'ABC') ");
+                    cmd.ExecuteNonQuery();
+                }
 
-        //        using (var cmd = new SqliteDatabaseCommand(_connection, transaction))
-        //        {
-        //            cmd.Log = Console.WriteLine;
-        //            cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (9876, 'XYZ') ");
-        //            cmd.ExecuteNonQuery();
-        //        }
+                using (var cmd = new SqliteDatabaseCommand(_connection, transaction))
+                {
+                    cmd.Log = Console.WriteLine;
+                    cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (9876, 'XYZ') ");
+                    cmd.ExecuteNonQuery();
+                }
 
-        //        transaction.Rollback();
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 16);
 
-        //        Assert.AreEqual(EMP.GetEmployeesCount(_connection, transaction), 14);
-        //    }
-        //}
+                transaction.Rollback();
 
-        //[TestMethod]
-        //public void ExecuteNonQuery_TransactionForTwoCommands_Test()
-        //{
-        //    SQLiteTransaction currentTransaction;
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);
+            }
+        }
 
-        //    using (var cmd = new SqliteDatabaseCommand(_connection))
-        //    {
-        //        cmd.Log = Console.WriteLine;
-        //        cmd.CommandText.AppendLine(" DELETE FROM EMP ");
+        [TestMethod]
+        public void ExecuteNonQuery_TransactionForTwoCommands_Test()
+        {
+            SQLiteTransaction currentTransaction;
 
-        //        currentTransaction = cmd.TransactionBegin();
-        //        cmd.ExecuteNonQuery();
+            using (var cmd = new SqliteDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" DELETE FROM EMP ");
 
-        //        Assert.AreEqual(EMP.GetEmployeesCount(_connection, currentTransaction), 0);     // Inside the transaction
+                currentTransaction = cmd.TransactionBegin();
+                cmd.ExecuteNonQuery();
 
-        //        cmd.TransactionRollback();
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 0);    
 
-        //        Assert.AreEqual(EMP.GetEmployeesCount(_connection, currentTransaction), 14);    // Inside the transaction
-        //        Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);                      // Ouside the transaction
-        //    }
-        //}
+                cmd.TransactionRollback();
 
-        //[TestMethod]
-        //public void ExecuteNonQuery_TransactionForTwoIncludedCommands_Test()
-        //{
-        //    using (SqliteDatabaseCommand cmd1 = new SqliteDatabaseCommand(_connection))
-        //    {
-        //        cmd1.Log = Console.WriteLine;
-        //        cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
-        //        cmd1.TransactionBegin();
-        //        cmd1.ExecuteNonQuery();
+                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);                   
+            }
+        }
 
-        //        using (SqliteDatabaseCommand cmd2 = new SqliteDatabaseCommand(_connection, cmd1.Transaction))
-        //        {
-        //            cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
-        //            int count = cmd2.ExecuteScalar<int>();
-        //        }
+        [TestMethod]
+        public void ExecuteNonQuery_TransactionForTwoIncludedCommands_Test()
+        {
+            using (SqliteDatabaseCommand cmd1 = new SqliteDatabaseCommand(_connection))
+            {
+                cmd1.Log = Console.WriteLine;
+                cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
+                cmd1.TransactionBegin();
+                cmd1.ExecuteNonQuery();
 
-        //        cmd1.TransactionRollback();
-        //    }
-        //}
+                using (SqliteDatabaseCommand cmd2 = new SqliteDatabaseCommand(_connection, cmd1.Transaction))
+                {
+                    cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                    var count = cmd2.ExecuteScalar<long>();
+                    Assert.AreEqual(0, count);
+                }
 
-        #endregion
+                cmd1.TransactionRollback();
+            }
 
-        #region DEADLOCKS
-
-        //[TestMethod()]
-        //public void RaiseDeadLock_Test()
-        //{
-        //    SQLiteException ex = this.RaiseSqlDeadLock(false);
-
-        //    Assert.IsNotNull(ex);
-        //    Assert.AreEqual(ex.Number, 1205);
-        //}
-
-        //[TestMethod()]
-        //public void RetryWhenDeadLockOccured_Test()
-        //{
-        //    SQLiteException ex = this.RaiseSqlDeadLock(true);
-
-        //    Assert.IsNull(ex);
-        //}
-
-        //private SQLiteException RaiseSqlDeadLock(bool withRetry)
-        //{
-        //    // See: http://stackoverflow.com/questions/22825147/how-to-simulate-deadlock-on-sql-server
-
-        //    SQLiteConnection connection2 = new SQLiteConnection(CONNECTION_STRING);
-        //    connection2.Open();
-        //    SQLiteException exToReturn = null;
-
-        //    try
-        //    {
-        //        using (var cmd = new SqliteDatabaseCommand(_connection))
-        //        {
-        //            cmd.Log = Console.WriteLine;
-
-        //            cmd.CommandText.AppendLine(" CREATE TABLE ##Employees ( ");
-        //            cmd.CommandText.AppendLine("     EmpId INT IDENTITY, ");
-        //            cmd.CommandText.AppendLine("     EmpName VARCHAR(16), ");
-        //            cmd.CommandText.AppendLine("     Phone VARCHAR(16) ");
-        //            cmd.CommandText.AppendLine(" ) ");
-
-        //            cmd.CommandText.AppendLine(" INSERT INTO ##Employees (EmpName, Phone) ");
-        //            cmd.CommandText.AppendLine(" VALUES('Martha', '800-555-1212'), ('Jimmy', '619-555-8080') ");
-
-        //            cmd.CommandText.AppendLine(" CREATE TABLE ##Suppliers( ");
-        //            cmd.CommandText.AppendLine("     SupplierId INT IDENTITY, ");
-        //            cmd.CommandText.AppendLine("     SupplierName VARCHAR(64), ");
-        //            cmd.CommandText.AppendLine("     Fax VARCHAR(16) ");
-        //            cmd.CommandText.AppendLine(" ) ");
-
-        //            cmd.CommandText.AppendLine(" INSERT INTO ##Suppliers (SupplierName, Fax) ");
-        //            cmd.CommandText.AppendLine(" VALUES ('Acme', '877-555-6060'), ('Rockwell', '800-257-1234') ");
-
-        //            cmd.ExecuteNonQuery();
-
-        //        }
-
-        //        using (SqliteDatabaseCommand cmd1 = new SqliteDatabaseCommand(_connection))
-        //        {
-        //            using (SqliteDatabaseCommand cmd2 = new SqliteDatabaseCommand(connection2))
-        //            {
-        //                cmd1.Log = Console.WriteLine;
-        //                cmd2.Log = Console.WriteLine;
-
-        //                cmd1.TransactionBegin();
-        //                cmd2.TransactionBegin();
-
-        //                cmd1.Clear();
-        //                cmd1.CommandText.AppendLine(" UPDATE ##Employees SET EmpName = 'Mary'    WHERE empid = 1 ");
-        //                cmd1.ExecuteNonQuery();
-
-        //                cmd2.Clear();
-        //                cmd2.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
-        //                cmd2.ExecuteNonQuery();
-
-        //                // Start and when cmd2.ExecuteNonQuery command will be executed, an DeadLock exception will be raised.
-        //                Task task1 = Task.Factory.StartNew(() =>
-        //                {
-        //                    cmd1.Clear();
-        //                    cmd1.ThrowException = false;
-        //                    if (withRetry)
-        //                    {
-        //                        cmd1.RetryIfExceptionsOccured.SetDeadLockCodes();
-        //                    }
-        //                    cmd1.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
-        //                    cmd1.ExecuteNonQuery();
-        //                });
-
-        //                System.Threading.Thread.Sleep(1000);
-
-        //                cmd2.Clear();
-        //                cmd2.CommandText.AppendLine(" UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ");
-        //                cmd2.ExecuteNonQuery();
-
-        //                cmd2.Dispose();
-        //                connection2.Close();
-
-        //                // Wait cmd1 finished (and raised an Exception)
-        //                task1.Wait();
-
-        //                exToReturn = cmd1.Exception;
-        //            }
-        //        }
-
-        //        using (var cmd = new SqliteDatabaseCommand(_connection))
-        //        {
-        //            cmd.Log = Console.WriteLine;
-
-        //            cmd.CommandText.AppendLine(" DROP TABLE ##Employees ");
-        //            cmd.CommandText.AppendLine(" DROP TABLE ##Suppliers ");
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        connection2.Close();
-        //        connection2.Dispose();
-        //        connection2 = null;
-        //    }
-
-        //    return exToReturn;
-        //}
+            Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);
+        }
 
         #endregion
 

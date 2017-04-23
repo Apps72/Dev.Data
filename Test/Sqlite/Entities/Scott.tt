@@ -1,0 +1,39 @@
+﻿﻿<# 
+   // UPDATE THIS CONNECTION STRING
+   string CONNECTION_STRING   = @"Data Source=..\scott.db;Version=3;";
+   string CONFIG_FILE         = null;
+#>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="$(TargetDir)\Apps72.Dev.Data.Sqlite.dll" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.Configuration" #>
+<#
+    try
+    {
+		var entitiesGenerator = new Apps72.Dev.Data.Generator.SqlEntitiesGenerator(CONNECTION_STRING, CONFIG_FILE);
+#>
+// *********************************************
+// Code Generated with Apps72.Dev.Data.Generator
+// *********************************************
+using System;
+
+namespace <#=System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint")#>.<#= System.IO.Path.GetFileNameWithoutExtension(this.Host.TemplateFile) #>
+{
+<# foreach(var table in entitiesGenerator.Tables) { #>
+	/// <summary />
+    public partial class <#= table.Name #>	<# // Or table.SchemaAndName #>
+    {
+<# foreach(var column in table.Columns) { #>
+		/// <summary />
+		public virtual <#= column.CSharpTypeNullable #> <#= column.ColumnName #> { get; set; }
+<# } #>
+	}
+<# }#>
+}
+<# } catch (Exception ex) { #>
+// CHECK THE 'CONNECTION_STRING_NAME' PARAMETER IN TOP OF THE .TT FILE
+// <#= ex.Message.Replace(Environment.NewLine, Environment.NewLine + "// ") #>
+// <#= ex.StackTrace.Replace(Environment.NewLine, Environment.NewLine + "// ") #>
+<# } #>
