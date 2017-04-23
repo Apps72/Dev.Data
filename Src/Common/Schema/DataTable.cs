@@ -82,7 +82,6 @@ namespace Apps72.Dev.Data.Schema
         /// Creates a new instance of T type and sets all row values to the new T properties.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="table"></param>
         /// <returns></returns>
         public T[] ConvertTo<T>()
         {
@@ -170,7 +169,7 @@ namespace Apps72.Dev.Data.Schema
         /// <summary>
         /// Load and fill all data (Rows and Columns) from the array of object[].
         /// </summary>
-        /// <param name="values"></param>
+        /// <param name="arrayOfvalues"></param>
         /// <param name="firstRowOnly"></param>
         internal void Load(IEnumerable<object[]> arrayOfvalues, bool firstRowOnly)
         {
@@ -220,7 +219,7 @@ namespace Apps72.Dev.Data.Schema
         /// <summary>
         /// Fill all columns properties
         /// </summary>
-        /// <param name="values"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
         private int FillColumnsProperties(object data)
         {

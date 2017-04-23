@@ -18,6 +18,7 @@ namespace Data.Tests
         {
             SqlConnection conn = new SqlConnection();
 
+#pragma warning disable CS0612 // Type or member is obsolete
             conn.DefineDataInjection((cmd) =>
             {
                 List<EMPBase> employees = new List<EMPBase>();
@@ -26,6 +27,7 @@ namespace Data.Tests
 
                 cmd.Inject(employees);
             });
+#pragma warning restore CS0612 // Type or member is obsolete
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
             {
@@ -43,10 +45,12 @@ namespace Data.Tests
         {
             SqlConnection conn = new SqlConnection();
 
+#pragma warning disable CS0612 // Type or member is obsolete
             conn.DefineDataInjection((cmd) =>
             {
                 cmd.Inject(new EMPBase() { EName = "SMITH", EmpNo = 1 });
             });
+#pragma warning restore CS0612 // Type or member is obsolete
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
             {
@@ -64,6 +68,7 @@ namespace Data.Tests
         {
             SqlConnection conn = new SqlConnection();
 
+#pragma warning disable CS0612 // Type or member is obsolete
             conn.DefineDataInjection((cmd) =>
             {
                 List<EMPBase> employees = new List<EMPBase>();
@@ -72,6 +77,7 @@ namespace Data.Tests
 
                 cmd.Inject(employees);
             });
+#pragma warning restore CS0612 // Type or member is obsolete
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
             {
@@ -89,10 +95,12 @@ namespace Data.Tests
         {
             SqlConnection conn = new SqlConnection();
 
+#pragma warning disable CS0612 // Type or member is obsolete
             conn.DefineDataInjection((cmd) =>
             {
                 cmd.Inject(new int[] { 2 });
             });
+#pragma warning restore CS0612 // Type or member is obsolete
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
             {
@@ -108,10 +116,12 @@ namespace Data.Tests
         {
             SqlConnection conn = new SqlConnection();
 
+#pragma warning disable CS0612 // Type or member is obsolete
             conn.DefineDataInjection((cmd) =>
             {
                 cmd.Inject(2);
             });
+#pragma warning restore CS0612 // Type or member is obsolete
 
             using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(conn))
             {

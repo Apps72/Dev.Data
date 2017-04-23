@@ -22,9 +22,9 @@ namespace Apps72.Dev.Data
             this.Parameters = command.Parameters.Cast<DbParameter>();
         }
 
-        ///// <summary>
-        ///// Get the CommandText used with this request.
-        ///// </summary>
+        /// <summary>
+        /// Get the CommandText used with this request.
+        /// </summary>
         public string CommandText { get; private set; }
 
         /// <summary>
@@ -45,8 +45,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Inject a simple type value or a single complex type to simulate the Command Results.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="values"></param>
+        /// <param name="value"></param>
         public void Inject(object value)
         {
             _values = new object[] { value };
