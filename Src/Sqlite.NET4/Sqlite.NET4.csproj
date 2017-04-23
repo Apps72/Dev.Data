@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.105.0\lib\net40\System.Data.SQLite.dll</HintPath>
@@ -46,7 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseCommandBase.cs" />
     <Compile Include="Extension\DataExtensions.cs" />
+    <Compile Include="Generator\DataColumn.cs" />
+    <Compile Include="Generator\SqlEntitiesGenerator.cs" />
     <Compile Include="SqliteDatabaseCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
