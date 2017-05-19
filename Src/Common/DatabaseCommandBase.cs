@@ -593,6 +593,35 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Adds a value to the end of the <see cref="DbCommand.Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <returns></returns>
+        public DatabaseCommandBase AddParameter(string name, object value)
+        {
+            var dbCommand = this.Command;
+            var param = dbCommand.CreateParameter();
+
+            param.ParameterName = name;
+            param.Value = value ?? DBNull.Value;
+
+            dbCommand.Parameters.Add(param);
+            return this;
+        }
+
+        /// <summary>
+        /// Add all properties / values to the end of the <see cref="DbCommand.Parameters"/> property.
+        /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
+        /// </summary>
+        /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
+        public DatabaseCommandBase AddParameter<T>(T values)
+        {
+            Schema.DataParameter.AddValues<T>(this.Command, values);
+            return this;
+        }
+
+        /// <summary>
         /// Raises the ExceptionOccured event.
         /// </summary>
         /// <param name="e"></param>

@@ -32,7 +32,7 @@ namespace Apps72.Dev.Data
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
         public static void AddValues<T>(this SQLiteParameterCollection parameters, T values)
         {
-            Schema.DataParameter.AddValues<T, SQLiteParameterCollection, SQLiteParameter>(parameters, values);
+            Schema.DataParameter.AddValues<T, SQLiteParameter>(parameters, values);
         }
 
     }

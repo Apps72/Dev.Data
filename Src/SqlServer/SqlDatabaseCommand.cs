@@ -29,6 +29,7 @@ namespace Apps72.Dev.Data
         public SqlDatabaseCommand(SqlConnection connection)
             : this(connection, String.Empty)
         {
+            
         }
 
         /// <summary>

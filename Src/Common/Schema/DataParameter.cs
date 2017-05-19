@@ -17,13 +17,12 @@ namespace Apps72.Dev.Data.Schema
         /// sets to value's properties.
         /// </summary>
         /// <typeparam name="T">Type of object with properties to convert in Parameters</typeparam>
-        /// <typeparam name="U">DbParameterCollection where to insert or replace values</typeparam>
         /// <typeparam name="V">DbParameter type (SqlParameter, ...)</typeparam>
         /// <param name="parameters"></param>
         /// <param name="values"></param>
-        public static void AddValues<T, U, V>(U parameters, T values) where U : DbParameterCollection where V : DbParameter, new()
+        public static void AddValues<T, V>(DbParameterCollection parameters, T values) where V : DbParameter, new()
         {
-            IEnumerable<V> properties = ToParameters<T, V>(values);
+            IEnumerable<DbParameter> properties = ToParameters<T, V>(null, values);
             AddOrRemplaceParameters(parameters, properties);
         }
 
@@ -32,10 +31,24 @@ namespace Apps72.Dev.Data.Schema
         /// sets to value's properties.
         /// </summary>
         /// <typeparam name="T">Type of object with properties to convert in Parameters</typeparam>
+        /// <param name="command"></param>
+        /// <param name="values"></param>
+        public static void AddValues<T>(DbCommand command, T values)
+        {
+            IEnumerable<DbParameter> properties = ToParameters<T, DbParameter>(command, values);
+            AddOrRemplaceParameters(command.Parameters, properties);
+        }
+
+        /// <summary>
+        /// Creates a new instance of DbParameter[] with ParameterName, Value and IsNullable properties 
+        /// sets to value's properties.
+        /// </summary>
+        /// <typeparam name="T">Type of object with properties to convert in Parameters</typeparam>
         /// <typeparam name="U">DbParameter type (SqlParameter, ...)</typeparam>
+        /// <param name="command"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static IEnumerable<U> ToParameters<T, U>(T value) where U : DbParameter, new()
+        private static IEnumerable<DbParameter> ToParameters<T, U>(DbCommand command, T value) where U : DbParameter
         {
             if (TypeExtension.IsPrimitive(typeof(T)))
             {
@@ -43,7 +56,7 @@ namespace Apps72.Dev.Data.Schema
             }
             else
             {
-                List<U> parameters = new List<U>();
+                List<DbParameter> parameters = new List<DbParameter>();
                 foreach (PropertyInfo property in typeof(T).GetProperties())
                 {
                     if (TypeExtension.IsPrimitive(property.PropertyType))
@@ -52,7 +65,9 @@ namespace Apps72.Dev.Data.Schema
                         Type propType = TypeExtension.GetNullableSubType(property.PropertyType);
 
                         // Value
-                        U parameter = Activator.CreateInstance(typeof(U)) as U;
+                        DbParameter parameter = command != null ? 
+                                                command.CreateParameter() : 
+                                                Activator.CreateInstance(typeof(U)) as DbParameter;
                         parameter.Value = typeof(T).GetProperty(property.Name).GetValue(value, null);
                         parameter.IsNullable = TypeExtension.IsNullable(propType);
                         parameter.DbType = DataTypedConvertor.ToDbType(propType);
@@ -77,7 +92,7 @@ namespace Apps72.Dev.Data.Schema
 
         }
 
-        private static void AddOrRemplaceParameters<U>(DbParameterCollection existingParameters, IEnumerable<U> newParameters) where U : DbParameter, new()
+        private static void AddOrRemplaceParameters(DbParameterCollection existingParameters, IEnumerable<DbParameter> newParameters)
         {
             string prefix = DataParameter.GetPrefixParameter(existingParameters);
 

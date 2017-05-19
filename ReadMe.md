@@ -19,14 +19,13 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 ## Commands
 
 - [ExecuteTable](#ExecuteTable): Execute a SQL query and retrieve all data to a list of C# objects.
-- [Parameters.AddValues](#ExecuteTableWithParameters): Execute a SQL query, add some parameters and retrieve all data to a list of C# objects.
+- [AddParameter](#ExecuteTableWithParameters): Execute a SQL query, add some parameters and retrieve all data to a list of C# objects.
 - [ExecuteRow](#ExecuteRow): Execute a SQL query and retrieve the first row to one serialized C# object.
 - [ExecuteScalar](#ExecuteScalar): Execute a SQL query and retrieve the first value (first row / first column) to a C# data type.
 - [TransactionBegin](#TransactionBegin): Manage your SQL Transactions.
 - [Logging](#Logging): Trace all SQL queries sent to the server (in Text or HTML format).
 - [ThrowException](#ThrowException): Disable the SqlException to avoid application crashes... and catch it via the Exception property or ExceptionOccured event.
 - [RetryIfExceptionsOccureds](#RetryIfExceptionsOccured): Avoid DeadLocks with retrying your Execute commands maximum 3 times.
-- [Extensions](#Extensions): Use some extensions methods to simplify your code (AddWithValueOrDBNull, ConvertToDBNull, ...)
 - [Data Injection](#DataInjection): Include your Unit Tests without Database, but intercept all queries executions to set predefined data.
 - [Best Practices](#BestPractices): Copy our samples and use it as templates.
 - [Entities Generators](#EntitiesGenerator): Generate automatically all classes from your database classes (via a T4 file).
@@ -69,7 +68,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
                        .AppendLine("  WHERE EMPNO = @EmpNo ")
                        .AppendLine("    AND HIREDATE = @HireDate ");
 
-        cmd.Parameters.AddValues(new
+        cmd.AddParameter(new
                 {
                     EmpNo = 7369,
                     HireDate = new DateTime(1980, 12, 17)
@@ -183,20 +182,6 @@ All SQL queries can be traced via the <b>.log</b> property.
         cmd.CommandText.AppendLine(" DELETE FROM EMP ");
         cmd.ExecuteNonQuery();
     }
-```
-
-#### <a name="Extensions"></a>using DBNull values
-
-To add a <b>null</b> parameter to convert to <b>DBNull.Value</b> :
-
-```cs
-    cmd.Parameters.AddWithValueOrDBNull("@Comm", null);
-```
-
-To convert a <b>null</b> parameter to <b>DBNull.Value</b> :
-
-```cs
-    cmd.Parameters.AddWithValue("@Comm", null).ConvertToDBNull();
 ```
 
 #### <a name="DataInjection"></a>Data Injection - For Unit testing
@@ -350,7 +335,7 @@ For example:
 
 ### Version 1.3
 
-* Add a extension method **SqlParameterCollection.AddValues** to simplify the creation of parameters. See [Parameters.AddValues](#ExecuteTableWithParameters) for a code sample.
+* Add a extension method **SqlParameterCollection.AddValues** to simplify the creation of parameters.
 
 ### Version 1.4
 
@@ -374,3 +359,8 @@ For example:
 ### Version 2.1
 
 * Fix using the constructor with ConnectionString and CommandText parameters (the CommandText was not correctly assigned).
+
+### Version 2.2
+
+* Add a **DotNetCore** version with features based on DbConnection.
+* Add the method **AddParameter** in DatabaseCommandBase, usable for all projects (SqlServer, Oracle, Sqlite, ...).
