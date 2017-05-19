@@ -171,15 +171,8 @@ namespace Apps72.Dev.Data
             if (this.Log != null)
                 this.Log.Invoke("BEGIN TRANSACTION");
 
-            if (!this.Connection.ContainsDataInjectionDataTable())
-            {
-                this.Command.Transaction = this.Command.Connection.BeginTransaction();
-                return this.Command.Transaction;
-            }
-            else
-            {
-                return null;
-            }
+            this.Command.Transaction = this.Command.Connection.BeginTransaction();
+            return this.Command.Transaction;
         }
 
         /// <summary>
@@ -192,10 +185,7 @@ namespace Apps72.Dev.Data
                 if (this.Log != null)
                     this.Log.Invoke("COMMIT");
 
-                if (!this.Connection.ContainsDataInjectionDataTable())
-                {
-                    this.Command.Transaction.Commit();
-                }
+                this.Command.Transaction.Commit();
             }
         }
 
@@ -209,10 +199,7 @@ namespace Apps72.Dev.Data
                 if (this.Log != null)
                     this.Log.Invoke("ROLLBACK");
 
-                if (!this.Connection.ContainsDataInjectionDataTable())
-                {
-                    this.Command.Transaction.Rollback();
-                }
+                this.Command.Transaction.Rollback();
             }
         }
 
@@ -467,7 +454,7 @@ namespace Apps72.Dev.Data
         {
             return this.ExecuteRow<T>(default(T));
         }
-        
+
         /// <summary>
         /// Execute the query and fill the specified T object with the first row of results
         /// </summary>
@@ -520,17 +507,8 @@ namespace Apps72.Dev.Data
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
 
-                // If UnitTest activated, invoke the "Get Method" to retrieve custom data
-                if (this.Connection.ContainsDataInjectionDataTable())
-                {
-                    DataInjectionDbCommand command = this.Connection.InvokeAndReturnData(this);
-                    return command.GetDataTable().Rows.Length;
-                }
-                else
-                {
-                    // Send the request to the Database server
-                    return this.Command.ExecuteNonQuery();
-                }
+                // Send the request to the Database server
+                return this.Command.ExecuteNonQuery();
             }
             catch (DbException ex)
             {
@@ -557,17 +535,8 @@ namespace Apps72.Dev.Data
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
 
-                // If UnitTest activated, invoke the "Get Method" to retrieve custom data
-                if (this.Connection.ContainsDataInjectionDataTable())
-                {
-                    DataInjectionDbCommand command = this.Connection.InvokeAndReturnData(this);
-                    return command.GetScalar();
-                }
-                else
-                {
-                    // Send the request to the Database server
-                    return this.Command.ExecuteScalar();
-                }
+                // Send the request to the Database server
+                return this.Command.ExecuteScalar();
             }
             catch (DbException ex)
             {
@@ -668,9 +637,9 @@ namespace Apps72.Dev.Data
 
 #endif
 
-#endregion
+        #endregion
 
-#region PRIVATE
+        #region PRIVATE
 
         /// <summary>
         /// Execute the query and return an internal DataTable with all data.
@@ -690,28 +659,19 @@ namespace Apps72.Dev.Data
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
 
-                // If UnitTest activated, invoke the "Get Method" to retrieve custom data
-                if (this.Connection.ContainsDataInjectionDataTable())
-                {
-                    DataInjectionDbCommand command = this.Connection.InvokeAndReturnData(this);
-                    return new Schema.DataTable[] { command.GetDataTable() };
-                }
-                else
-                {
-                    var tables = new List<Schema.DataTable>();
+                var tables = new List<Schema.DataTable>();
 
-                    // Send the request to the Database server
-                    using (DbDataReader dr = this.Command.ExecuteReader())
+                // Send the request to the Database server
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    do
                     {
-                        do
-                        {
-                            tables.Add(new Schema.DataTable(dr, firstRowOnly));
-                        }
-                        while (!firstRowOnly && dr.NextResult());
+                        tables.Add(new Schema.DataTable(dr, firstRowOnly));
                     }
-
-                    return tables.ToArray();
+                    while (!firstRowOnly && dr.NextResult());
                 }
+
+                return tables.ToArray();
             }
             catch (DbException ex)
             {
@@ -759,6 +719,6 @@ namespace Apps72.Dev.Data
             return default(T);
         }
 
-#endregion
+        #endregion
     }
 }

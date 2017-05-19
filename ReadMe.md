@@ -26,7 +26,6 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
 - [Logging](#Logging): Trace all SQL queries sent to the server (in Text or HTML format).
 - [ThrowException](#ThrowException): Disable the SqlException to avoid application crashes... and catch it via the Exception property or ExceptionOccured event.
 - [RetryIfExceptionsOccureds](#RetryIfExceptionsOccured): Avoid DeadLocks with retrying your Execute commands maximum 3 times.
-- [Data Injection](#DataInjection): Include your Unit Tests without Database, but intercept all queries executions to set predefined data.
 - [Best Practices](#BestPractices): Copy our samples and use it as templates.
 - [Entities Generators](#EntitiesGenerator): Generate automatically all classes from your database classes (via a T4 file).
 
@@ -181,27 +180,6 @@ All SQL queries can be traced via the <b>.log</b> property.
 
         cmd.CommandText.AppendLine(" DELETE FROM EMP ");
         cmd.ExecuteNonQuery();
-    }
-```
-
-#### <a name="DataInjection"></a>Data Injection - For Unit testing
-
-```cs
-    // Intercept Query executions to set predefined data.
-    _connection.DefineDataInjection((cmd) =>
-    {
-        List<Employee> employees = new List<Employee>();
-        employees.Add(new Employee() { EmpNo = 1 });
-        employees.Add(new Employee() { EmpNo = 2 });
-        return DataTypedConvertor.ToDataTable(employees);
-    });
-
-    // Query executed in "main" program.
-    using (var cmd = new SqlDatabaseCommand(conn))
-    {
-        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-        if (cmd.ExecuteTable().Rows.Count >= 2)
-            ...
     }
 ```
 
@@ -364,3 +342,4 @@ For example:
 
 * Add a **DotNetCore** version with features based on DbConnection.
 * Add the method **AddParameter** in DatabaseCommandBase, usable for all projects (SqlServer, Oracle, Sqlite, ...).
+* Remove DataInjection concept. That will be replaced by pre and post execution events.

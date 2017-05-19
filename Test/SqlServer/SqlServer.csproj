@@ -72,7 +72,6 @@
     <Compile Include="SqlBestPracticeTests.cs" />
     <Compile Include="SqlDatabaseCommandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlDataInjectionTests.cs" />
     <Compile Include="SqlEntitiesGeneratorTests.cs" />
   </ItemGroup>
   <ItemGroup>
