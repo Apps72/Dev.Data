@@ -240,19 +240,25 @@ namespace Apps72.Dev.Data
         /// Dispose the object and free ressources
         /// </summary>
         /// <param name="disposing"></param>
-        //protected override void Dispose(bool disposing)
-        //{
-        //    base.Dispose(disposing);
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
 
-        //    if (_mustAutoDisconnect)
-        //    {
-        //        if (this.Connection.State != ConnectionState.Closed)
-        //        {
-        //            this.Connection.Close();
-        //            this.Connection.Dispose();
-        //        }
-        //    }
-        //}
+            if (_mustAutoDisconnect)
+            {
+                if (this.Connection.State != ConnectionState.Closed)
+                {
+                    try
+                    {
+                        this.Connection.Close();
+                    }
+                    finally
+                    {
+                        this.Connection.Dispose();
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Execute the specified method (ExecuteTable, ExecuteNonQuery or ExecuteScalar)

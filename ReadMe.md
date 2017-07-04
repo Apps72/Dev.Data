@@ -343,3 +343,7 @@ For example:
 * Add a **DotNetCore** version with features based on DbConnection.
 * Add the method **AddParameter** in DatabaseCommandBase, usable for all projects (SqlServer, Oracle, Sqlite, ...).
 * Remove DataInjection concept. That will be replaced by pre and post execution events.
+
+### Version 2.3
+
+* Fix using Dispose method with AutoDisconnect mode.
