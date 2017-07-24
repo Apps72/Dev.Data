@@ -411,7 +411,7 @@ namespace Apps72.Dev.Data
         public virtual IEnumerable<T> ExecuteTable<T>()
         {
             Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            return table.ConvertTo<T>();
+            return table?.ConvertTo<T>();
         }
 
         /// <summary>
@@ -482,7 +482,7 @@ namespace Apps72.Dev.Data
             else
             {
                 Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
-                if (table.Rows.Length > 0)
+                if (table != null && table.Rows.Length > 0)
                     return table.Rows[0].ConvertTo<T>(itemOftype);
                 else
                     return default(T);
@@ -687,7 +687,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         internal virtual Schema.DataTable ExecuteInternalDataTable(bool firstRowOnly)
         {
-            return this.ExecuteInternalDataSet(firstRowOnly).FirstOrDefault();
+            return this.ExecuteInternalDataSet(firstRowOnly)?.FirstOrDefault();
         }
 
 

@@ -589,6 +589,62 @@ namespace Data.Tests
             }
         }
 
+
+        [TestMethod]
+        [ExpectedException(typeof(SqlException))]
+        public void ExecuteTableTyped_ThrowingException_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.ThrowException = true;
+                cmd.CommandText.AppendLine(" XXX ");
+                var data = cmd.ExecuteTable<EMP>();
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTableTyped_WithoutThrowingException_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.ThrowException = false;
+                cmd.CommandText.AppendLine(" XXX ");
+                var data = cmd.ExecuteTable<EMP>();
+
+                Assert.AreEqual(null, data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteRowTyped_WithoutThrowingException_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.ThrowException = false;
+                cmd.CommandText.AppendLine(" XXX ");
+                var data = cmd.ExecuteRow<EMP>();
+
+                Assert.AreEqual(null, data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarTyped_WithoutThrowingException_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.ThrowException = false;
+                cmd.CommandText.AppendLine(" XXX ");
+                var data = cmd.ExecuteScalar<EMP>();
+
+                Assert.AreEqual(null, data);
+            }
+        }
+
         #endregion
 
         #region DEADLOCKS

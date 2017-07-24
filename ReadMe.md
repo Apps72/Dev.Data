@@ -347,3 +347,4 @@ For example:
 ### Version 2.3
 
 * Fix using Dispose method with AutoDisconnect mode.
+* Fix when ThrowException = False: returns the default value and not an exception.
