@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandTextFormatted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DataTypedConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DbTypeMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convertor\DynamicConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\TypeExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommandBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />

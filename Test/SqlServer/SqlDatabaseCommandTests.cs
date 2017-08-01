@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 using Apps72.Dev.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Collections.Generic;
 
 namespace Data.Tests
 {
@@ -143,6 +146,21 @@ namespace Data.Tests
                 Assert.AreEqual(7369, emp.EmpNo);
             }
         }
+
+        [TestMethod]
+        public void ExecuteRowDynamic_Test()
+        {
+            dynamic x = Common.Convertor.DynamicConvertor.GetDynamicObject("MyClass", new Dictionary<string, Type>()
+            {
+                { "LastName", typeof(string) },
+                { "Age", typeof(int?) }
+            });
+            
+            x.LastName = "abc";
+            x.Age = 123;
+        }
+
+
 
         [TestMethod]
         [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
