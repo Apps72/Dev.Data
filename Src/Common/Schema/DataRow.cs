@@ -128,6 +128,13 @@ namespace Apps72.Dev.Data.Schema
         public T ConvertTo<T>(T item)
         {
             Type type = typeof(T);
+            bool isDynamicType = Common.Convertor.DynamicConvertor.IsDynamic(type);
+
+            if (isDynamicType)
+            {
+                var columns = this.Table.Columns.ToDictionary(c => c.ColumnName, c => c.IsNullable ? typeof(Nullable<>).MakeGenericType(c.DataType) : c.DataType);
+                type = Common.Convertor.DynamicConvertor.GetDynamicType(Common.Convertor.DynamicConvertor.DYNAMIC_CLASS_NAME, columns);
+            }
 
             // For anonymous type, creates a new instance and sets all data row values to this new object.
             if (Apps72.Dev.Data.Convertor.TypeExtension.IsAnonymousType(type))
@@ -150,6 +157,8 @@ namespace Apps72.Dev.Data.Schema
                 object newItem = null;
 
                 // Creates or gets an instance of T
+                if (isDynamicType)
+                    newItem = Activator.CreateInstance(type);
                 if (EqualityComparer<T>.Default.Equals(item, default(T)))
                     newItem = Activator.CreateInstance(type, null);
                 else

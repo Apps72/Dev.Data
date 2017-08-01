@@ -4,16 +4,54 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using System.Linq;
 
 namespace Common.Convertor
 {
-#if !NETCOREAPP1_1
+
     /// <summary>
     /// Helpers to build and instanciate class.
     /// </summary>
-    public static class DynamicConvertor
+    internal static class DynamicConvertor
     {
-        private const string DYNAMIC_NAMESPACE = "Apps72.Dev.Data.Dynamic";
+        internal const string DYNAMIC_NAMESPACE = "Apps72.Dev.Data.Dynamic";
+        internal const string DYNAMIC_CLASS_NAME = "AnonymousClass";
+
+#if NETCOREAPP1_1
+        /// <summary>
+        /// Returns always False.
+        /// </summary>
+        /// <param name="type">NA</param>
+        /// <returns></returns>
+        public static bool IsDynamic(Type type)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Returns always null.
+        /// </summary>
+        /// <param name="className">NA</param>
+        /// <param name="properties">NA</param>
+        /// <returns></returns>
+        public static Type GetDynamicType(string className, IDictionary<string, Type> properties)
+        {
+            return null;
+        }
+#else
+        /// <summary>
+        /// Returns True if the <paramref name="type"/> is dynamic.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsDynamic(Type type)
+        {
+            // TODO: To find a best method !
+            if (type.Namespace == "System" && type.Name == "Object")
+                return true;
+            else
+                return false;
+        }
 
         /// <summary>
         /// Returns a new object created and instanciated dynamically, and containing specified properties.
@@ -23,7 +61,7 @@ namespace Common.Convertor
         /// <returns></returns>
         public static dynamic GetDynamicObject(string className, IDictionary<string, Type> properties)
         {
-            return  Activator.CreateInstance(GetDynamicType(className, properties));
+            return Activator.CreateInstance(GetDynamicType(className, properties));
         }
 
         /// <summary>
@@ -112,6 +150,6 @@ namespace Common.Convertor
             }
             return result.ToString();
         }
-    }
 #endif
+    }
 }
