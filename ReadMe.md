@@ -7,7 +7,8 @@ The version 1.5 was rebuild using the CoreCLR runtime (https://dotnet.github.io)
 
 ```cs
     int count = cmd.ExecuteScalar<int>();
-    var emps = cmd.ExecuteTable<Employee>();
+    var emps  = cmd.ExecuteTable<Employee>();
+    var smith = cmd.ExecuteRow<dynamic>();
 ```
 
 First, you need to create a SqlConnection or to use a ConnectionString. 
@@ -37,6 +38,16 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications 
     {
 	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
 	    var emps = cmd.ExecuteTable<Employee>();
+    }
+```
+
+Calling an Execute method using a **dynamic** return type.
+
+```cs
+    using (var cmd = new SqlDatabaseCommand(_connection))
+    {
+	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+	    var emps = cmd.ExecuteTable<dynamic>();
     }
 ```
 
@@ -348,3 +359,13 @@ For example:
 
 * Fix using Dispose method with AutoDisconnect mode.
 * Fix when ThrowException = False: returns the default value and not an exception.
+
+### Version 2.4
+
+* Add **dynamic** return value. Example: *var emps = cmd.ExecuteTable&lt;**dynamic**&gt;();*
+
+### [RoadMap]
+
+* Add events before and after connection or query executions.
+* Add Extension methods to configure and execute queries using only one command, like *connection.SqlCmd.Query("SELECT * FROM Emp").Execute();**
+* Include Asynchronous methods.

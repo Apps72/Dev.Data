@@ -15,6 +15,7 @@ namespace Apps72.Dev.Data.Schema
         /// Initializes a new instance of a Column
         /// </summary>
         /// <param name="table"></param>
+        /// <param name="mapping"></param>
         internal DataColumn(DataTable table, Dictionary<string, string> mapping)
         {
             _mapping = mapping;

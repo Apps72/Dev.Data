@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Apps72.Dev.Data.SqlServerClr</id>
-    <version>2.3.1</version>
+    <version>2.4.0</version>
     <title>SqlDatabaseCommand - CLR</title>
     <authors>Denis Voituron</authors>
     <owners>Denis Voituron</owners>
@@ -16,7 +16,7 @@
     </description>
     <summary>The SqlDatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQL Server.</summary>
     <releaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</releaseNotes>
-    <copyright>Copyright 2016 Denis Voituron</copyright>
+    <copyright>Copyright 2017 Denis Voituron</copyright>
     <language />
     <tags>SQL CLR StoredProcedure Trigger SqlDatabaseCommand</tags>
   </metadata>

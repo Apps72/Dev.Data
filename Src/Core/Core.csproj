@@ -2,12 +2,34 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <Version>2.2.0</Version>
+    <AssemblyVersion>2.4.0.0</AssemblyVersion>
+    <Version>2.4.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Apps72.Dev.Data.Core</PackageId>
+    <Authors>Denis Voituron</Authors>
+    <Copyright>Copyright 2017 Denis Voituron</Copyright>
+    <Description>The Dev.Data.DatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from servers. It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</Description>
+    <Company />
+    <Product />
+    <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
+    <PackageReleaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</PackageReleaseNotes>
+    <PackageTags>SQL DatabaseCommand DotNetCore</PackageTags>
+    <RepositoryUrl></RepositoryUrl>
+    <AssemblyName>Apps72.Dev.Data.Core</AssemblyName>
+    <RootNamespace>Apps72.Dev.Data.Core</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\Apps72.Dev.Data.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\Common\Common.projitems" Label="Shared" />

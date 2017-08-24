@@ -72,14 +72,25 @@ namespace Common.Convertor
         /// <returns></returns>
         public static Type GetDynamicType(string className, IDictionary<string, Type> properties)
         {
-            // Create the builder
+
+#if NETCOREAPP2_0
+            // Create the Builder (in .NET Core)
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid().ToString()), AssemblyBuilderAccess.Run);
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(DYNAMIC_NAMESPACE);
+#else
+            // Create the builder (in .NET)
             AssemblyName assembly = new AssemblyName(DYNAMIC_NAMESPACE);
             AppDomain appDomain = System.Threading.Thread.GetDomain();
             AssemblyBuilder assemblyBuilder = appDomain.DefineDynamicAssembly(assembly, AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assembly.Name);
-
+#endif
             // Create the class
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(className, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit, typeof(System.Object));
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(className, 
+                                                               TypeAttributes.Public | 
+                                                               TypeAttributes.AutoClass | 
+                                                               TypeAttributes.AnsiClass | 
+                                                               TypeAttributes.BeforeFieldInit, 
+                                                               typeof(System.Object));
 
             // Add properties
             foreach (var prop in properties)
@@ -151,5 +162,5 @@ namespace Common.Convertor
             return result.ToString();
         }
 #endif
+        }
     }
-}
