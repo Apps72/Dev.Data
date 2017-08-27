@@ -29,6 +29,7 @@ namespace Apps72.Dev.Data
         public SqlDatabaseCommand(SqlConnection connection)
             : this(connection, String.Empty)
         {
+            
         }
 
         /// <summary>
@@ -247,8 +248,14 @@ namespace Apps72.Dev.Data
             {
                 if (this.Connection.State != ConnectionState.Closed)
                 {
-                    this.Connection.Close();
-                    this.Connection.Dispose();
+                    try
+                    {
+                        this.Connection.Close();
+                    }
+                    finally
+                    {
+                        this.Connection.Dispose();
+                    }
                 }
             }
         }

@@ -47,9 +47,6 @@
     <Compile Include="..\SqlServer\Extension\DataExtensions.cs">
       <Link>Extension\DataExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\SqlServer\Extension\DataInjectionDbCommandExtensions.cs">
-      <Link>Extension\DataInjectionDbCommandExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\SqlServer\Extension\DataTableExtensions.cs">
       <Link>Extension\DataTableExtensions.cs</Link>
     </Compile>

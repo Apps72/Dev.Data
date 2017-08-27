@@ -13,11 +13,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandTextFormatted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DataTypedConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DbTypeMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convertor\DynamicConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\TypeExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommandBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataInjection\DataInjectionDbCommand.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DataInjection\DataInjectionExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataColumn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataRow.cs" />

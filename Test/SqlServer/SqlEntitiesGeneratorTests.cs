@@ -59,7 +59,7 @@ namespace Data.Tests
         {
             SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator("Scott", "../../App.Config");
 
-            Assert.AreEqual("Server=(localdb)\\ProjectsV13;Database=Scott;Integrated Security=true;", entitiesGenerator.ConnectionString);
+            Assert.AreEqual("Server=(localdb)\\ProjectsV12;Database=Scott;Integrated Security=true;", entitiesGenerator.ConnectionString);
         }
 
         [TestMethod]
