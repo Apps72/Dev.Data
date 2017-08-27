@@ -15,7 +15,7 @@
     <iconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>The SqliteDatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQLite. It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</description>
-    <summary>The SqliteDatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQL Server.</summary>
+    <summary>The SqliteDatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from a SQLite database.</summary>
     <releaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</releaseNotes>
     <copyright>Copyright 2017 Denis Voituron</copyright>
     <language />
