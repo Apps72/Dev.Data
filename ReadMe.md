@@ -1,4 +1,4 @@
-# SqlDatabaseCommand - Simple Object Mapping
+# DatabaseCommand - Simple Object Mapping
 
 ## Introduction
 
@@ -11,11 +11,18 @@ The version 1.5 was rebuild using the CoreCLR runtime (https://dotnet.github.io)
     var smith = cmd.ExecuteRow<dynamic>();
 ```
 
-First, you need to create a SqlConnection or to use a ConnectionString. 
+First, you need to add the NuGet packages. https://www.nuget.org/packages?q=Apps72.Dev.Data
+Select the correct package for SQL Server, Oracle, SQLite or a generic .NET Core library.
+
+Next, you need to create a SqlConnection or other database connection. 
 The SqlConnection will be not closed by this library
 The ConnectionString will instanciated a temporary SqlConnection for this query and will be closed after using.
 
-Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications or SQL Server 2008 R2 for SQL CLR Stored procedures.
+Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications, or SQL Server 2008 R2 for SQL CLR Stored procedures, or .NET Standard 2.0 for .NET Core library.
+
+## Basic Samples (video)
+
+[![Samples](http://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](http://www.youtube.com/watch?v=DRfM15Paw8k)
 
 ## Commands
 

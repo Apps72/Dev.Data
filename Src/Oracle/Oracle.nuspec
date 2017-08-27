@@ -16,7 +16,7 @@
     <language />
     <tags>SQL OracleDatabaseCommand Oracle</tags>
     <dependencies>
-      <dependency id="Oracle.ManagedDataAccess" />
+      <dependency id="Oracle.ManagedDataAccess" version="12.2.1100" />
     </dependencies>
   </metadata>
   <files>
