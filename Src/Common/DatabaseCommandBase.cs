@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using Apps72.Dev.Data.Convertor;
 
 namespace Apps72.Dev.Data
 {
@@ -125,6 +126,17 @@ namespace Apps72.Dev.Data
         /// For example, to log to the console, set this property to Console.Write.
         /// </summary>
         public virtual Action<string> Log { get; set; }
+
+        /// <summary>
+        /// Set this property to execute an action immediately BEFORE the database request.
+        /// </summary>
+        public virtual Action<DatabaseCommandBase> ActionBeforeExecution { get; set; }
+
+        /// <summary>
+        /// Set this property to execute an action immediately AFTER the database request,
+        /// and before the type convertions.
+        /// </summary>
+        public virtual Action<DatabaseCommandBase, IEnumerable<Schema.DataTable>> ActionAfterExecution { get; set; }
 
         #endregion
 
@@ -499,16 +511,35 @@ namespace Apps72.Dev.Data
 
             try
             {
+                Update_CommandDotCommandText_If_CommandText_IsNew();
 
-                string sql = this.CommandText.ToString();
+                // Action Before Execution
+                if (this.ActionBeforeExecution != null)
+                {
+                    this.ActionBeforeExecution.Invoke(this);
+                    Update_CommandDotCommandText_If_CommandText_IsNew();
+                }
 
-                if (String.CompareOrdinal(sql, this.Command.CommandText) != 0) this.Command.CommandText = sql;
-
+                // Log
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                return this.Command.ExecuteNonQuery();
+                int rowsAffected = this.Command.ExecuteNonQuery();
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null)
+                {
+                    var tables = new Schema.DataTable[]
+                    {
+                        new Schema.DataTable("ExecuteNonQuery", "Result", rowsAffected)
+                    };
+                    this.ActionAfterExecution.Invoke(this, tables);
+                    int? newValue = tables[0].Rows[0][0] as int?;
+                    rowsAffected = newValue.HasValue ? newValue.Value : 0;
+                }
+
+                return rowsAffected;
             }
             catch (DbException ex)
             {
@@ -528,15 +559,34 @@ namespace Apps72.Dev.Data
             try
             {
 
-                string sql = this.CommandText.ToString();
-                if (String.CompareOrdinal(sql, this.Command.CommandText) != 0)
-                    this.Command.CommandText = sql;
+                Update_CommandDotCommandText_If_CommandText_IsNew();
 
+                // Action Before Execution
+                if (this.ActionBeforeExecution != null)
+                {
+                    this.ActionBeforeExecution.Invoke(this);
+                    Update_CommandDotCommandText_If_CommandText_IsNew();
+                }
+
+                // Log
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                return this.Command.ExecuteScalar();
+                object result = this.Command.ExecuteScalar();
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null)
+                {
+                    var tables = new Schema.DataTable[]
+                    {
+                        new Schema.DataTable("ExecuteNonQuery", "Result", result)
+                    };
+                    this.ActionAfterExecution.Invoke(this, tables);
+                    result = tables[0].Rows[0][0];
+                }
+
+                return result;
             }
             catch (DbException ex)
             {
@@ -652,12 +702,18 @@ namespace Apps72.Dev.Data
 
             try
             {
-                string sql = this.CommandText.ToString();
+                Update_CommandDotCommandText_If_CommandText_IsNew();
 
-                if (String.CompareOrdinal(sql, this.Command.CommandText) != 0) this.Command.CommandText = sql;
+                // Action Before Execution
+                if (this.ActionBeforeExecution != null)
+                {
+                    this.ActionBeforeExecution.Invoke(this);
+                    Update_CommandDotCommandText_If_CommandText_IsNew();
+                }
 
+                // Log
                 if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
+                    this.Log.Invoke(this.Command.CommandText);                
 
                 var tables = new List<Schema.DataTable>();
 
@@ -669,6 +725,12 @@ namespace Apps72.Dev.Data
                         tables.Add(new Schema.DataTable(dr, firstRowOnly));
                     }
                     while (!firstRowOnly && dr.NextResult());
+                }
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null)
+                {
+                    this.ActionAfterExecution.Invoke(this, tables);
                 }
 
                 return tables.ToArray();
@@ -689,7 +751,6 @@ namespace Apps72.Dev.Data
         {
             return this.ExecuteInternalDataSet(firstRowOnly)?.FirstOrDefault();
         }
-
 
         /// <summary>
         /// Set the last raised exception to null
@@ -717,6 +778,20 @@ namespace Apps72.Dev.Data
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Check if the this.CommandText is different of Command.CommandText and updated it.
+        /// </summary>
+        /// <returns></returns>
+        private string Update_CommandDotCommandText_If_CommandText_IsNew()
+        {
+            string sql = this.CommandText.ToString();
+
+            if (String.CompareOrdinal(sql, this.Command.CommandText) != 0)
+                this.Command.CommandText = sql;
+
+            return this.Command.CommandText;
         }
 
         #endregion

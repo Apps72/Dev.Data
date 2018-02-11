@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Apps72.Dev.Data.Oracle</id>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
     <title>OracleDatabaseCommand</title>
     <authors>Denis Voituron</authors>
     <owners>Denis Voituron</owners>
@@ -12,7 +12,7 @@
     <description>The OracleDatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from Oracle Server. It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</description>
     <summary>The OracleDatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from Oracle Server.</summary>
     <releaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</releaseNotes>
-    <copyright>Copyright 2017 Denis Voituron</copyright>
+    <copyright>Copyright 2018 Denis Voituron</copyright>
     <language />
     <tags>SQL OracleDatabaseCommand Oracle</tags>
     <dependencies>

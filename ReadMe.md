@@ -2,8 +2,8 @@
 
 ## Introduction
 
-This C# library simplify all SQL Queries to external databases. An implementation for SQL Server is included.
-The version 1.5 was rebuild using the CoreCLR runtime (https://dotnet.github.io).
+This C# library simplify all SQL Queries to external databases, using the base class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
+Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQLite** are included.
 
 ```cs
     int count = cmd.ExecuteScalar<int>();
@@ -30,8 +30,10 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 - [AddParameter](#ExecuteTableWithParameters): Execute a SQL query, add some parameters and retrieve all data to a list of C# objects.
 - [ExecuteRow](#ExecuteRow): Execute a SQL query and retrieve the first row to one serialized C# object.
 - [ExecuteScalar](#ExecuteScalar): Execute a SQL query and retrieve the first value (first row / first column) to a C# data type.
+- [ExecuteDataSet](#ExecuteDataSet): Execute multiple SQL queries and retrieve all tables serialized C# objets.
 - [TransactionBegin](#TransactionBegin): Manage your SQL Transactions.
 - [Logging](#Logging): Trace all SQL queries sent to the server (in Text or HTML format).
+- [ActionBeforeExecution and ActionAfterExecution](#ActionsBeforeAfter): Define actions to execute immediately before and after the query execution.
 - [ThrowException](#ThrowException): Disable the SqlException to avoid application crashes... and catch it via the Exception property or ExceptionOccured event.
 - [RetryIfExceptionsOccureds](#RetryIfExceptionsOccured): Avoid DeadLocks with retrying your Execute commands maximum 3 times.
 - [Best Practices](#BestPractices): Copy our samples and use it as templates.
@@ -132,6 +134,19 @@ Calling an Execute method using a **dynamic** return type.
     }
 ```
 
+#### <a name="ExecuteDataSet"></a>ExecuteDataSet
+
+```cs
+    using (var cmd = new SqlDatabaseCommand(_connection))
+    {
+	    cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
+	    cmd.CommandText.AppendLine(" SELECT * FROM DEPT; ");
+	    var data = cmd.ExecuteDataSet<Employee, Department>();
+
+	    int empCount = data.Item1.Count(); 
+    }
+```
+
 #### <a name="TransactionBegin"></a>TransactionBegin
 
 ```cs
@@ -179,6 +194,25 @@ All SQL queries can be traced via the <b>.log</b> property.
     }
 ```
 
+#### <a name="ActionsBeforeAfter"></a>ActionBeforeExecution and ActionAfterExecution
+Define actions to execute code immediately before or after query execution.
+For example, to simplify unit tests or intergations with extra loggers.
+
+```cs
+    using (var cmd = new SqlDatabaseCommand(_connection))
+    {
+        cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+        
+        cmd.ActionBeforeExecution = (command) =>
+        {
+            command.CommandText.Clear();
+            command.CommandText.Append("SELECT 1+1 FROM EMP");
+        };
+
+        int count = cmd.ExecuteScalar<int>();       // Returns 2, and not 14
+    }
+```
+
 #### <a name="ThrowException"></a>ThrowException
 
 ```cs
@@ -205,7 +239,7 @@ All SQL queries can be traced via the <b>.log</b> property.
 
 In you project, create a <b>DataService</b> implementing IDisposable and add a method GetDatabaseCommand.
 
-#####1. Using ConnectionString for all applications or threads (ex. Web Applications, WebAPI, Web Services, ...)
+##### 1. Using ConnectionString for all applications or threads (ex. Web Applications, WebAPI, Web Services, ...)
 
 ```cs
         public class DataService : IDataService
@@ -222,7 +256,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
         }
 ```
 
-#####2. Using One SqlConnection for the application (ex. Desktop Apps, Universal Apps, ...)
+##### 2. Using One SqlConnection for the application (ex. Desktop Apps, Universal Apps, ...)
 
 ```cs
         public class DataService : IDataService, IDisposable
@@ -371,8 +405,11 @@ For example:
 
 * Add **dynamic** return value. Example: *var emps = cmd.ExecuteTable&lt;**dynamic**&gt;();*
 
+### Version 2.5
+
+* Add properties **ActionBeforeExecution** and **ActionAfterExecution** to inject code before and after SQL query executions.
+
 ### [RoadMap]
 
-* Add events before and after connection or query executions.
-* Add Extension methods to configure and execute queries using only one command, like *connection.SqlCmd.Query("SELECT * FROM Emp").Execute();**
+* Add Extension methods to configure and execute queries using Fluent syntax, like *connection.SqlCmd.Query("SELECT * FROM Emp").Execute();**
 * Include Asynchronous methods.
