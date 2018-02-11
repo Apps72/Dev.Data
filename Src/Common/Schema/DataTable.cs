@@ -24,6 +24,26 @@ namespace Apps72.Dev.Data.Schema
         }
 
         /// <summary>
+        /// Initialize a new instance of DataTable,
+        /// based on a single Row/Col value.
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="columnName"></param>
+        /// <param name="firstColRowValue"></param>
+        internal DataTable(string tableName, string columnName, object firstColRowValue)
+        {
+            this.Name = tableName;
+            this.Columns = new DataColumn[] { new DataColumn(this)
+            {
+                ColumnName = columnName,
+                IsNullable = true,
+                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)
+            } };
+
+            this.Rows = new DataRow[] { new DataRow(this, new object[] { firstColRowValue }) };
+        }
+
+        /// <summary>
         /// Initialize a new instance of DataTable, 
         /// load and fill all data (Rows and Columns) from the DbDataReader.
         /// </summary>
@@ -37,7 +57,7 @@ namespace Apps72.Dev.Data.Schema
         #endregion
 
         #region PROPERTIES
-    
+
         /// <summary>
         /// Gets the name of this Table
         /// </summary>
