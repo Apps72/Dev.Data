@@ -19,6 +19,11 @@ namespace Apps72.Dev.Data.Schema
         }
 
         /// <summary>
+        /// Gets the System.Data.DataTable to which the column belongs to.
+        /// </summary>
+        public DataTable Table { get; set; }
+
+        /// <summary>
         /// Gets the (zero-based) position of the column in the Columns collection.
         /// </summary>
         public int Ordinal { get; set; }
@@ -27,6 +32,11 @@ namespace Apps72.Dev.Data.Schema
         /// Gets the name of the column
         /// </summary>
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// Gets the Original SQL DataType retrieve in the database (ex. INTEGER)
+        /// </summary>
+        public string SqlType { get; set; }
 
         /// <summary>
         /// Gets the type of data stored in the column.
@@ -39,8 +49,33 @@ namespace Apps72.Dev.Data.Schema
         public bool IsNullable { get; set; }
 
         /// <summary>
-        /// Gets the System.Data.DataTable to which the column belongs to.
+        /// Gets the Database type stored in the column.
         /// </summary>
-        public DataTable Table { get; set; }
+        public System.Data.DbType DbType => Convertor.DataTypedConvertor.ToDbType(DataType);
+
+        /// <summary>
+        /// Returns the C# type suffixed by ?, if allowed
+        /// Ex. Int32  -> Int32?
+        ///     String -> String
+        /// </summary>
+        /// <param name="csharpType"></param>
+        /// <returns></returns>
+        private string GetCSharpTypeNullable(string csharpType)
+        {
+            if (this.IsNullable &&
+                   String.Compare(csharpType, "System.String", ignoreCase: true) != 0 &&
+                   String.Compare(csharpType, "System.Object", ignoreCase: true) != 0 &&
+                   String.Compare(csharpType, "System.Byte[]", ignoreCase: true) != 0 &&
+                   String.Compare(csharpType, "String", ignoreCase: true) != 0 &&
+                   String.Compare(csharpType, "Object", ignoreCase: true) != 0 &&
+                   String.Compare(csharpType, "Byte[]", ignoreCase: true) != 0)
+            {
+                return $"{csharpType}?";
+            }
+            else
+            {
+                return csharpType;
+            }
+        }
     }
 }

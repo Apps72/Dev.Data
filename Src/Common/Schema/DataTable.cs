@@ -37,7 +37,7 @@ namespace Apps72.Dev.Data.Schema
             {
                 ColumnName = columnName,
                 IsNullable = true,
-                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)
+                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)                
             } };
 
             this.Rows = new DataRow[] { new DataRow(this, new object[] { firstColRowValue }) };

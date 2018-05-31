@@ -718,7 +718,7 @@ namespace Apps72.Dev.Data
                 var tables = new List<Schema.DataTable>();
 
                 // Send the request to the Database server
-                using (DbDataReader dr = this.Command.ExecuteReader()) // System.Data.CommandBehavior.KeyInfo))
+                using (DbDataReader dr = this.Command.ExecuteReader())
                 {
                     do
                     {

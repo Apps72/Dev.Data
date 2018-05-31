@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data.Generator;
 using Apps72.Dev.Data.Schema;
+using System.Data.SqlClient;
 
 namespace Data.Tests
 {
@@ -19,7 +20,7 @@ namespace Data.Tests
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_WithSpecialChars_Test()
         {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
+            var entitiesGenerator = new SqlEntitiesGeneratorBase(null);
 
             PrivateObject obj = new PrivateObject(entitiesGenerator);
             var retVal = obj.Invoke("RemoveExtraChars", "Abc@123#xyZ-,_;è|789");
@@ -30,7 +31,7 @@ namespace Data.Tests
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_FirstCharMustBeALetter_Test()
         {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
+            var entitiesGenerator = new SqlEntitiesGeneratorBase(null);
 
             PrivateObject obj = new PrivateObject(entitiesGenerator);
             var retVal = obj.Invoke("RemoveExtraChars", "1A2B3C");
@@ -41,7 +42,7 @@ namespace Data.Tests
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_OnlyInvalidChars_Test()
         {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
+            var entitiesGenerator = new SqlEntitiesGeneratorBase(null);
 
             PrivateObject obj = new PrivateObject(entitiesGenerator);
             var retVal = obj.Invoke("RemoveExtraChars", "à{}@#|").ToString();
@@ -94,6 +95,24 @@ namespace Data.Tests
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "HIREDATE").IsNullable, "HIREDATE");
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "SAL").IsNullable, "SAL");
         }
+
+        //[TestMethod]
+        //public void EntitiesGeneratorBase_Test()
+        //{
+        //    using (var conn = new SqlConnection(CONNECTION_STRING))
+        //    {
+        //        conn.Open();
+        //        var entitiesGenerator = new SqlEntitiesGeneratorBase(conn);
+
+        //        DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
+
+        //        Assert.AreEqual(8, table.Columns.Count());
+        //        Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
+        //        Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
+
+        //        conn.Close();
+        //    }
+        //}
 
         #endregion
     }

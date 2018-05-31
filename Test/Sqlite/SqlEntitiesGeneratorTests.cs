@@ -23,44 +23,6 @@ namespace Data.Sqlite.Tests
             AppDomain.CurrentDomain.SetData("DataDirectory", path + "\\Data");
         }
 
-        #region RemoveExtraChars
-
-        [TestMethod]
-        public void EntitiesGenerator_RemoveExtraChars_WithSpecialChars_Test()
-        {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "Abc@123#xyZ-,_;è|789");
-
-            Assert.AreEqual("Abc123xyZ_789", retVal);
-        }
-
-        [TestMethod]
-        public void EntitiesGenerator_RemoveExtraChars_FirstCharMustBeALetter_Test()
-        {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "1A2B3C");
-
-            Assert.AreEqual("_1A2B3C", retVal);
-        }
-
-        [TestMethod]
-        public void EntitiesGenerator_RemoveExtraChars_OnlyInvalidChars_Test()
-        {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "à{}@#|").ToString();
-
-            Assert.AreEqual('_', retVal[0]);
-            Assert.AreEqual(38, retVal.Length);
-        }
-
-        #endregion
-
         #region EntitiesGenerator
 
         [TestMethod]
