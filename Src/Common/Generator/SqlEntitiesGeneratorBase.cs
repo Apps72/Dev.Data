@@ -11,6 +11,8 @@ namespace Apps72.Dev.Data.Generator
     /// </summary>
     public class SqlEntitiesGeneratorBase
     {
+        // TODO: Use Connection.GetSchema("DataTypes") to read all SQL and C# types
+
         #region CONSTRUCTORS
 
         /// <summary>
