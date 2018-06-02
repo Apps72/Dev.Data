@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data.Generator;
 using Apps72.Dev.Data.Schema;
-using System.Data.SqlClient;
 
 namespace Data.Tests
 {
@@ -89,43 +85,46 @@ namespace Data.Tests
             Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
 
-            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "EMPNO").CSharpType, "EMPNO");
-            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "ENAME").CSharpType, "ENAME");
-            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "JOB").CSharpType, "JOB");
-            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "MGR").CSharpType, "MGR");
-            Assert.AreEqual("DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").CSharpType, "HIREDATE");
-            Assert.AreEqual("decimal", table.Columns.First(c => c.ColumnName == "SAL").CSharpType, "SAL");
-            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "COMM").CSharpType, "COMM");
-            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "DEPTNO").CSharpType, "DEPTNO");
-            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "HIREDATE").IsNullable, "HIREDATE");
-            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "SAL").IsNullable, "SAL");
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "EMPNO").CSharpType);
+            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "ENAME").CSharpType);
+            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "JOB").CSharpType);
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "MGR").CSharpType);
+            Assert.AreEqual("DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").CSharpType);
+            Assert.AreEqual("decimal", table.Columns.First(c => c.ColumnName == "SAL").CSharpType);
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "COMM").CSharpType);
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "DEPTNO").CSharpType);
+            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "HIREDATE").IsNullable);
+            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "SAL").IsNullable);
 
-            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "EMPNO").DotNetType, "EMPNO");
-            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "ENAME").DotNetType, "ENAME");
-            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "JOB").DotNetType, "JOB");
-            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "MGR").DotNetType, "MGR");
+            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "EMPNO").DotNetType);
+            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "ENAME").DotNetType);
+            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "JOB").DotNetType);
+            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "MGR").DotNetType);
 
-            Assert.AreEqual("int?", table.Columns.First(c => c.ColumnName == "MGR").CSharpTypeNullable, "MGR");
-            Assert.AreEqual("Int32?", table.Columns.First(c => c.ColumnName == "MGR").DotNetTypeNullable, "MGR");
+            Assert.AreEqual("int?", table.Columns.First(c => c.ColumnName == "MGR").CSharpTypeNullable);
+            Assert.AreEqual("Int32?", table.Columns.First(c => c.ColumnName == "MGR").DotNetTypeNullable);
+
+            Assert.AreEqual(System.Data.SqlDbType.VarChar, table.Columns.First(c => c.ColumnName == "ENAME").SqlDbType);
+            Assert.AreEqual(System.Data.SqlDbType.Int, table.Columns.First(c => c.ColumnName == "MGR").SqlDbType);
         }
 
-        //[TestMethod]
-        //public void EntitiesGeneratorBase_Test()
-        //{
-        //    using (var conn = new SqlConnection(CONNECTION_STRING))
-        //    {
-        //        conn.Open();
-        //        var entitiesGenerator = new SqlEntitiesGenerator(conn);
+        [TestMethod]
+        public void EntitiesGeneratorBase_Test()
+        {
+            using (var conn = new System.Data.SqlClient.SqlConnection(CONNECTION_STRING))
+            {
+                conn.Open();
+                var entitiesGenerator = new SqlEntitiesGenerator(conn);
 
-        //        DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
+                DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
 
-        //        Assert.AreEqual(8, table.Columns.Count());
-        //        Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
-        //        Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
+                Assert.AreEqual(8, table.Columns.Count());
+                Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
+                Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
 
-        //        conn.Close();
-        //    }
-        //}
+                conn.Close();
+            }
+        }
 
         #endregion
     }

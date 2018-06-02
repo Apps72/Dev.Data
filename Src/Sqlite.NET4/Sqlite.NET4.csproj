@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="DatabaseCommandBase.cs" />
     <Compile Include="Extension\DataExtensions.cs" />
-    <Compile Include="Generator\DataColumn.cs" />
     <Compile Include="Generator\SqlEntitiesGenerator.cs" />
     <Compile Include="SqliteDatabaseCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

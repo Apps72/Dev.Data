@@ -6,7 +6,7 @@ namespace Apps72.Dev.Data.Schema
     /// <summary>
     /// Represents the schema of a column in a Table.
     /// </summary>
-    [DebuggerDisplay("{ColumnName}")]
+    [DebuggerDisplay("{ColumnName} {SqlType}")]
     public partial class DataColumn
     {
         /// <summary>
