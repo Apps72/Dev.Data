@@ -31,27 +31,27 @@ namespace Apps72.Dev.Data.Schema
             }
         }
 
-        /// <summary>
-        /// Gets the C# type associated to the SqlType (ex. Int32)
-        /// </summary>
-        public string CSharpType
-        {
-            get
-            {
-                System.Data.SqlDbType? sqlDbType = this.SqlDbType;
-                if (sqlDbType.HasValue)
-                    return Convertor.DataTypedConvertor.ToNetType(sqlDbType.Value).Name;
-                else
-                    return "Object";
-            }
-        }
+        ///// <summary>
+        ///// Gets the C# type associated to the SqlType (ex. Int32)
+        ///// </summary>
+        //public string CSharpType
+        //{
+        //    get
+        //    {
+        //        System.Data.SqlDbType? sqlDbType = this.SqlDbType;
+        //        if (sqlDbType.HasValue)
+        //            return Convertor.DataTypedConvertor.ToNetType(sqlDbType.Value).Name;
+        //        else
+        //            return "Object";
+        //    }
+        //}
 
-        /// <summary>
-        /// Gets the C# type associated to the SqlType 
-        /// suffixed by ? if the field is nullable and if it's not a String or Byte[]
-        /// (ex. "Int32?" but "string")
-        /// </summary>
-        public string CSharpTypeNullable => GetCSharpTypeNullable(CSharpType);
+        ///// <summary>
+        ///// Gets the C# type associated to the SqlType 
+        ///// suffixed by ? if the field is nullable and if it's not a String or Byte[]
+        ///// (ex. "Int32?" but "string")
+        ///// </summary>
+        //public string CSharpTypeNullable => GetCSharpTypeNullable(CSharpType);
 
     }
 }

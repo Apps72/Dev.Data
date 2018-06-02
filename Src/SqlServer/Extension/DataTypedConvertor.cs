@@ -192,48 +192,48 @@ namespace Apps72.Dev.Data.Convertor
 
         }
 
-        /// <summary>
-        /// Convert TSQL type to .Net data type
-        /// </summary>
-        /// <param name="sqlDbType"></param>
-        /// <returns></returns>
-        public static Type ToNetType(System.Data.SqlDbType sqlDbType)
-        {
-            DbTypeMapEntry entry = DbTypeMap.First(t => t.SqlDbType == sqlDbType);
-            return entry.Type;
-        }
+        ///// <summary>
+        ///// Convert TSQL type to .Net data type
+        ///// </summary>
+        ///// <param name="sqlDbType"></param>
+        ///// <returns></returns>
+        //public static Type ToNetType(System.Data.SqlDbType sqlDbType)
+        //{
+        //    DbTypeMapEntry entry = DbTypeMap.First(t => t.SqlDbType == sqlDbType);
+        //    return entry.Type;
+        //}
 
-        /// <summary>
-        /// Convert .Net type to TSQL data type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static System.Data.SqlDbType ToSqlDbType(Type type)
-        {
-            DbTypeMapEntry entry = DbTypeMap.First(t => t.Type == type);
-            return entry.SqlDbType;
-        }
+        ///// <summary>
+        ///// Convert .Net type to TSQL data type
+        ///// </summary>
+        ///// <param name="type"></param>
+        ///// <returns></returns>
+        //public static System.Data.SqlDbType ToSqlDbType(Type type)
+        //{
+        //    DbTypeMapEntry entry = DbTypeMap.First(t => t.Type == type);
+        //    return entry.SqlDbType;
+        //}
 
-        /// <summary>
-        /// Convert DbType type to TSQL data type
-        /// </summary>
-        /// <param name="dbType"></param>
-        /// <returns></returns>
-        public static System.Data.SqlDbType ToSqlDbType(System.Data.DbType dbType)
-        {
-            DbTypeMapEntry entry = DbTypeMap.First(t => t.DbType == dbType);
-            return entry.SqlDbType;
-        }
+        ///// <summary>
+        ///// Convert DbType type to TSQL data type
+        ///// </summary>
+        ///// <param name="dbType"></param>
+        ///// <returns></returns>
+        //public static System.Data.SqlDbType ToSqlDbType(System.Data.DbType dbType)
+        //{
+        //    DbTypeMapEntry entry = DbTypeMap.First(t => t.DbType == dbType);
+        //    return entry.SqlDbType;
+        //}
 
-        /// <summary>
-        /// Convert TSQL data type to DbType
-        /// </summary>
-        /// <param name="sqlDbType"></param>
-        /// <returns></returns>
-        public static System.Data.DbType ToDbType(System.Data.SqlDbType sqlDbType)
-        {
-            DbTypeMapEntry entry = DbTypeMap.First(t => t.SqlDbType == sqlDbType);
-            return entry.DbType;
-        }
+        ///// <summary>
+        ///// Convert TSQL data type to DbType
+        ///// </summary>
+        ///// <param name="sqlDbType"></param>
+        ///// <returns></returns>
+        //public static System.Data.DbType ToDbType(System.Data.SqlDbType sqlDbType)
+        //{
+        //    DbTypeMapEntry entry = DbTypeMap.First(t => t.SqlDbType == sqlDbType);
+        //    return entry.DbType;
+        //}
     }
 }

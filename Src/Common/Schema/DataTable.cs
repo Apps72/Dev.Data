@@ -80,7 +80,8 @@ namespace Apps72.Dev.Data.Schema
         }
 
         /// <summary>
-        /// Gets True if this 'Table' is a View
+        /// Gets True if this 'Table' is a View.
+        /// Not developed (always False)
         /// </summary>
         public bool IsView { get; set; }
 

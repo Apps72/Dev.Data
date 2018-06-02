@@ -2,114 +2,68 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Data.Common;
 
 namespace Apps72.Dev.Data.Convertor
 {
     /// <summary>
-    /// DbType Mapping
-    /// See https://gist.github.com/abrahamjp
+    /// DbType Mapping, using connection.GetSchema("DataTypes").
+    /// This schema collection exposes information about the data types that are supported by the database 
+    /// that the .NET Framework managed provider is currently connected to
+    /// see https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/common-schema-collections
     /// </summary>
     internal static class DbTypeMap
     {
-        private static readonly List<DbTypeMapEntry> _dbTypeList = new List<DbTypeMapEntry>();
+        private static readonly List<DbTypeMapEntry> _dbProviderTypeList = new List<DbTypeMapEntry>();
+        private static readonly List<Type2DbType> _dbTypeList = FillDbTypeList();
 
         /// <summary>
         /// Initialize the DbTypeMap
         /// </summary>
-        static DbTypeMap()
+        public static void Initialize(DbConnection connection)
         {
-            FillDbTypeList();
+            if (_dbProviderTypeList.Count == 0)
+            {
+                // Providers Data Types
+                DataTable allTypes = connection.GetSchema("DataTypes");
+                foreach (DataRow row in allTypes.Rows)
+                {
+                    _dbProviderTypeList.Add(new DbTypeMapEntry(Convert.ToString(row["TypeName"]),
+                                                               Convert.ToInt32(row["ProviderDbType"]),
+                                                               Convert.ToString(row["DataType"])));
+                }
+
+
+            }
         }
 
         /// <summary>
-        /// Fill all dbTypeList entries
+        /// Returns the CSharp type of a .NET Type
+        /// String.Int32 => int
         /// </summary>
-        public static void FillDbTypeList()
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string DotNetToCSharpType(Type type)
         {
-#if NET451 || SQL_CLR
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int16), DbType.Int16, SqlDbType.SmallInt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int32), DbType.Int32, SqlDbType.Int));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int64), DbType.Int64, SqlDbType.BigInt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt16), DbType.UInt16, SqlDbType.SmallInt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt32), DbType.UInt32, SqlDbType.Int));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt64), DbType.UInt64, SqlDbType.BigInt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(bool), DbType.Boolean, SqlDbType.Bit));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte), DbType.Byte, SqlDbType.TinyInt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(sbyte), DbType.SByte, SqlDbType.SmallInt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Decimal), DbType.Decimal, SqlDbType.Decimal));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Decimal), DbType.Single, SqlDbType.Decimal));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.Double, SqlDbType.Float));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(decimal), DbType.Currency, SqlDbType.Money));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(decimal), DbType.Currency, SqlDbType.SmallMoney));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.Double, SqlDbType.Real));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.VarNumeric, SqlDbType.Real));
-
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.NVarChar));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.NChar));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.Char));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.VarChar));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.NText));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String, SqlDbType.Text));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.AnsiString, SqlDbType.VarChar));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.AnsiStringFixedLength, SqlDbType.VarChar));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.Xml, SqlDbType.Xml));
-
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime, SqlDbType.DateTime));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.Date, SqlDbType.Date));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime2, SqlDbType.DateTime2));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime, SqlDbType.SmallDateTime));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTimeOffset, SqlDbType.DateTimeOffset));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.Time, SqlDbType.Time));
-
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Guid), DbType.Guid, SqlDbType.UniqueIdentifier));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Variant));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte[]), DbType.Binary, SqlDbType.Image));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte[]), DbType.Binary, SqlDbType.Binary));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Udt));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object, SqlDbType.Structured));
-#else
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int16), DbType.Int16));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int32), DbType.Int32));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Int64), DbType.Int64));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt16), DbType.UInt16));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt32), DbType.UInt32));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(UInt64), DbType.UInt64));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(bool), DbType.Boolean));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte), DbType.Byte));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(sbyte), DbType.SByte));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Decimal), DbType.Decimal));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Decimal), DbType.Single));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.Double));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(decimal), DbType.Currency));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(decimal), DbType.Currency));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.Double));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(double), DbType.VarNumeric));
-
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String));;
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.String));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.AnsiString));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.AnsiStringFixedLength));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(string), DbType.Xml));
-
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.Date));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime2));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTime));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.DateTimeOffset));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(DateTime), DbType.Time));
-
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(Guid), DbType.Guid));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte[]), DbType.Binary));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(byte[]), DbType.Binary));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object));
-            _dbTypeList.Add(new DbTypeMapEntry(typeof(object), DbType.Object));
-#endif
-
+            if (type == typeof(System.Boolean)) return "bool";
+            if (type == typeof(System.Byte)) return "byte";
+            if (type == typeof(System.SByte)) return "sbyte";
+            if (type == typeof(System.Char)) return "char";
+            if (type == typeof(System.Decimal)) return "decimal";
+            if (type == typeof(System.Double)) return "double";
+            if (type == typeof(System.Single)) return "float";
+            if (type == typeof(System.Int32)) return "int";
+            if (type == typeof(System.UInt32)) return "uint";
+            if (type == typeof(System.Int64)) return "long";
+            if (type == typeof(System.UInt64)) return "ulong";
+            if (type == typeof(System.Object)) return "object";
+            if (type == typeof(System.Int16)) return "short";
+            if (type == typeof(System.UInt16)) return "ushort";
+            if (type == typeof(System.String)) return "string";
+            if (type == typeof(System.DateTime)) return "DateTime";
+            if (type == typeof(System.Guid)) return "Guid";
+            if (type.ToString() == "System.Byte[]") return "byte[]";
+            return "object";
         }
 
         /// <summary>
@@ -117,35 +71,104 @@ namespace Apps72.Dev.Data.Convertor
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public static DbTypeMapEntry First(Func<DbTypeMapEntry, bool> predicate)
+        //public static DbTypeMapEntry First(Func<DbTypeMapEntry, bool> predicate)
+        //{
+        //    if (_dbProviderTypeList == null)
+        //        throw new ArgumentException("Call Initialize method before.");
+
+        //    return _dbProviderTypeList.First(predicate);
+        //}
+
+        public static Type FirstType(string sqlType) => _dbProviderTypeList.First(i => String.Compare(i.SqlTypeName, sqlType, ignoreCase: true) == 0).DotNetType;
+
+        public static DbType FirstDbType(Type type) => _dbTypeList.First(i => i.Type == type).DbType;
+
+        public static Type FirstType(DbType type) => _dbTypeList.First(i => i.DbType == type).Type;
+
+        static List<Type2DbType> FillDbTypeList()
         {
-            return _dbTypeList.First(predicate);
+            var list = new List<Type2DbType>();
+
+            list.Add(new Type2DbType(typeof(Int16), DbType.Int16));
+            list.Add(new Type2DbType(typeof(Int32), DbType.Int32));
+            list.Add(new Type2DbType(typeof(Int64), DbType.Int64));
+            list.Add(new Type2DbType(typeof(UInt16), DbType.UInt16));
+            list.Add(new Type2DbType(typeof(UInt32), DbType.UInt32));
+            list.Add(new Type2DbType(typeof(UInt64), DbType.UInt64));
+            list.Add(new Type2DbType(typeof(Boolean), DbType.Boolean));
+            list.Add(new Type2DbType(typeof(Byte), DbType.Byte));
+            list.Add(new Type2DbType(typeof(SByte), DbType.SByte));
+            list.Add(new Type2DbType(typeof(Decimal), DbType.Decimal));
+            list.Add(new Type2DbType(typeof(Decimal), DbType.Single));
+            list.Add(new Type2DbType(typeof(Double), DbType.Double));
+            list.Add(new Type2DbType(typeof(Decimal), DbType.Currency));
+            list.Add(new Type2DbType(typeof(Double), DbType.VarNumeric));
+
+            list.Add(new Type2DbType(typeof(String), DbType.String));
+            list.Add(new Type2DbType(typeof(String), DbType.AnsiString));
+            list.Add(new Type2DbType(typeof(String), DbType.AnsiStringFixedLength));
+            list.Add(new Type2DbType(typeof(String), DbType.Xml));
+
+            list.Add(new Type2DbType(typeof(DateTime), DbType.DateTime));
+            list.Add(new Type2DbType(typeof(DateTime), DbType.Date));
+            list.Add(new Type2DbType(typeof(DateTime), DbType.DateTime2));
+            list.Add(new Type2DbType(typeof(DateTime), DbType.DateTime));
+            list.Add(new Type2DbType(typeof(DateTime), DbType.DateTimeOffset));
+            list.Add(new Type2DbType(typeof(DateTime), DbType.Time));
+            
+            list.Add(new Type2DbType(typeof(Guid), DbType.Guid));
+            list.Add(new Type2DbType(typeof(Object), DbType.Object));
+            list.Add(new Type2DbType(typeof(Byte[]), DbType.Binary));
+            list.Add(new Type2DbType(typeof(Object), DbType.Object));
+
+            return list;
         }
     }
-
 
     /// <summary>
     /// Mapping type structure to convert C# type to DbType, or to SqlDbType
     /// </summary>
     internal struct DbTypeMapEntry
     {
-#if NET451 || SQL_CLR 
-        public DbTypeMapEntry(Type type, DbType dbType, SqlDbType sqlDbType)
+        /// <summary />
+        public DbTypeMapEntry(string sqlTypeName, int enumProviderDbType, string dotNetDataType)
         {
-            this.Type = type;
-            this.DbType = dbType;
-            this.SqlDbType = sqlDbType;
+            this.SqlTypeName = sqlTypeName;
+            this.EnumProviderDbType = enumProviderDbType;
+            this.DotNetDataType = dotNetDataType;
         }
-        public SqlDbType SqlDbType;
-#else
-        public DbTypeMapEntry(Type type, DbType dbType)
-        {
-            this.Type = type;
-            this.DbType = dbType;
-        }
-#endif
 
-        public Type Type;
-        public DbType DbType;
+        /// <summary />
+        public string SqlTypeName { get; }              // tinyint
+        /// <summary />
+        public int EnumProviderDbType { get; }          // 20 => SqlDbType.TinyInt
+        /// <summary />
+        public string DotNetDataType { get; }           // System.SByte
+        /// <summary />
+        public Type DotNetType => Type.GetType(DotNetDataType);
+        /// <summary />
+        public DbType DbType => DbTypeMap.FirstDbType(DotNetType);
+        /// <summary />
+        public T GetProviderDbType<T>() where T : struct, IConvertible
+        {
+            return (T)Convert.ChangeType(EnumProviderDbType, typeof(T));
+        }
+
+    }
+
+    /// <summary />
+    internal struct Type2DbType
+    {
+        /// <summary />
+        public Type2DbType(Type type, DbType dbType)
+        {
+            Type = type;
+            DbType = dbType;
+        }
+
+        /// <summary />
+        public Type Type { get; }
+        /// <summary />
+        public DbType DbType { get; }
     }
 }

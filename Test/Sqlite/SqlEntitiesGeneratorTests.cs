@@ -54,16 +54,22 @@ namespace Data.Sqlite.Tests
             Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
 
-            Assert.AreEqual("System.Int32", table.Columns.First(c => c.ColumnName == "EMPNO").CSharpType, "EMPNO");
-            Assert.AreEqual("System.String", table.Columns.First(c => c.ColumnName == "ENAME").CSharpType, "ENAME");
-            Assert.AreEqual("System.String", table.Columns.First(c => c.ColumnName == "JOB").CSharpType, "JOB");
-            Assert.AreEqual("System.Int32", table.Columns.First(c => c.ColumnName == "MGR").CSharpType, "MGR");
-            Assert.AreEqual("System.DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").CSharpType, "HIREDATE");
-            Assert.AreEqual("System.Decimal", table.Columns.First(c => c.ColumnName == "SAL").CSharpType, "SAL");
-            Assert.AreEqual("System.Int32", table.Columns.First(c => c.ColumnName == "COMM").CSharpType, "COMM");
-            Assert.AreEqual("System.Int32", table.Columns.First(c => c.ColumnName == "DEPTNO").CSharpType, "DEPTNO");
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "EMPNO").CSharpType, "EMPNO");
+            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "ENAME").CSharpType, "ENAME");
+            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "JOB").CSharpType, "JOB");
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "MGR").CSharpType, "MGR");
+            Assert.AreEqual("DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").CSharpType, "HIREDATE");
+            Assert.AreEqual("decimal", table.Columns.First(c => c.ColumnName == "SAL").CSharpType, "SAL");
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "COMM").CSharpType, "COMM");
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "DEPTNO").CSharpType, "DEPTNO");
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "HIREDATE").IsNullable, "HIREDATE");
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "SAL").IsNullable, "SAL");
+            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "EMPNO").DotNetType, "EMPNO");
+            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "ENAME").DotNetType, "ENAME");
+            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "JOB").DotNetType, "JOB");
+            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "MGR").DotNetType, "MGR");
+            Assert.AreEqual("DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").DotNetType, "HIREDATE");
+            Assert.AreEqual("int?", table.Columns.First(c => c.ColumnName == "MGR").CSharpTypeNullable, "MGR");
         }
 
         #endregion
