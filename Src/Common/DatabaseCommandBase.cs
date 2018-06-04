@@ -61,6 +61,32 @@ namespace Apps72.Dev.Data
         #region PROPERTIES
 
         /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        public FluentQuery Query()
+        {
+            return new FluentQuery(this);
+        }
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        /// <param name="sqlQuery">SQL query to execute.</param>
+        public FluentQuery Query(string sqlQuery)
+        {
+            return new FluentQuery(this).ForSql(sqlQuery);
+        }
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        /// <param name="sqlQuery">SQL query to execute.</param>
+        public FluentQuery Query<T>(string sqlQuery, T values)
+        {
+            return new FluentQuery(this).ForSql(sqlQuery).AddParameter(values);
+        }
+
+        /// <summary>
         /// Gets the last raised exception 
         /// </summary>
         public virtual System.Data.Common.DbException Exception { get; private set; }
@@ -619,11 +645,24 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public DatabaseCommandBase AddParameter(string name, object value)
         {
+            return AddParameter(name, value, null);
+        }
+
+        /// <summary>
+        /// Adds a value to the end of the <see cref="DbCommand.Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <param name="type">Type of parameter.</param>
+        /// <returns></returns>
+        public DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type)
+        {
             var dbCommand = this.Command;
             var param = dbCommand.CreateParameter();
 
             param.ParameterName = name;
             param.Value = value ?? DBNull.Value;
+            if (type.HasValue) param.DbType = type.Value;
 
             dbCommand.Parameters.Add(param);
             return this;
@@ -713,7 +752,7 @@ namespace Apps72.Dev.Data
 
                 // Log
                 if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);                
+                    this.Log.Invoke(this.Command.CommandText);
 
                 var tables = new List<Schema.DataTable>();
 

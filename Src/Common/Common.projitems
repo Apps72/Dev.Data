@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\TypeExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommandBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FluentQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\SchemaFields.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\TableAndColumn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataColumn.cs" />
