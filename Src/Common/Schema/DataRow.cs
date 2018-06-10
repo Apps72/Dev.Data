@@ -85,10 +85,30 @@ namespace Apps72.Dev.Data.Schema
             }
         }
 
+        private object[] _itemArray;
         /// <summary>
         /// Gets all values as an Array of objects
         /// </summary>
-        public object[] ItemArray { get; private set; }
+        public object[] ItemArray
+        {
+            get
+            {
+                return _itemArray;
+            }
+            private set
+            {
+                _itemArray = value;
+
+                // Replace DBNull by null (Issue #8)
+                if (_itemArray?.Contains(DBNull.Value) == true)
+                {
+                    for (int i = 0; i < _itemArray.Length; i++)
+                    {
+                        if (_itemArray[i] == DBNull.Value) _itemArray[i] = null;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the System.Data.DataTable to which the column belongs to.

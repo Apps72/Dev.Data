@@ -11,7 +11,7 @@ namespace Data.Core.Tests
     public class DatabaseCommandTests
     {
         #region INITIALIZATION
-        
+
         private SqlConnection _connection;
 
         [TestInitialize]
@@ -306,6 +306,31 @@ namespace Data.Core.Tests
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP ");
                 EMP[] data = cmd.ExecuteTable<EMP>().ToArray();
                 EMP smith = data.FirstOrDefault(i => i.EmpNo == 7369);
+
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
+                Assert.AreEqual(EMP.Smith.EName, smith.EName);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
+                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTableNullableProperties_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP ");
+                var data = cmd.ExecuteTable(new
+                {
+                    EmpNo = int.MinValue,
+                    EName = String.Empty,
+                    HireDate = new Nullable<DateTime>(),
+                    Comm = (int?)null,
+                    Mgr = (int?)4
+                });
+
+                var smith = data.FirstOrDefault(i => i.EmpNo == 7369);
 
                 Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
                 Assert.AreEqual(EMP.Smith.EName, smith.EName);
@@ -750,7 +775,7 @@ namespace Data.Core.Tests
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
-                
+
                 cmd.ActionAfterExecution = (command, tables) =>
                 {
                     tables.First().Rows[0].ItemArray[0] = 10;               // New Count
