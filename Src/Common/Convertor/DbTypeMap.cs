@@ -67,17 +67,10 @@ namespace Apps72.Dev.Data.Convertor
         }
 
         /// <summary>
-        /// Returns the first element in a sequence that satisfies a specified condition.
+        /// Returns the first element using the <paramref name="sqlType"/>.
         /// </summary>
-        /// <param name="predicate"></param>
+        /// <param name="sqlType">Name of SQL type to search.</param>
         /// <returns></returns>
-        //public static DbTypeMapEntry First(Func<DbTypeMapEntry, bool> predicate)
-        //{
-        //    if (_dbProviderTypeList == null)
-        //        throw new ArgumentException("Call Initialize method before.");
-
-        //    return _dbProviderTypeList.First(predicate);
-        //}
 
         public static Type FirstType(string sqlType) => _dbProviderTypeList.First(i => String.Compare(i.SqlTypeName, sqlType, ignoreCase: true) == 0).DotNetType;
 

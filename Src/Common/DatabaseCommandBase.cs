@@ -81,9 +81,10 @@ namespace Apps72.Dev.Data
         /// Gets a Fluent Query tool to execute SQL request.
         /// </summary>
         /// <param name="sqlQuery">SQL query to execute.</param>
-        public FluentQuery Query<T>(string sqlQuery, T values)
+        /// <param name="parameters">Object contains all SQL parameters (as object properties)</param>
+        public FluentQuery Query<T>(string sqlQuery, T parameters)
         {
-            return new FluentQuery(this).ForSql(sqlQuery).AddParameter(values);
+            return new FluentQuery(this).ForSql(sqlQuery).AddParameter(parameters);
         }
 
         /// <summary>
@@ -643,7 +644,7 @@ namespace Apps72.Dev.Data
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <returns></returns>
-        public DatabaseCommandBase AddParameter(string name, object value)
+        public virtual DatabaseCommandBase AddParameter(string name, object value)
         {
             return AddParameter(name, value, null);
         }
@@ -655,7 +656,7 @@ namespace Apps72.Dev.Data
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <param name="type">Type of parameter.</param>
         /// <returns></returns>
-        public DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type)
+        public virtual DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type)
         {
             var dbCommand = this.Command;
             var param = dbCommand.CreateParameter();
@@ -673,7 +674,7 @@ namespace Apps72.Dev.Data
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
         /// </summary>
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
-        public DatabaseCommandBase AddParameter<T>(T values)
+        public virtual DatabaseCommandBase AddParameter<T>(T values)
         {
             Schema.DataParameter.AddValues<T>(this.Command, values);
             return this;
