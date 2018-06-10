@@ -16,9 +16,15 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine("                               See https://www.connectionstrings.com");
             Console.WriteLine("   --Provider         | -p     Type of server: SqlServer, Oracle of SqLite.");
             Console.WriteLine("   --Output           | -o     File name where class will be written.");
-            Console.WriteLine("   --Language         | -f     Target format: CSharp, TypeScript.");
+            Console.WriteLine("   --Language         | -l     Target format: CSharp, TypeScript.");
             Console.WriteLine("   --Namespace        | -ns    Name of the namespace to generate.");
-            Console.WriteLine("   --EntityFormat     | -t     Format of class: NameOnly, SchemaAndName.");
+            Console.WriteLine("   --ClassFormat      | -cf    Format of class: NameOnly, SchemaAndName.");
+            Console.WriteLine();
+            Console.WriteLine("By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp");
+            Console.WriteLine("            Namespace=[Empty], ClassFormat=NameOnly");
+            Console.WriteLine();
+            Console.WriteLine("Example:");
+            Console.WriteLine("  SqlCmd -cs=\"Server=localhost;Database=Scott;\" -p=SqlServer ");
         }
     }
 }
