@@ -15,6 +15,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.Language = cmdLine.GetValue("Language", "l") ?? "CSharp";
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
+            this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
 
             // Validation
             this.Validate();
@@ -48,5 +49,6 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string Language { get; set; }
         public string Namespace { get; set; }
         public string ClassFormat { get; set; }
+        public string ColumnAttribute { get; set; }
     }
 }

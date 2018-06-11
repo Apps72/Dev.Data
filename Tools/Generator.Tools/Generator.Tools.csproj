@@ -17,6 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Oracle.ManagedDataAccess">
+      <HintPath>Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Oracle.ManagedDataAccess.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

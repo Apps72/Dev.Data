@@ -72,7 +72,7 @@ namespace Apps72.Dev.Data.Convertor
         /// <param name="sqlType">Name of SQL type to search.</param>
         /// <returns></returns>
 
-        public static Type FirstType(string sqlType) => _dbProviderTypeList.First(i => String.Compare(i.SqlTypeName, sqlType, ignoreCase: true) == 0).DotNetType;
+        public static Type FirstType(string sqlType) => _dbProviderTypeList.FirstOrDefault(i => String.Compare(i.SqlTypeName, sqlType, ignoreCase: true) == 0)?.DotNetType ?? typeof(System.Object);
 
         public static DbType FirstDbType(Type type) => _dbTypeList.First(i => i.Type == type).DbType;
 
@@ -108,7 +108,7 @@ namespace Apps72.Dev.Data.Convertor
             list.Add(new Type2DbType(typeof(DateTime), DbType.DateTime));
             list.Add(new Type2DbType(typeof(DateTime), DbType.DateTimeOffset));
             list.Add(new Type2DbType(typeof(DateTime), DbType.Time));
-            
+
             list.Add(new Type2DbType(typeof(Guid), DbType.Guid));
             list.Add(new Type2DbType(typeof(Object), DbType.Object));
             list.Add(new Type2DbType(typeof(Byte[]), DbType.Binary));
@@ -121,7 +121,8 @@ namespace Apps72.Dev.Data.Convertor
     /// <summary>
     /// Mapping type structure to convert C# type to DbType, or to SqlDbType
     /// </summary>
-    internal struct DbTypeMapEntry
+    [System.Diagnostics.DebuggerDisplay("{SqlTypeName} - {DotNetDataType}")]
+    internal class DbTypeMapEntry
     {
         /// <summary />
         public DbTypeMapEntry(string sqlTypeName, int enumProviderDbType, string dotNetDataType)

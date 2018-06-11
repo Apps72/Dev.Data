@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text;
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
@@ -30,10 +27,16 @@ namespace Apps72.Dev.Data.Generator.Tools
 
         private DbConnection GetConnection()
         {
-            if (Arguments.Provider.IsEqualTo("SqlServer"))
-                return new SqlConnection();
+            // Oracle
+            if (Arguments.Provider.IsEqualTo("Oracle"))
+                return new Oracle.ManagedDataAccess.Client.OracleConnection();
 
-            return null;
+            // SQLite
+            if (Arguments.Provider.IsEqualTo("SQLite"))
+                return new Microsoft.Data.Sqlite.SqliteConnection();
+
+            // SQLServer or Default
+            return new System.Data.SqlClient.SqlConnection();
         }
     }
 }

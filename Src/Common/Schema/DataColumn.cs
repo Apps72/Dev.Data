@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Apps72.Dev.Data.Convertor;
+using System;
 using System.Diagnostics;
 
 namespace Apps72.Dev.Data.Schema
@@ -32,6 +33,11 @@ namespace Apps72.Dev.Data.Schema
         /// Gets the name of the column
         /// </summary>
         public string ColumnName { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the column
+        /// </summary>
+        public string DotNetColumnName => this.ColumnName.RemoveExtraChars();
 
         /// <summary>
         /// Gets the Original SQL DataType retrieve in the database (ex. INTEGER)

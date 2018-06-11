@@ -38,7 +38,16 @@ namespace Apps72.Dev.Data.Generator.Tools
                 foreach (var column in entity.Columns)
                 {
                     code.AppendLine($"        /// <summary />");
-                    code.AppendLine($"        public virtual {column.CSharpTypeNullable} {column.ColumnName} {{ get; set; }}");
+
+                    if (column.ColumnName.IsNotEqualTo(column.DotNetColumnName))
+                    {
+                        code.AppendLine($"        [Apps72.Dev.Data.Annotations.Column(\"{column.ColumnName}\")]");
+
+                        if (!String.IsNullOrEmpty(_arguments.ColumnAttribute))
+                            code.AppendLine($"        [{_arguments.ColumnAttribute}(\"{column.ColumnName}\")]");
+                    }
+
+                    code.AppendLine($"        public virtual {column.CSharpTypeNullable} {column.DotNetColumnName} {{ get; set; }}");
                 }
 
                 code.AppendLine($"    }}");

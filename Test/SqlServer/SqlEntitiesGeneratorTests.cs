@@ -13,24 +13,22 @@ namespace Data.Tests
 
         #region RemoveExtraChars
 
+
+
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_WithSpecialChars_Test()
         {
-            var entitiesGenerator = new SqlEntitiesGenerator(String.Empty);
+            PrivateType obj = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.TypeExtension");
+            var retVal = obj.InvokeStatic("RemoveExtraChars", "Abc@123#xyZ-,_;è|789");
 
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "Abc@123#xyZ-,_;è|789");
-
-            Assert.AreEqual("Abc123xyZ_789", retVal);
+            Assert.AreEqual("Abc_123_xyZ______789", retVal);
         }
 
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_FirstCharMustBeALetter_Test()
         {
-            var entitiesGenerator = new SqlEntitiesGenerator(String.Empty);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "1A2B3C");
+            PrivateType obj = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.TypeExtension");
+            var retVal = obj.InvokeStatic("RemoveExtraChars", "1A2B3C");
 
             Assert.AreEqual("_1A2B3C", retVal);
         }
@@ -38,10 +36,8 @@ namespace Data.Tests
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_OnlyInvalidChars_Test()
         {
-            var entitiesGenerator = new SqlEntitiesGenerator(String.Empty);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "à{}@#|").ToString();
+            PrivateType obj = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.TypeExtension");
+            var retVal = obj.InvokeStatic("RemoveExtraChars", "à{}@#|").ToString();
 
             Assert.AreEqual('_', retVal[0]);
             Assert.AreEqual(38, retVal.Length);

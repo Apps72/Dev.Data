@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Apps72.Dev.Data.Convertor;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -103,9 +104,9 @@ namespace Apps72.Dev.Data.Generator
                     SchemaName = Convert.ToString(row[fields.SchemaName]),
                     TableName = Convert.ToString(row[fields.TableName]),
                     ColumnName = Convert.ToString(row[fields.ColumnName]),
-                    ColumnType = Convert.ToString(row[fields.ColumnType]),
+                    ColumnType = ExtractTypeNameOnly(Convert.ToString(row[fields.ColumnType])),
                     ColumnSize = row[fields.ColumnSize] != DBNull.Value ? Convert.ToInt32(row[fields.ColumnSize]) : 0,
-                    IsColumnNullable = ToBoolean(Convert.ToString(row[fields.IsColumnNullable])),
+                    IsColumnNullable = Convert.ToString(row[fields.IsColumnNullable]).ToBoolean(),
                     IsView = false  // TODO
                 });
             }
@@ -140,7 +141,7 @@ namespace Apps72.Dev.Data.Generator
                                                         c.TableName == table.Name)
                                                .Select(c => new Schema.DataColumn(table)
                                                {
-                                                   ColumnName = RemoveExtraChars(c.ColumnName),
+                                                   ColumnName = c.ColumnName,
                                                    SqlType = c.ColumnType,
                                                    DataType = Convertor.DbTypeMap.FirstType(c.ColumnType),
                                                    IsNullable = c.IsColumnNullable,
@@ -152,84 +153,34 @@ namespace Apps72.Dev.Data.Generator
             // Remove extra chars
             foreach (var table in tables)
             {
-                table.Name = RemoveExtraChars(table.Name);
-                table.Schema = RemoveExtraChars(table.Schema);
+                table.Name = table.Name.RemoveExtraChars();
+                table.Schema = table.Schema.RemoveExtraChars();
             }
 
             return tables;
         }
 
-        /// <summary>
-        /// Remove invalid chars for CSharp class and property names.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        /// <remarks>See https://msdn.microsoft.com/en-us/library/gg615485.aspx </remarks>
-        protected virtual string RemoveExtraChars(string name)
+        private string ExtractTypeNameOnly(string columnType)
         {
-            StringBuilder newName = new StringBuilder();
-            int ascii = 0;
-
-            // Keep only digits, letters or underscore
-            foreach (char c in name)
-            {
-                // Ascii code of the current Char
-                ascii = (int)c;
-
-                // 0 .. 9, A .. Z, a .. z, _
-                if (ascii >= 48 && ascii <= 57 ||
-                    ascii >= 65 && ascii <= 90 ||
-                    ascii >= 97 && ascii <= 122 ||
-                    ascii == 95)
-                {
-                    newName.Append(c);
-                }
-            }
-
-            // First char must be a letter or underscore
-            if (newName.Length > 0)
-            {
-                ascii = (int)newName[0];
-                if (ascii >= 65 && ascii <= 90 ||
-                    ascii >= 97 && ascii <= 122 ||
-                    ascii == 95)
-                {
-                    return newName.ToString();
-                }
-                else
-                {
-                    return $"_{newName.ToString()}";
-                }
+            if (columnType.Contains('(') && columnType.Contains(')'))
+            {                
+                return ReplaceBetween(columnType, '(', ')', String.Empty);
             }
             else
-            {
-                return $"__{Guid.NewGuid().ToString().Replace('-', '_')}";
-            }
-
+                return columnType;
         }
 
-        /// <summary>
-        /// Convert the string to a boolean
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private bool ToBoolean(string value)
+        private string ReplaceBetween(string text, char from, char to, string newValue)
         {
-            switch (value.ToUpper())
-            {
-                case "YES":
-                case "Y":
-                case "TRUE":
-                    return true;
-
-                case "NO":
-                case "N":
-                case "FALSE":
-                    return false;
-
-                default:
-                    return false;
+            int indexFrom = text.IndexOf(from);
+            int indexTo = text.IndexOf(to);
+            
+            if (indexTo > indexFrom)
+            {                
+                return String.Format("{0}{1}{2}", text.Substring(0, indexFrom), newValue, text.Substring(indexTo + 1));
             }
+            else
+                return text;
         }
 
         #endregion
