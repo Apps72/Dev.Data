@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
-    public class Help
+    internal class Help
     {
         public static void DisplayGeneralHelp()
         {

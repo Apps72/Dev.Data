@@ -67,35 +67,38 @@ namespace Apps72.Dev.Data.Generator.Tools
         {
             var allItems = new Dictionary<string, string>();
 
-            foreach (var arg in args)
+            if (args != null)
             {
-                var seperatorFound = arg.IndexOfAny(SEPARATORS);
-                int keyLength = seperatorFound.Index;
-                int valueStartIndex = seperatorFound.Index + seperatorFound.Separator.Length;
-
-                if (seperatorFound.Index < 0)
+                foreach (var arg in args)
                 {
-                    keyLength = arg.Length;
-                    valueStartIndex = arg.Length;
-                }
+                    var seperatorFound = arg.IndexOfAny(SEPARATORS);
+                    int keyLength = seperatorFound.Index;
+                    int valueStartIndex = seperatorFound.Index + seperatorFound.Separator.Length;
 
-                if (keyLength >= 0 && valueStartIndex > 0)
-                {
-                    string key = arg.Substring(0, keyLength).Trim();
-                    string value = arg.Substring(valueStartIndex).Trim();
-
-                    // Remove the first chars (prefix) to have the key
-                    var prefixFound = key.IndexOfAny(PREFIX);
-                    if (prefixFound.Index >= 0)
-                        key = key.Substring(prefixFound.Separator.Length).Trim();
-
-                    // Remove optional guillemets to have the value
-                    if (value.Length > 2 && value.StartsWith(GUILLEMET) && value.EndsWith(GUILLEMET))
-                        value = value.Substring(1, value.Length - 2);
-
-                    if (!String.IsNullOrEmpty(key) && !allItems.ContainsKey(key))
+                    if (seperatorFound.Index < 0)
                     {
-                        allItems.Add(key, value);
+                        keyLength = arg.Length;
+                        valueStartIndex = arg.Length;
+                    }
+
+                    if (keyLength >= 0 && valueStartIndex > 0)
+                    {
+                        string key = arg.Substring(0, keyLength).Trim();
+                        string value = arg.Substring(valueStartIndex).Trim();
+
+                        // Remove the first chars (prefix) to have the key
+                        var prefixFound = key.IndexOfAny(PREFIX);
+                        if (prefixFound.Index >= 0)
+                            key = key.Substring(prefixFound.Separator.Length).Trim();
+
+                        // Remove optional guillemets to have the value
+                        if (value.Length > 2 && value.StartsWith(GUILLEMET) && value.EndsWith(GUILLEMET))
+                            value = value.Substring(1, value.Length - 2);
+
+                        if (!String.IsNullOrEmpty(key) && !allItems.ContainsKey(key))
+                        {
+                            allItems.Add(key, value);
+                        }
                     }
                 }
             }

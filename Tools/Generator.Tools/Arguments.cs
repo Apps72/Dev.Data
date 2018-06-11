@@ -43,12 +43,12 @@ namespace Apps72.Dev.Data.Generator.Tools
             }
         }
 
-        public string ConnectionString { get; set; }
-        public string Provider { get; set; }
-        public string Output { get; set; }
-        public string Language { get; set; }
-        public string Namespace { get; set; }
-        public string ClassFormat { get; set; }
-        public string ColumnAttribute { get; set; }
+        public string ConnectionString { get; private set; }
+        public string Provider { get; private set; }
+        public string Output { get; private set; }
+        public string Language { get; private set; }
+        public string Namespace { get; private set; }
+        public string ClassFormat { get; private set; }
+        public string ColumnAttribute { get; private set; }
     }
 }

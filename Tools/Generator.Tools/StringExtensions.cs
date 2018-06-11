@@ -2,7 +2,7 @@
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         /// <summary>
         /// Reports the zero-based index of the first occurrence in this instance of any

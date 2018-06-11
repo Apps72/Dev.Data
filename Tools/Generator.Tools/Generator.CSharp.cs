@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
-    public class GeneratorCSharp
+    internal class GeneratorCSharp
     {
         private SqlEntitiesGenerator _generator;
         private Arguments _arguments;

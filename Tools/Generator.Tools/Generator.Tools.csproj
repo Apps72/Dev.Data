@@ -5,6 +5,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Apps72.Dev.Data.Generator.Tools</AssemblyName>
     <RootNamespace>Apps72.Dev.Data.Generator.Tools</RootNamespace>
+    <ApplicationIcon />
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
