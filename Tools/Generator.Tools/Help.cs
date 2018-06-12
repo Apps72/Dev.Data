@@ -24,7 +24,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine("                               If value is empty, the Apps72 Column attribute is added.");
             Console.WriteLine("                               You can set the full qualified name of attribute to add ");
             Console.WriteLine("                               in addition of Apps72.");
-            Console.WriteLine("                               Ex: -a \"System.ComponentModel.DataAnnotations.Schema.Column\"");
+            Console.WriteLine("                               Ex: -a=\"System.ComponentModel.DataAnnotations.Schema.Column\"");
             Console.WriteLine();
             Console.WriteLine("     By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp");
             Console.WriteLine("                 Namespace=[Empty], ClassFormat=NameOnly");

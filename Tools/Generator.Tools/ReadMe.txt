@@ -7,5 +7,8 @@ To install and use this package locally:
 
 The application will be installer in the current user folder: %USERPROFILE%\.dotnet\tools
 
+To display all tool installed:
+  C:\> dotnet tool list -g
+
 To uninstall the tool:
   C:\> dotnet tool uninstall -g Apps72.Dev.Data.Generator.Tools
