@@ -8,6 +8,13 @@ namespace Apps72.Dev.Data.Generator.Tools
         {
             var cmdLine = new CommandLine(args);
 
+            // Read command
+            this.Command = ArgumentCommand.None;
+            if (cmdLine.ContainsKey("GenerateEntities", "ge"))
+            {
+                this.Command = ArgumentCommand.GenerateEntities;
+            }
+
             // Read arguments
             this.ConnectionString = cmdLine.GetValue("ConnectionString", "cs");
             this.Provider = cmdLine.GetValue("Provider", "p") ?? "SqlServer";
@@ -23,6 +30,11 @@ namespace Apps72.Dev.Data.Generator.Tools
 
         private void Validate()
         {
+            if (this.Command == ArgumentCommand.None)
+            {
+                throw new ArgumentException("Please, specify a command to execute: GenerateEntities, ...");
+            }
+
             if (this.Provider.IsNotEqualTo("SqlServer") &&
                 this.Provider.IsNotEqualTo("Oracle") &&
                 this.Provider.IsNotEqualTo("SqLite"))
@@ -43,6 +55,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             }
         }
 
+        public ArgumentCommand Command { get; private set; } 
         public string ConnectionString { get; private set; }
         public string Provider { get; private set; }
         public string Output { get; private set; }
@@ -50,5 +63,12 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string Namespace { get; private set; }
         public string ClassFormat { get; private set; }
         public string ColumnAttribute { get; private set; }
+        
+    }
+
+    public enum ArgumentCommand
+    {
+        None,
+        GenerateEntities
     }
 }
