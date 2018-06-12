@@ -85,8 +85,11 @@ namespace Apps72.Dev.Data.Generator
         }
 
         /// <summary>
-        /// Search all table names and columns names in SQL Server
+        /// Search all table names and columns names in Database
         /// </summary>
+        /// <remarks>
+        /// See https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/getschema-and-schema-collections
+        /// </remarks>
         protected virtual IEnumerable<TableAndColumn> GetTablesDescription()
         {
             List<TableAndColumn> tableAndColumns = new List<TableAndColumn>();
@@ -100,12 +103,15 @@ namespace Apps72.Dev.Data.Generator
             {
                 tableAndColumns.Add(new TableAndColumn()
                 {
+                    DatabaseFamily = fields.DatabaseFamily,
                     SequenceNumber = Convert.ToInt32(row[fields.SequenceNumber]),
                     SchemaName = Convert.ToString(row[fields.SchemaName]),
                     TableName = Convert.ToString(row[fields.TableName]),
                     ColumnName = Convert.ToString(row[fields.ColumnName]),
                     ColumnType = ExtractTypeNameOnly(Convert.ToString(row[fields.ColumnType])),
                     ColumnSize = row[fields.ColumnSize] != DBNull.Value ? Convert.ToInt32(row[fields.ColumnSize]) : 0,
+                    NumericPrecision = row[fields.NumericPrecision] != DBNull.Value ? Convert.ToInt32(row[fields.NumericPrecision]) : 0,
+                    NumericScale = row[fields.NumericScale] != DBNull.Value ? Convert.ToInt32(row[fields.NumericScale]) : 0,
                     IsColumnNullable = Convert.ToString(row[fields.IsColumnNullable]).ToBoolean(),
                     IsView = false  // TODO
                 });
@@ -143,7 +149,7 @@ namespace Apps72.Dev.Data.Generator
                                                {
                                                    ColumnName = c.ColumnName,
                                                    SqlType = c.ColumnType,
-                                                   DataType = Convertor.DbTypeMap.FirstType(c.ColumnType),
+                                                   DataType = c.GetDataType(),
                                                    IsNullable = c.IsColumnNullable,
                                                    Ordinal = c.SequenceNumber
                                                })

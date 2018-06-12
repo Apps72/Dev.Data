@@ -6,11 +6,13 @@ namespace Tools.Generator.Tests
     [TestClass]
     public class Generator_OracleTests
     {
+        [Ignore]
         [TestMethod]
         public void Oracle_DefaultParameters_Test()
         {
             var args = new[] 
             {
+                $"GenerateEntities",
                 $"cs=\"{Configuration.ORACLE_CONNECTION_STRING}\"",
                 $"p=Oracle",
                 $"cf=SchemaAndName",

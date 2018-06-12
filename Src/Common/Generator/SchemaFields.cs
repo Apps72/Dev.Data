@@ -13,43 +13,52 @@ namespace Apps72.Dev.Data.Generator
         /// <param name="productName"></param>
         public SchemaColumnsFields(string productName)
         {
-            // Fields for SQL Server
-            if (IsSqlServerFamily(productName))
-            {
-                NAME = "Columns";
-                SequenceNumber = "ORDINAL_POSITION";
-                ColumnName = "COLUMN_NAME";
-                TableName = "TABLE_NAME";
-                SchemaName = "TABLE_SCHEMA";
-                ColumnType = "DATA_TYPE";
-                ColumnSize = "CHARACTER_OCTET_LENGTH";
-                IsColumnNullable = "IS_NULLABLE";
-            }
+            FindDatabaseFamily(productName);
 
-            // Fields for Oracle Server
-            else if (IsOracleFamily(productName))
+            switch (this.DatabaseFamily)
             {
-                NAME = "Columns";
-                SequenceNumber = "ID";
-                ColumnName = "COLUMN_NAME";
-                TableName = "TABLE_NAME";
-                SchemaName = "OWNER";
-                ColumnType = "DATATYPE";
-                ColumnSize = "LENGTH";
-                IsColumnNullable = "NULLABLE";
-            }
+                // Fields for SQL Server
+                case DatabaseFamily.Unknown:
+                case DatabaseFamily.SqlServer:
+                    NAME = "Columns";
+                    SequenceNumber = "ORDINAL_POSITION";
+                    ColumnName = "COLUMN_NAME";
+                    TableName = "TABLE_NAME";
+                    SchemaName = "TABLE_SCHEMA";
+                    ColumnType = "DATA_TYPE";
+                    ColumnSize = "CHARACTER_OCTET_LENGTH";
+                    IsColumnNullable = "IS_NULLABLE";
+                    NumericPrecision = "NUMERIC_PRECISION";
+                    NumericScale = "NUMERIC_SCALE";
+                    break;
 
-            // Fields for SQLite
-            else if (IsSqliteFamily(productName))
-            {
-                NAME = "Columns";
-                SequenceNumber = "ORDINAL_POSITION";
-                ColumnName = "COLUMN_NAME";
-                TableName = "TABLE_NAME";
-                SchemaName = "TABLE_SCHEMA";
-                ColumnType = "DATA_TYPE";
-                ColumnSize = "CHARACTER_MAXIMUM_LENGTH";
-                IsColumnNullable = "IS_NULLABLE";
+                // Fields for Oracle Server
+                case DatabaseFamily.Oracle:
+                    NAME = "Columns";
+                    SequenceNumber = "ID";
+                    ColumnName = "COLUMN_NAME";
+                    TableName = "TABLE_NAME";
+                    SchemaName = "OWNER";
+                    ColumnType = "DATATYPE";
+                    ColumnSize = "LENGTH";
+                    IsColumnNullable = "NULLABLE";
+                    NumericPrecision = "PRECISION";
+                    NumericScale = "SCALE";
+                    break;
+
+                // Fields for SQLite
+                case DatabaseFamily.Sqlite:
+                    NAME = "Columns";
+                    SequenceNumber = "ORDINAL_POSITION";
+                    ColumnName = "COLUMN_NAME";
+                    TableName = "TABLE_NAME";
+                    SchemaName = "TABLE_SCHEMA";
+                    ColumnType = "DATA_TYPE";
+                    ColumnSize = "CHARACTER_MAXIMUM_LENGTH";
+                    IsColumnNullable = "IS_NULLABLE";
+                    NumericPrecision = "NUMERIC_PRECISION";
+                    NumericScale = "NUMERIC_SCALE";
+                    break;
             }
         }
 
@@ -66,39 +75,26 @@ namespace Apps72.Dev.Data.Generator
         /// <summary />
         public string ColumnType { get; private set; } = "DATA_TYPE";
         /// <summary />
-        public string ColumnSize { get; private set; } = "LENGTH";
+        public string ColumnSize { get; private set; } = "CHARACTER_OCTET_LENGTH";
+        /// <summary />
+        public string NumericPrecision { get; private set; } = "NUMERIC_PRECISION";
+        /// <summary />
+        public string NumericScale { get; private set; } = "NUMERIC_SCALE";
         /// <summary />
         public string IsColumnNullable { get; private set; } = "IS_NULLABLE";
+        /// <summary />
+        public DatabaseFamily DatabaseFamily { get; private set; } = DatabaseFamily.Unknown;
 
-        /// <summary>
-        /// Returns True if the Database Server name is "Oracle"
-        /// </summary>
-        /// <param name="productName"></param>
-        /// <returns></returns>
-        private bool IsOracleFamily(string productName)
+        /// <summary />
+        private void FindDatabaseFamily(string productName)
         {
-            return productName.ToLower().Contains("oracle");
+            if (productName.ToLower().Contains("oracle"))
+                this.DatabaseFamily = DatabaseFamily.Oracle;
+            else if (productName.ToLower().Contains("sqlserver") || productName.ToLower().Contains("sql server"))
+                this.DatabaseFamily = DatabaseFamily.SqlServer;
+            else if (productName.ToLower().Contains("sqlite"))
+                this.DatabaseFamily = DatabaseFamily.Sqlite;
         }
 
-        /// <summary>
-        /// Returns True if the Database Server name is "SQLServer"
-        /// </summary>
-        /// <param name="productName"></param>
-        /// <returns></returns>
-        private bool IsSqlServerFamily(string productName)
-        {
-            return productName.ToLower().Contains("sqlserver") || productName.ToLower().Contains("sql server");
-        }
-
-        /// <summary>
-        /// Returns True if the Database Server name is "SQLite"
-        /// </summary>
-        /// <param name="productName"></param>
-        /// <returns></returns>
-        private bool IsSqliteFamily(string productName)
-        {
-            return productName.ToLower().Contains("sqlite");
-        }
-        
     }
 }

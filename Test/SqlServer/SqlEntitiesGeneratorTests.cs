@@ -122,6 +122,18 @@ namespace Data.Tests
             }
         }
 
+        [TestMethod]
+        public void EntitiesGenerator_EmployeeSalary_MustBeInt64_Test()
+        {
+            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
+            DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
+            DataColumn column = table.Columns.First(c => c.ColumnName == "SAL");
+
+            Assert.AreEqual("numeric", column.SqlType);
+            Assert.AreEqual(typeof(decimal), column.DataType);
+        }
+
+
         #endregion
     }
 }
