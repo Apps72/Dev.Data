@@ -7,6 +7,15 @@
     <RootNamespace>Apps72.Dev.Data.Generator.Tools</RootNamespace>    
     <ApplicationIcon />
     <StartupObject></StartupObject>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>DbCmd</ToolCommandName>
+    <PackageOutputPath>bin/nupkgs</PackageOutputPath>
+    <Version>2.6.0</Version>
+    <Company>Apps72</Company>
+    <Authors>Denis Voituron</Authors>
+    <Description>Tools to generate entities (class) from existing database (SQL Server, Oracle or SQLite).</Description>
+    <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,9 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DbCmd.cmd">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Oracle.ManagedDataAccess.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

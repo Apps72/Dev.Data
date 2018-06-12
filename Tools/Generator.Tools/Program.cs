@@ -6,8 +6,8 @@ namespace Apps72.Dev.Data.Generator.Tools
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("SqlDatabase Command Line Tools (2.5.0)");
-            Console.WriteLine("Project on https://github.com/Apps72/Dev.Data");
+            Console.WriteLine($"SqlDatabase Command Line Tools (v{GetAssemblyVersion().ToString(3)})");
+            Console.WriteLine($"Project on https://github.com/Apps72/Dev.Data");
 
             if (args == null || args.Length <= 0 || args[0].IsEqualTo("-h") || args[0].IsEqualTo("--help"))
             {
@@ -32,6 +32,13 @@ namespace Apps72.Dev.Data.Generator.Tools
                 Console.ResetColor();
             }
             
+        }
+
+        private static Version GetAssemblyVersion()
+        {
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            return new Version(fvi.FileVersion);
         }
     }
 }
