@@ -110,8 +110,8 @@ namespace Apps72.Dev.Data.Generator
                     ColumnName = Convert.ToString(row[fields.ColumnName]),
                     ColumnType = ExtractTypeNameOnly(Convert.ToString(row[fields.ColumnType])),
                     ColumnSize = row[fields.ColumnSize] != DBNull.Value ? Convert.ToInt32(row[fields.ColumnSize]) : 0,
-                    NumericPrecision = row[fields.NumericPrecision] != DBNull.Value ? Convert.ToInt32(row[fields.NumericPrecision]) : 0,
-                    NumericScale = row[fields.NumericScale] != DBNull.Value ? Convert.ToInt32(row[fields.NumericScale]) : 0,
+                    NumericPrecision = ConvertToNullableInt32(row[fields.NumericPrecision]),
+                    NumericScale = ConvertToNullableInt32(row[fields.NumericScale]),
                     IsColumnNullable = Convert.ToString(row[fields.IsColumnNullable]).ToBoolean(),
                     IsView = false  // TODO
                 });
@@ -174,6 +174,14 @@ namespace Apps72.Dev.Data.Generator
             }
             else
                 return columnType;
+        }
+
+        private int? ConvertToNullableInt32(object value) 
+        {
+            if (value == DBNull.Value)
+                return null;
+            else
+                return Convert.ToInt32(value);
         }
 
         private string ReplaceBetween(string text, char from, char to, string newValue)

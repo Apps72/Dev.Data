@@ -6,7 +6,6 @@ namespace Tools.Generator.Tests
     [TestClass]
     public class Generator_OracleTests
     {
-        [Ignore]
         [TestMethod]
         public void Oracle_DefaultParameters_Test()
         {
@@ -21,7 +20,8 @@ namespace Tools.Generator.Tests
             var generator = new Apps72.Dev.Data.Generator.Tools.Generator(args);
             var code = generator.Code;
 
-            Assert.IsTrue(code.Contains("public virtual int EMPNO { get; set; }"));
+            Assert.IsTrue(code.Contains("public virtual long ID_JOUR_OUVRE { get; set; }"));
+            Assert.IsTrue(code.Contains("public virtual decimal APP_ID { get; set; }"));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
@@ -21,7 +22,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                 Console.WriteLine($"  Entities generating...");
                 var generator = new Generator(args);
                 System.IO.File.WriteAllText(generator.Arguments.Output, generator.Code);
-                Console.WriteLine($"  Entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                Console.WriteLine($"  {generator.Entities.TablesAndViews.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
             }
             catch (Exception ex)
             {

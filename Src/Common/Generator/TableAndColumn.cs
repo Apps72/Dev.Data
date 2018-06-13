@@ -22,9 +22,9 @@ namespace Apps72.Dev.Data.Generator
         /// <summary />
         public int ColumnSize { get; internal set; }
         /// <summary />
-        public int NumericPrecision { get; internal set; }
+        public int? NumericPrecision { get; internal set; }
         /// <summary />
-        public int NumericScale { get; internal set; }
+        public int? NumericScale { get; internal set; }
         /// <summary />
         public bool IsColumnNullable { get; internal set; }
         /// <summary />
@@ -36,8 +36,8 @@ namespace Apps72.Dev.Data.Generator
 
             if (DatabaseFamily == DatabaseFamily.Oracle)
             {
-                // For NUMERIC, check the NumericScale to transform to an Integer (Int16, Int32 oi Int64)
-                if (this.NumericScale == 0 &&
+                // For NUMERIC, check the Scale and Precision to transform to an Int64
+                if (this.NumericScale == 0 && this.NumericPrecision > 0 &&
                     (dataType == typeof(decimal) || dataType == typeof(float) || dataType == typeof(double)))
                 {
                     if (this.NumericPrecision <= 4)
