@@ -13,15 +13,17 @@ namespace Tools.Generator.Tests
             {
                 $"GenerateEntities",
                 $"cs=\"{Configuration.ORACLE_CONNECTION_STRING}\"",
+                $"ns=\"Actiris.CoreBusiness.Services.Data.Models.Ibis\"",
                 $"p=Oracle",
-                $"cf=SchemaAndName",
+                $"cf=NameOnly",
+                $"ca=\"AV1130, AV1507, AV1704, AV1706, AV1710\"",
+                $"os=IBIS",
                 $"a=\"System.ComponentModel.DataAnnotations.Schema.Column\"",   // Include Column Attribute
             };
             var generator = new Apps72.Dev.Data.Generator.Tools.Generator(args);
             var code = generator.Code;
 
             Assert.IsTrue(code.Contains("public virtual long ID_JOUR_OUVRE { get; set; }"));
-            Assert.IsTrue(code.Contains("public virtual decimal APP_ID { get; set; }"));
         }
     }
 }

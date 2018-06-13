@@ -13,48 +13,80 @@ namespace Apps72.Dev.Data.Generator.Tools
         {
             _generator = generator;
             _arguments = arguments;
+
+            this.Start();
         }
 
-        public string GenerateCodeForEntities()
+        public string Code { get; private set; }
+
+        public IEnumerable<Schema.DataTable> Entities { get; set; }
+
+        private string Start()
         {
             var code = new StringBuilder();
+            List<Schema.DataTable> tables = new List<Schema.DataTable>();
+
             bool tableNameOnly = _arguments.ClassFormat.IsEqualTo("NameOnly");
 
-            code.AppendLine($"// *********************************************");
-            code.AppendLine($"// Code Generated with Apps72.Dev.Data.Generator");
-            code.AppendLine($"// *********************************************");
+            code.AppendLine($"/* *********************************************");
+            code.AppendLine($"   Code Generated with Apps72.Dev.Data.Generator");
+            code.AppendLine($"   *********************************************");
+            code.AppendLine($"   $ dotnet tool install -g Apps72.Dev.Data.Generator.Tools ");
+            code.AppendLine($"   $ DbCmd --Help ");
+            code.AppendLine($"*/");
             code.AppendLine();
             code.AppendLine($"namespace {_arguments.Namespace}");
             code.AppendLine($"{{");
-            code.AppendLine($"using System;");
+
+            // Pragma       
+            if (!String.IsNullOrEmpty(_arguments.CodeAnalysis))
+                code.AppendLine($"    #pragma warning disable {_arguments.CodeAnalysis} ");
+
+            // Namespace
+            code.AppendLine($"    using System;");
             code.AppendLine();
 
+            // Entities
             foreach (var entity in _generator.TablesAndViews)
             {
-                code.AppendLine($"    /// <summary />");
-                code.AppendLine($"    public partial class {(tableNameOnly ? entity.Name : entity.SchemaAndName)}");
-                code.AppendLine($"    {{");
-
-                foreach (var column in entity.Columns)
+                if (String.IsNullOrEmpty(_arguments.OnlySchema) ||
+                    entity.Schema.IsEqualTo(_arguments.OnlySchema))
                 {
-                    code.AppendLine($"        /// <summary />");
+                    tables.Add(entity);
 
-                    if (column.ColumnName.IsNotEqualTo(column.DotNetColumnName))
+                    code.AppendLine($"    /// <summary />");
+                    code.AppendLine($"    public partial class {(tableNameOnly ? entity.Name : entity.SchemaAndName)}");
+                    code.AppendLine($"    {{");
+
+                    foreach (var column in entity.Columns)
                     {
-                        code.AppendLine($"        [Apps72.Dev.Data.Annotations.Column(\"{column.ColumnName}\")]");
+                        code.AppendLine($"        /// <summary />");
 
-                        if (!String.IsNullOrEmpty(_arguments.ColumnAttribute))
-                            code.AppendLine($"        [{_arguments.ColumnAttribute}(\"{column.ColumnName}\")]");
+                        if (column.ColumnName.IsNotEqualTo(column.DotNetColumnName))
+                        {
+                            code.AppendLine($"        [Apps72.Dev.Data.Annotations.Column(\"{column.ColumnName}\")]");
+
+                            if (!String.IsNullOrEmpty(_arguments.ColumnAttribute))
+                                code.AppendLine($"        [{_arguments.ColumnAttribute}(\"{column.ColumnName}\")]");
+                        }
+
+                        code.AppendLine($"        public virtual {column.CSharpTypeNullable} {column.DotNetColumnName} {{ get; set; }}");
                     }
 
-                    code.AppendLine($"        public virtual {column.CSharpTypeNullable} {column.DotNetColumnName} {{ get; set; }}");
+                    code.AppendLine($"    }}");
                 }
-
-                code.AppendLine($"    }}");
             }
             code.AppendLine($"}}");
 
-            return code.ToString();
+            // Pragma       
+            if (!String.IsNullOrEmpty(_arguments.CodeAnalysis))
+                code.AppendLine($"#pragma warning restore {_arguments.CodeAnalysis} ");
+
+
+            this.Entities = tables;
+            this.Code = code.ToString();
+
+            return this.Code;
         }
     }
 }

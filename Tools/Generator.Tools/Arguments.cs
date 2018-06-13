@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
@@ -23,7 +25,9 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
             this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
-
+            this.OnlySchema = cmdLine.GetValue("OnlySchema", "os");
+            this.CodeAnalysis = cmdLine.GetValue("CodeAnalysis", "ca");
+            
             // Validation
             this.Validate();
         }
@@ -63,7 +67,9 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string Namespace { get; private set; }
         public string ClassFormat { get; private set; }
         public string ColumnAttribute { get; private set; }
-        
+        public string OnlySchema { get; private set; }
+        public string CodeAnalysis { get; private set; }
+        //public IEnumerable<string> CodeAnalysisCodes => this.CodeAnalysis?.Split(';', StringSplitOptions.RemoveEmptyEntries)?.Select(i => i.Trim());
     }
 
     public enum ArgumentCommand

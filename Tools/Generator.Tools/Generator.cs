@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 
 namespace Apps72.Dev.Data.Generator.Tools
@@ -14,10 +15,11 @@ namespace Apps72.Dev.Data.Generator.Tools
                 conn.ConnectionString = Arguments.ConnectionString;
                 conn.Open();
 
-                this.Entities = new SqlEntitiesGenerator(conn);
+                this.AllEntities = new SqlEntitiesGenerator(conn);
 
-                var generator = new GeneratorCSharp(this.Entities, Arguments);
-                this.Code = generator.GenerateCodeForEntities();
+                var generator = new GeneratorCSharp(this.AllEntities, Arguments);
+                this.Code = generator.Code;
+                this.EntitiesGenerated = generator.Entities;
 
                 conn.Close();
             }
@@ -25,9 +27,11 @@ namespace Apps72.Dev.Data.Generator.Tools
 
         public Arguments Arguments { get; private set; }
 
-        public SqlEntitiesGenerator Entities { get; set; }
+        public SqlEntitiesGenerator AllEntities { get; set; }
 
         public string Code { get; private set; }
+
+        public IEnumerable<Schema.DataTable> EntitiesGenerated { get; set; }
 
         private DbConnection GetConnection()
         {
