@@ -31,6 +31,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 - [ExecuteRow](#ExecuteRow): Execute a SQL query and retrieve the first row to one serialized C# object.
 - [ExecuteScalar](#ExecuteScalar): Execute a SQL query and retrieve the first value (first row / first column) to a C# data type.
 - [ExecuteDataSet](#ExecuteDataSet): Execute multiple SQL queries and retrieve all tables serialized C# objets.
+- [FluentQuery](#FluentQuery): Define and execute queries unsing a Fluent style.
 - [TransactionBegin](#TransactionBegin): Manage your SQL Transactions.
 - [Logging](#Logging): Trace all SQL queries sent to the server (in Text or HTML format).
 - [ActionBeforeExecution and ActionAfterExecution](#ActionsBeforeAfter): Define actions to execute immediately before and after the query execution.
@@ -144,6 +145,27 @@ Calling an Execute method using a **dynamic** return type.
 	    var data = cmd.ExecuteDataSet<Employee, Department>();
 
 	    int empCount = data.Item1.Count(); 
+    }
+```
+
+#### <a name="FluentQuery"></a>FluentQuery
+
+```cs
+    using (var cmd = new SqlDatabaseCommand(_connection))
+    {
+	    int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
+                       .AddParameter("ID", 10)
+                       .ExecuteScalar<int>();
+
+	    var employees = cmd.Query(@"SELECT EMPNO, ENAME 
+		                              FROM EMP 
+									 WHERE EMPNO > @ID",
+						   .AddParameter( new { ID = 10 } )
+                           .ExecuteTable( new 
+						   { 
+						       EmpNo = 0, 
+							   EName = String.Empty 
+						   });
     }
 ```
 
@@ -311,6 +333,9 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformation_Toolkit">T4 file</a> to generate all classes associated to your database tables.
 Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/SqlServer/Entities/Scott.tt) in your project and set your correct **Connection String**. Check if the .tt file properties are **Build Action** = Content and **Custom Tool = TextTemplatingFileGenerator**.
 
+**NEW** Since version 2.6, you can use the <a href="https://www.nuget.org/packages/Apps72.Dev.Data.Generator.Tools/">Data.Generator.Tools</a> to quickly generate all classes associated to your database tables.
+Example: `DbCmd GenerateEntities -cs="Server=localhost;Database=Scott;" --provider=SqlServer` will create a Output.cs file with all entities.
+
 ```cs
     // UPDATE THIS CONNECTION STRING
     const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
@@ -409,7 +434,15 @@ For example:
 
 * Add properties **ActionBeforeExecution** and **ActionAfterExecution** to inject code before and after SQL query executions.
 
+### Version 2.6
+
+* Add a FluentQuery feature to create quickly new commands.
+  Example:  cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID", new { ID = 10 }).ExecuteScalar<int>();
+* Update SqlEntitiesGenerator to generate SQL Server, Oracle or SQLite entities.
+* Add a command line tool to generate entity classes.
+
 ### [RoadMap]
 
-* Add Extension methods to configure and execute queries using Fluent syntax, like *connection.SqlCmd.Query("SELECT * FROM Emp").Execute();**
+* Add DataRow manual management when executing a command (ExecuteTable<T>(Func<DataRow, T> action)).
+* Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
 * Include Asynchronous methods.
