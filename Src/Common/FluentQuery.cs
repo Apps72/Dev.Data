@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
@@ -83,14 +84,20 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Execute the query and return the count of modified rows
+        /// </summary>
+        /// <returns>Count of modified rows</returns>
+        public virtual int ExecuteNonQuery()
+        {
+            return _databaseCommand.ExecuteNonQuery();
+        }
+
+        /// <summary>
         /// Execute the query and return a new instance of T with the first row of results
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
         /// <returns>First row of results</returns>
         /// <example>
-        /// <code>
-        ///   Employee emp = cmd.ExecuteRow&lt;Employee&gt;();
-        /// </code>
         /// <remarks>
         ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
         ///   to set which column name (ex. [Column("Name")] must be associated to this property.
@@ -108,12 +115,6 @@ namespace Apps72.Dev.Data
         /// <param name="itemOftype"></param>
         /// <returns>First row of results</returns>
         /// <example>
-        /// <code>
-        ///   Employee emp = new Employee();
-        ///   var x = cmd.ExecuteRow(new { emp.Age, emp.Name });
-        ///   var y = cmd.ExecuteRow(new { Age = 0, Name = "" });
-        ///   var z = cmd.ExecuteRow(emp);
-        /// </code>
         /// <remarks>
         ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
         ///   to set which column name (ex. [Column("Name")] must be associated to this property.
@@ -141,6 +142,39 @@ namespace Apps72.Dev.Data
         public virtual T ExecuteScalar<T>()
         {
             return _databaseCommand.ExecuteScalar<T>();
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <returns>Array of typed results</returns>
+        /// <example>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual IEnumerable<T> ExecuteTable<T>()
+        {
+            return _databaseCommand.ExecuteTable<T>();
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="itemOftype"></param>
+        /// <returns>Array of typed results</returns>
+        /// <example>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual IEnumerable<T> ExecuteTable<T>(T itemOftype)
+        {
+            return _databaseCommand.ExecuteTable<T>(itemOftype);
         }
     }
 }

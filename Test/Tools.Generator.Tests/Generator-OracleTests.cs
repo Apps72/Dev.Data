@@ -7,6 +7,7 @@ namespace Tools.Generator.Tests
     public class Generator_OracleTests
     {
         [TestMethod]
+        [Ignore]
         public void Oracle_DefaultParameters_Test()
         {
             var args = new[] 

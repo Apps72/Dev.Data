@@ -1,12 +1,10 @@
 ﻿using Apps72.Dev.Data;
-using Data.Core.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
+using System.Linq;
 
-namespace Core.Tests
+namespace Data.Core.Tests
 {
     [TestClass]
     public class FluentQueryTests
@@ -154,6 +152,34 @@ namespace Core.Tests
                 cmd.Log = Console.WriteLine;
                 var emp = cmd.Query("SELECT EName FROM EMP WHERE EMPNO = 7369")
                              .ExecuteRow(new { EName = String.Empty});
+
+                Assert.AreEqual("SMITH", emp.EName);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTable_Simple_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var employees = cmd.Query("SELECT * FROM EMP ")
+                                   .ExecuteTable<EMP>();
+                var emp = employees.First(i => i.EmpNo == 7369);
+
+                Assert.AreEqual("SMITH", emp.EName);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTable_Lambda_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var employees = cmd.Query("SELECT EMPNO, ENAME FROM EMP")
+                                   .ExecuteTable(new { EmpNo = 0, EName = String.Empty });
+                var emp = employees.First(i => i.EmpNo == 7369);
 
                 Assert.AreEqual("SMITH", emp.EName);
             }
