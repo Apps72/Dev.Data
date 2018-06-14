@@ -37,7 +37,7 @@ namespace Apps72.Dev.Data.Schema
             {
                 ColumnName = columnName,
                 IsNullable = true,
-                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)
+                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)                
             } };
 
             this.Rows = new DataRow[] { new DataRow(this, new object[] { firstColRowValue }) };
@@ -80,7 +80,8 @@ namespace Apps72.Dev.Data.Schema
         }
 
         /// <summary>
-        /// Gets True if this 'Table' is a View
+        /// Gets True if this 'Table' is a View.
+        /// Not developed (always False)
         /// </summary>
         public bool IsView { get; set; }
 

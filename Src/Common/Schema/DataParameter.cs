@@ -70,7 +70,7 @@ namespace Apps72.Dev.Data.Schema
                                                 Activator.CreateInstance(typeof(U)) as DbParameter;
                         parameter.Value = typeof(T).GetProperty(property.Name).GetValue(value, null);
                         parameter.IsNullable = TypeExtension.IsNullable(propType);
-                        parameter.DbType = DataTypedConvertor.ToDbType(propType);
+                        parameter.DbType = DbTypeMap.FirstDbType(propType);
 
                         // Parameter name
                         string attribute = Apps72.Dev.Data.Annotations.ColumnAttribute.GetColumnAttributeName(property);

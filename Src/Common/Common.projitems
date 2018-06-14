@@ -11,18 +11,21 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Annotations\ColumnAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandTextFormatted.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Convertor\DataTypedConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DbTypeMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DynamicConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\TypeExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommandBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FluentQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generator\DatabaseFamily.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generator\SchemaFields.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generator\TableAndColumn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataColumn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataRow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionOccuredEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Generator\SqlEntitiesGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generator\SqlEntitiesGenerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDatabaseCommandBase.cs" />
   </ItemGroup>
 </Project>

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data.Generator;
 using Apps72.Dev.Data.Schema;
@@ -16,24 +13,22 @@ namespace Data.Tests
 
         #region RemoveExtraChars
 
+
+
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_WithSpecialChars_Test()
         {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
+            PrivateType obj = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.TypeExtension");
+            var retVal = obj.InvokeStatic("RemoveExtraChars", "Abc@123#xyZ-,_;è|789");
 
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "Abc@123#xyZ-,_;è|789");
-
-            Assert.AreEqual("Abc123xyZ_789", retVal);
+            Assert.AreEqual("Abc_123_xyZ______789", retVal);
         }
 
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_FirstCharMustBeALetter_Test()
         {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "1A2B3C");
+            PrivateType obj = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.TypeExtension");
+            var retVal = obj.InvokeStatic("RemoveExtraChars", "1A2B3C");
 
             Assert.AreEqual("_1A2B3C", retVal);
         }
@@ -41,10 +36,8 @@ namespace Data.Tests
         [TestMethod]
         public void EntitiesGenerator_RemoveExtraChars_OnlyInvalidChars_Test()
         {
-            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
-
-            PrivateObject obj = new PrivateObject(entitiesGenerator);
-            var retVal = obj.Invoke("RemoveExtraChars", "à{}@#|").ToString();
+            PrivateType obj = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.TypeExtension");
+            var retVal = obj.InvokeStatic("RemoveExtraChars", "à{}@#|").ToString();
 
             Assert.AreEqual('_', retVal[0]);
             Assert.AreEqual(38, retVal.Length);
@@ -79,21 +72,67 @@ namespace Data.Tests
             SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
             DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
 
+            Assert.AreEqual("EMP", table.Name);
+            Assert.AreEqual("dbo", table.Schema);
+            Assert.AreEqual("dbo_EMP", table.SchemaAndName);
+            Assert.AreEqual(false, table.IsView);
+
             Assert.AreEqual(8, table.Columns.Count());
             Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
             Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
 
-            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "EMPNO").CSharpType, "EMPNO");
-            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "ENAME").CSharpType, "ENAME");
-            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "JOB").CSharpType, "JOB");
-            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "MGR").CSharpType, "MGR");
-            Assert.AreEqual("DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").CSharpType, "HIREDATE");
-            Assert.AreEqual("Decimal", table.Columns.First(c => c.ColumnName == "SAL").CSharpType, "SAL");
-            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "COMM").CSharpType, "COMM");
-            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "DEPTNO").CSharpType, "DEPTNO");
-            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "HIREDATE").IsNullable, "HIREDATE");
-            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "SAL").IsNullable, "SAL");
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "EMPNO").CSharpType);
+            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "ENAME").CSharpType);
+            Assert.AreEqual("string", table.Columns.First(c => c.ColumnName == "JOB").CSharpType);
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "MGR").CSharpType);
+            Assert.AreEqual("DateTime", table.Columns.First(c => c.ColumnName == "HIREDATE").CSharpType);
+            Assert.AreEqual("decimal", table.Columns.First(c => c.ColumnName == "SAL").CSharpType);
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "COMM").CSharpType);
+            Assert.AreEqual("int", table.Columns.First(c => c.ColumnName == "DEPTNO").CSharpType);
+            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "HIREDATE").IsNullable);
+            Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "SAL").IsNullable);
+
+            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "EMPNO").DotNetType);
+            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "ENAME").DotNetType);
+            Assert.AreEqual("String", table.Columns.First(c => c.ColumnName == "JOB").DotNetType);
+            Assert.AreEqual("Int32", table.Columns.First(c => c.ColumnName == "MGR").DotNetType);
+
+            Assert.AreEqual("int?", table.Columns.First(c => c.ColumnName == "MGR").CSharpTypeNullable);
+            Assert.AreEqual("Int32?", table.Columns.First(c => c.ColumnName == "MGR").DotNetTypeNullable);
+
+            Assert.AreEqual(System.Data.SqlDbType.VarChar, table.Columns.First(c => c.ColumnName == "ENAME").SqlDbType);
+            Assert.AreEqual(System.Data.SqlDbType.Int, table.Columns.First(c => c.ColumnName == "MGR").SqlDbType);
         }
+
+        [TestMethod]
+        public void EntitiesGeneratorBase_Test()
+        {
+            using (var conn = new System.Data.SqlClient.SqlConnection(CONNECTION_STRING))
+            {
+                conn.Open();
+                var entitiesGenerator = new SqlEntitiesGenerator(conn);
+
+                DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
+
+                Assert.AreEqual(8, table.Columns.Count());
+                Assert.AreEqual(false, table.Columns.First(c => c.ColumnName == "EMPNO").IsNullable);
+                Assert.AreEqual(true, table.Columns.First(c => c.ColumnName == "ENAME").IsNullable);
+
+                conn.Close();
+            }
+        }
+
+        [TestMethod]
+        public void EntitiesGenerator_EmployeeSalary_MustBeInt64_Test()
+        {
+            SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
+            DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
+            DataColumn column = table.Columns.First(c => c.ColumnName == "SAL");
+
+            Assert.AreEqual("numeric", column.SqlType);
+            Assert.AreEqual(typeof(decimal), column.DataType);
+        }
+
 
         #endregion
     }

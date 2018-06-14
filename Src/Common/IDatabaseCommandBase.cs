@@ -38,6 +38,17 @@ namespace Apps72.Dev.Data
         Action<string> Log { get; set; }
 
         /// <summary>
+        /// Set this property to execute an action immediately BEFORE the database request.
+        /// </summary>
+        Action<DatabaseCommandBase> ActionBeforeExecution { get; set; }
+
+        /// <summary>
+        /// Set this property to execute an action immediately AFTER the database request,
+        /// and before the type convertions.
+        /// </summary>
+        Action<DatabaseCommandBase, IEnumerable<Schema.DataTable>> ActionAfterExecution { get; set; }
+
+        /// <summary>
         /// Delete the CommandText and the all sql parameters
         /// </summary>
         void Clear();
@@ -62,6 +73,108 @@ namespace Apps72.Dev.Data
         /// Rollback the current transaction 
         /// </summary>
         void TransactionRollback();
+
+        /// <summary>
+        /// Adds a value to the end of the <see cref="Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <returns></returns>
+        DatabaseCommandBase AddParameter(string name, object value);
+
+        /// <summary>
+        /// Adds a value to the end of the <see cref="Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <param name="type">Type of parameter.</param>
+        /// <returns></returns>
+        DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type);
+
+        /// <summary>
+        /// Add all properties / values to the end of the <see cref="Parameters"/> property.
+        /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
+        /// </summary>
+        /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
+        DatabaseCommandBase AddParameter<T>(T values);
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <typeparam name="X">Object type for fifth table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ExecuteDataSet<T, U, V, W, X>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4, X typeOfItem5);
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>> ExecuteDataSet<T, U, V, W>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4);
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>> ExecuteDataSet<T, U, V>(T typeOfItem1, U typeOfItem2, V typeOfItem3);
+
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>(T typeOfItem1, U typeOfItem2);
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <typeparam name="X">Object type for fifth table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ExecuteDataSet<T, U, V, W, X>();
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>> ExecuteDataSet<T, U, V, W>();
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>> ExecuteDataSet<T, U, V>();
+
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>();
 
         /// <summary>
         /// Execute the query and return an array of new instances of typed results filled with data table result.

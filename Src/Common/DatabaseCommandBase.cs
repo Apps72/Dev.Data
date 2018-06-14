@@ -61,6 +61,33 @@ namespace Apps72.Dev.Data
         #region PROPERTIES
 
         /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        public FluentQuery Query()
+        {
+            return new FluentQuery(this);
+        }
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        /// <param name="sqlQuery">SQL query to execute.</param>
+        public FluentQuery Query(string sqlQuery)
+        {
+            return new FluentQuery(this).ForSql(sqlQuery);
+        }
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        /// <param name="sqlQuery">SQL query to execute.</param>
+        /// <param name="parameters">Object contains all SQL parameters (as object properties)</param>
+        public FluentQuery Query<T>(string sqlQuery, T parameters)
+        {
+            return new FluentQuery(this).ForSql(sqlQuery).AddParameter(parameters);
+        }
+
+        /// <summary>
         /// Gets the last raised exception 
         /// </summary>
         public virtual System.Data.Common.DbException Exception { get; private set; }
@@ -617,13 +644,26 @@ namespace Apps72.Dev.Data
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <returns></returns>
-        public DatabaseCommandBase AddParameter(string name, object value)
+        public virtual DatabaseCommandBase AddParameter(string name, object value)
+        {
+            return AddParameter(name, value, null);
+        }
+
+        /// <summary>
+        /// Adds a value to the end of the <see cref="DbCommand.Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <param name="type">Type of parameter.</param>
+        /// <returns></returns>
+        public virtual DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type)
         {
             var dbCommand = this.Command;
             var param = dbCommand.CreateParameter();
 
             param.ParameterName = name;
             param.Value = value ?? DBNull.Value;
+            if (type.HasValue) param.DbType = type.Value;
 
             dbCommand.Parameters.Add(param);
             return this;
@@ -634,7 +674,7 @@ namespace Apps72.Dev.Data
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
         /// </summary>
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
-        public DatabaseCommandBase AddParameter<T>(T values)
+        public virtual DatabaseCommandBase AddParameter<T>(T values)
         {
             Schema.DataParameter.AddValues<T>(this.Command, values);
             return this;
@@ -713,12 +753,12 @@ namespace Apps72.Dev.Data
 
                 // Log
                 if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);                
+                    this.Log.Invoke(this.Command.CommandText);
 
                 var tables = new List<Schema.DataTable>();
 
                 // Send the request to the Database server
-                using (DbDataReader dr = this.Command.ExecuteReader()) // System.Data.CommandBehavior.KeyInfo))
+                using (DbDataReader dr = this.Command.ExecuteReader())
                 {
                     do
                     {

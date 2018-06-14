@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Apps72.Dev.Data.Convertor
 {
@@ -64,6 +65,86 @@ namespace Apps72.Dev.Data.Convertor
         {
             Type subType = Nullable.GetUnderlyingType(type);
             return subType == null ? type : subType;
+        }
+
+        /// <summary>
+        /// Remove invalid chars for CSharp class and property names.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <remarks>See https://msdn.microsoft.com/en-us/library/gg615485.aspx </remarks>
+        public static string RemoveExtraChars(this string name)
+        {
+            StringBuilder newName = new StringBuilder();
+            int ascii = 0;
+
+            // Keep only digits, letters or underscore
+            foreach (char c in name)
+            {
+                // Ascii code of the current Char
+                ascii = (int)c;
+
+                // 0 .. 9, A .. Z, a .. z, _
+                if (ascii >= 48 && ascii <= 57 ||
+                    ascii >= 65 && ascii <= 90 ||
+                    ascii >= 97 && ascii <= 122 ||
+                    ascii == 95)
+                {
+                    newName.Append(c);
+                }
+                else
+                {
+                    newName.Append('_');
+                }
+            }
+
+            // Name without extra chars (including '_')
+            string tinyName = newName.ToString().Trim('_');
+
+            // First char must be a letter or underscore
+            if (tinyName.Length > 0)
+            {
+                ascii = (int)newName[0];
+                if (ascii >= 65 && ascii <= 90 ||
+                    ascii >= 97 && ascii <= 122 ||
+                    ascii == 95)
+                {
+                    return newName.ToString();
+                }
+                else
+                {
+                    return $"_{newName.ToString()}";
+                }
+            }
+            else
+            {
+                return $"__{Guid.NewGuid().ToString().Replace('-', '_')}";
+            }
+
+        }
+
+        /// <summary>
+        /// Convert the string to a boolean
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool ToBoolean(this string value)
+        {
+            switch (value.ToUpper())
+            {
+                case "YES":
+                case "Y":
+                case "TRUE":
+                    return true;
+
+                case "NO":
+                case "N":
+                case "FALSE":
+                    return false;
+
+                default:
+                    return false;
+            }
         }
     }
 }
