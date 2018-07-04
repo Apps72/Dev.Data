@@ -27,7 +27,7 @@ namespace Data.Core.Tests
         {
             get
             {
-                return new EMP() { EmpNo = 7369, EName = "SMITH", HireDate = new DateTime(1980, 12, 17), Comm = null, Salary = 800 };
+                return new EMP() { EmpNo = 7369, EName = "SMITH", HireDate = new DateTime(1980, 12, 17), Comm = null, Salary = 800, Manager = 7902 };
             }
         }
 

@@ -62,6 +62,46 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteRowWithConverter_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
+                EMP emp = cmd.ExecuteRow<EMP>((row) =>
+                {
+                    return new EMP()
+                    {
+                        EmpNo = Convert.ToInt32(row["EMPNO"]),
+                        EName = Convert.ToString(row["ENAME"])
+                    };
+                });
+
+                Assert.AreEqual(7369, emp.EmpNo);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteRowWithAnonymousConverter_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 7369");
+                var emp = cmd.ExecuteRow((row) =>
+                {
+                    return new 
+                    {
+                        Id = Convert.ToInt32(row["EMPNO"]),
+                        Name = Convert.ToString(row["ENAME"])
+                    };
+                });
+
+                Assert.AreEqual(7369, emp.Id);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteRowAnonymousTyped_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
@@ -377,6 +417,38 @@ namespace Data.Core.Tests
                 Assert.AreEqual(smith.HireDate, EMP.Smith.HireDate);
                 Assert.AreEqual(smith.Comm, EMP.Smith.Comm);
                 Assert.AreEqual(smith.Salary, EMP.Smith.Salary);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTableWithAnonymousConverter_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, SAL, HIREDATE, COMM, MGR  FROM EMP");
+                var employees = cmd.ExecuteTable((row) =>
+                {
+                    return new
+                    {
+                        Id = row.Field<int>("EMPNO"),
+                        Name = row.Field<string>("ENAME"),
+                        Salary = row.Field<Decimal>("SAL"),
+                        HireDate = row.Field<DateTime>("HIREDATE"),
+                        Comm = row.Field<int?>("COMM"),
+                        Manager = row.Field<int?>("MGR"),
+                    };
+                });
+
+                var smith = employees.First();
+
+                Assert.AreEqual(14, employees.Count());
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.Id);
+                Assert.AreEqual(EMP.Smith.Salary, smith.Salary);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
+                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
+                Assert.AreEqual(EMP.Smith.Manager, smith.Manager);
+
             }
         }
 
