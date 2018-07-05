@@ -6,8 +6,8 @@
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
-    <AssemblyVersion>2.7.0.0</AssemblyVersion>
-    <Version>2.7.0</Version>
+    <AssemblyVersion>2.7.1.0</AssemblyVersion>
+    <Version>2.7.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Apps72.Dev.Data.Core</PackageId>
     <Authors>Denis Voituron</Authors>

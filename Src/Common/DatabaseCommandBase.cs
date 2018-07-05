@@ -123,11 +123,12 @@ namespace Apps72.Dev.Data
         {
             get
             {
-                return this.Command.Transaction;
+                return this.Command?.Transaction;
             }
             set
             {
-                this.Command.Transaction = value as DbTransaction;
+                if (this.Command != null)
+                    this.Command.Transaction = value as DbTransaction;
             }
         }
 
@@ -138,7 +139,7 @@ namespace Apps72.Dev.Data
         {
             get
             {
-                return this.Command.Parameters;
+                return this.Command?.Parameters;
             }
         }
 
