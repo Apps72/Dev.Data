@@ -24,6 +24,14 @@ namespace Data.Core.Tests
         #endregion
 
         [TestMethod]
+        public void Execute_NullConstructor_Test()
+        {
+            var cmd = new DatabaseCommand(null);
+
+            Assert.IsNotNull(cmd);
+        }
+
+        [TestMethod]
         public void Execute_Constructor1_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
