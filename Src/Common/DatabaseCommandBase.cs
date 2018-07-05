@@ -456,6 +456,26 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Execute the query and return an array of new instances of typed results filled with data table result.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="converter"></param>
+        /// <returns>Array of typed results</returns>
+        public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
+        {
+            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
+            int rowCount = table.Rows.Length;
+
+            var results = new T[rowCount];
+            for (int i = 0; i < rowCount; i++)
+            {
+                results[i] = converter.Invoke(table.Rows[i]);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
         /// <typeparam name="T">Object type</typeparam>
         /// <param name="itemOftype"></param>
         /// <returns>Array of typed results</returns>
@@ -523,6 +543,28 @@ namespace Apps72.Dev.Data
                 Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
                 if (table != null && table.Rows.Length > 0)
                     return table.Rows[0].ConvertTo<T>(itemOftype);
+                else
+                    return default(T);
+            }
+        }
+
+        /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter"></param>
+        /// <returns>First row of results</returns>
+        public virtual T ExecuteRow<T>(Func<Schema.DataRow, T> converter)
+        {
+            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return this.ExecuteScalar<T>();
+            }
+            else
+            {
+                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
+                if (table != null && table.Rows.Length > 0)
+                    return converter.Invoke(table.Rows[0]);
                 else
                     return default(T);
             }

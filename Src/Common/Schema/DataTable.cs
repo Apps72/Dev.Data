@@ -61,12 +61,12 @@ namespace Apps72.Dev.Data.Schema
         /// <summary>
         /// Gets the name of this Table
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// Gets the Schema of this table
         /// </summary>
-        public string Schema { get; set; }
+        public string Schema { get; internal set; }
 
         /// <summary>
         /// Gets the Schema and the Name of this table, separated by an underscore.
@@ -83,7 +83,7 @@ namespace Apps72.Dev.Data.Schema
         /// Gets True if this 'Table' is a View.
         /// Not developed (always False)
         /// </summary>
-        public bool IsView { get; set; }
+        public bool IsView { get; internal set; }
 
         /// <summary>
         /// Gets the Columns properties
@@ -104,7 +104,7 @@ namespace Apps72.Dev.Data.Schema
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T[] ConvertTo<T>()
+        internal T[] ConvertTo<T>()
         {
             T[] results = new T[this.Rows.Count()];
 
