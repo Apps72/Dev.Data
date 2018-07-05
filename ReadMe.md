@@ -441,8 +441,11 @@ For example:
 * Update SqlEntitiesGenerator to generate SQL Server, Oracle or SQLite entities.
 * Add a command line tool to generate entity classes.
 
+### Version 2.7
+
+* Add DataRow converter when executing a command (ExecuteTable<T>(Func<DataRow, T> converter)).
+
 ### [RoadMap]
 
-* Add DataRow manual management when executing a command (ExecuteTable<T>(Func<DataRow, T> action)).
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
 * Include Asynchronous methods.
