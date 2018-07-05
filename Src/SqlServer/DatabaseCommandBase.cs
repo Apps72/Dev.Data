@@ -43,25 +43,6 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Execute the query and return an array of new instances of typed results filled with data table result.
-        /// </summary>
-        /// <typeparam name="TReturn">Object type</typeparam>
-        /// <param name="converter">Conveter method to return a typed object from DataRow</param>
-        /// <returns>Array of typed results</returns>
-        public virtual IEnumerable<TReturn> ExecuteTable<TReturn>(Func<System.Data.DataRow, TReturn> converter)
-        {
-            System.Data.DataTable table = this.ExecuteTable();
-
-            TReturn[] results = new TReturn[table.Rows.Count];
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                results[i] = converter.Invoke(table.Rows[i]);
-            }
-
-            return results;
-        }
-
-        /// <summary>
         /// Execute the query and return the first row of results    
         /// </summary>
         /// <returns>First row of results</returns>
@@ -77,19 +58,6 @@ namespace Apps72.Dev.Data
             else
                 return null;
         }
-
-        /// <summary>
-        /// Execute the query and fill the specified TReturn object with the first row of results
-        /// </summary>
-        /// <typeparam name="TReturn">Object type</typeparam>
-        /// <param name="converter">Conveter method to return a typed object from DataRow</param>
-        /// <returns>First row of results</returns>
-        public virtual TReturn ExecuteRow<TReturn>(Func<System.Data.DataRow, TReturn> converter)
-        {
-            System.Data.DataRow row = this.ExecuteRow();
-            return converter.Invoke(row);
-        }
-
     }
 
 }
