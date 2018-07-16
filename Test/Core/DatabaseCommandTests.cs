@@ -696,6 +696,16 @@ namespace Data.Core.Tests
             }
         }
 
+        [TestMethod]
+        public void ChangeCommandType_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                Assert.AreEqual(System.Data.CommandType.StoredProcedure, cmd.CommandType);
+            }
+        }
 
         #region QUERY FORMATTED
 

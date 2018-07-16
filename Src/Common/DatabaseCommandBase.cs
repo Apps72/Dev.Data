@@ -100,7 +100,21 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the command type
         /// </summary>
-        public virtual System.Data.CommandType CommandType { get; set; }
+        public virtual System.Data.CommandType CommandType
+        {
+            get
+            {
+                if (this.Command != null)
+                    return this.Command.CommandType;
+                else
+                    return System.Data.CommandType.Text;
+            }
+            set
+            {
+                if (this.Command != null)
+                    this.Command.CommandType = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current active connection
