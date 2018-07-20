@@ -13,7 +13,7 @@ namespace Apps72.Dev.Data
     /// </summary>
 
     [DebuggerDisplay("{CommandText}")]
-    public abstract partial class DatabaseCommandBase : IDatabaseCommandBase
+    public abstract partial class DatabaseCommandBase : IDatabaseCommand, IDatabaseCommandBase
     {
         #region EVENTS
 
@@ -183,6 +183,15 @@ namespace Apps72.Dev.Data
         #endregion
 
         #region METHODS
+
+        /// <summary>
+        /// Gets the full CommandText, integrating parameters values.
+        /// </summary>
+        /// <returns>Formatted query</returns>
+        public virtual string GetCommandTextFormatted()
+        {
+            return GetCommandTextFormatted(QueryFormat.Text);
+        }
 
         /// <summary>
         /// Gets the CommandText formatted with specified format

@@ -26,7 +26,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void Execute_NullConstructor_Test()
         {
-            var cmd = new DatabaseCommand(null);
+            var cmd = GetDatabaseCommand(null);
 
             Assert.IsNotNull(cmd);
         }
@@ -34,7 +34,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void Execute_Constructor1_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -47,7 +47,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void Execute_Constructor2_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection, "SELECT COUNT(*) FROM EMP"))
+            using (var cmd = GetDatabaseCommand(_connection, "SELECT COUNT(*) FROM EMP"))
             {
                 cmd.Log = Console.WriteLine;
                 int count = cmd.ExecuteScalar<int>();
@@ -59,7 +59,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
@@ -72,7 +72,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowWithConverter_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
@@ -92,7 +92,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowWithAnonymousConverter_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 7369");
@@ -112,7 +112,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowAnonymousTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
@@ -131,7 +131,7 @@ namespace Data.Core.Tests
         [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
         public void ExecuteRowAnonymousTypedWithExtraProperty_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
@@ -150,7 +150,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowPrimitive_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO FROM EMP WHERE EMPNO = 7369");
@@ -163,7 +163,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowPrimitiveNullable_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COMM FROM EMP WHERE EMPNO = 7369");
@@ -176,7 +176,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalar_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -189,7 +189,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarWithParameter_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT ENAME ")
@@ -211,7 +211,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarWithNullParameter_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine("SET ANSI_NULLS OFF ")
@@ -231,7 +231,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarWithAnonymousParameters_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT ENAME ")
@@ -263,7 +263,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarWithAnonymousOnlyParameters_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT ENAME ")
@@ -290,7 +290,7 @@ namespace Data.Core.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void ExecuteScalarWithSimpleParameters_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT ENAME ")
@@ -309,7 +309,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLineFormat(" SELECT COUNT(*) FROM EMP ");
@@ -322,7 +322,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarTypedNull_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLineFormat(" SELECT COMM FROM EMP WHERE EMPNO = {0} ", 7369);
@@ -335,7 +335,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarWhereNoDataFound_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLineFormat(" SELECT COMM FROM EMP WHERE EMPNO = 99999 ");
@@ -348,7 +348,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteTableTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP ");
@@ -365,7 +365,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteTableNullableProperties_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP ");
@@ -391,7 +391,7 @@ namespace Data.Core.Tests
         [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
         public void ExecuteTableCustomedAnonymousTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP ");
@@ -413,7 +413,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteTableTypedWithColumnAttribute_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, SAL, HIREDATE, COMM, MGR FROM EMP ");
@@ -431,7 +431,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteTableWithAnonymousConverter_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, SAL, HIREDATE, COMM, MGR  FROM EMP");
@@ -463,7 +463,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteDataSetTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP ");
@@ -483,7 +483,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteDataSetCustomedTyped_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP ");
@@ -507,7 +507,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteDataSetTyped_WithSimpleType_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP ");
@@ -530,7 +530,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteNonQuery_Transaction_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" DELETE FROM EMP ");
@@ -548,14 +548,14 @@ namespace Data.Core.Tests
         {
             using (var transaction = _connection.BeginTransaction())
             {
-                using (var cmd = new DatabaseCommand(_connection, transaction))
+                using (var cmd = GetDatabaseCommand(_connection, transaction))
                 {
                     cmd.Log = Console.WriteLine;
                     cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (1234, 'ABC') ");
                     cmd.ExecuteNonQuery();
                 }
 
-                using (var cmd = new DatabaseCommand(_connection, transaction))
+                using (var cmd = GetDatabaseCommand(_connection, transaction))
                 {
                     cmd.Log = Console.WriteLine;
                     cmd.CommandText.AppendLine(" INSERT INTO EMP (EMPNO, ENAME) VALUES (9876, 'XYZ') ");
@@ -573,7 +573,7 @@ namespace Data.Core.Tests
         {
             DbTransaction currentTransaction;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" DELETE FROM EMP ");
@@ -593,14 +593,14 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteNonQuery_TransactionForTwoIncludedCommands_Test()
         {
-            using (var cmd1 = new DatabaseCommand(_connection))
+            using (var cmd1 = GetDatabaseCommand(_connection))
             {
                 cmd1.Log = Console.WriteLine;
                 cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
                 cmd1.TransactionBegin();
                 cmd1.ExecuteNonQuery();
 
-                using (var cmd2 = new DatabaseCommand(_connection, cmd1.Transaction))
+                using (var cmd2 = GetDatabaseCommand(_connection, cmd1.Transaction))
                 {
                     cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
                     int count = cmd2.ExecuteScalar<int>();
@@ -613,7 +613,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteRowDynamic_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM FROM EMP WHERE EMPNO = 7369");
@@ -629,7 +629,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteStarRowDynamic_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
@@ -645,7 +645,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteTwoRowsDynamic_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM FROM EMP WHERE EMPNO = 7369");
@@ -670,7 +670,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteTableDynamic_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE, COMM FROM EMP ORDER BY EMPNO");
@@ -686,7 +686,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ExecuteScalarDynamic_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -699,7 +699,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void ChangeCommandType_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
@@ -712,10 +712,10 @@ namespace Data.Core.Tests
         [TestMethod]
         public void GetFormattedAsText_Simple_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.CommandText.Append(" SELECT * FROM EMP ");
-                string formatted = cmd.GetCommandTextFormatted(QueryFormat.Text);
+                string formatted = cmd.GetCommandTextFormatted();
 
                 Assert.AreEqual(formatted, " SELECT * FROM EMP ");
             }
@@ -724,7 +724,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void GetFormattedAsText_Parameters_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.CommandText.Append(" SELECT *, @MyGuid FROM EMP WHERE EMPNO = @EmpNo AND ENAME LIKE @Ename AND HIREDATE > @Hire AND COMM = @Comm ");
                 cmd.AddParameter("@EmpNo", 7369);                                                  // Parameter normal
@@ -733,7 +733,7 @@ namespace Data.Core.Tests
                 cmd.AddParameter("@Comm", null);                                           // Parameter NULL
                 cmd.AddParameter("@MyGuid", new Guid("2fff1b89-b5f9-4a33-ac5b-a3ffee3e8b82"));     // Parameter GUID
 
-                string formatted = cmd.GetCommandTextFormatted(QueryFormat.Text);
+                string formatted = cmd.GetCommandTextFormatted();
 
                 Assert.AreEqual(" SELECT *, '2fff1b89-b5f9-4a33-ac5b-a3ffee3e8b82' FROM EMP WHERE EMPNO = 7369 AND ENAME LIKE '%SM%' AND HIREDATE > '1970-05-04 14:15:16' AND COMM = NULL ", formatted);
             }
@@ -742,7 +742,7 @@ namespace Data.Core.Tests
         [TestMethod]
         public void GetFormattedAsHtml_Parameters_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
                 cmd.CommandText.AppendLine("  WHERE EMPNO = @EmpNo AND ENAME LIKE @Ename AND HIREDATE > @Hire AND COMM = @Comm ");
@@ -751,7 +751,7 @@ namespace Data.Core.Tests
                 cmd.AddParameter("Hire", new DateTime(1970, 05, 04, 14, 15, 16));    // Parameter without @
                 cmd.AddParameter("@Comm", null);                                     // Parameter NULL
 
-                string formatted = cmd.GetCommandTextFormatted(QueryFormat.Html);
+                string formatted = (cmd as DatabaseCommand).GetCommandTextFormatted(QueryFormat.Html);
 
                 Assert.AreEqual(formatted, @" <span style=""color: #33f; font-weight: bold;"">SELECT</span> * <span style=""color: #33f; font-weight: bold;"">FROM</span> EMP <br/>  <span style=""color: #33f; font-weight: bold;"">WHERE</span> EMPNO = <span style=""color: #FF3F00;"">7369</span> <span style=""color: #33f; font-weight: bold;"">AND</span> ENAME <span style=""color: #33f; font-weight: bold;"">LIKE</span> <span style=""color: #FF3F00;"">'%SM%'</span> <span style=""color: #33f; font-weight: bold;"">AND</span> HIREDATE &gt; <span style=""color: #FF3F00;"">'<span style=""color: #FF3F00;"">1970</span><span style=""color: #FF3F00;"">-05</span><span style=""color: #FF3F00;"">-04</span> <span style=""color: #FF3F00;"">14</span>:<span style=""color: #FF3F00;"">15</span>:<span style=""color: #FF3F00;"">16</span>'</span> <span style=""color: #33f; font-weight: bold;"">AND</span> COMM = <span style=""color: #33f; font-weight: bold;"">NULL</span> <br/>");
             }
@@ -766,7 +766,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -790,7 +790,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -813,7 +813,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -837,7 +837,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT SAL FROM EMP WHERE EMPNO = @EmployeeID");
@@ -861,7 +861,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -884,7 +884,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
@@ -907,7 +907,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
@@ -928,7 +928,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
@@ -952,7 +952,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
@@ -974,7 +974,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
@@ -999,7 +999,7 @@ namespace Data.Core.Tests
         {
             bool isPassed = false;
 
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
@@ -1020,13 +1020,12 @@ namespace Data.Core.Tests
 
         #endregion
 
-
         #region EXTENSIONS
 
         [TestMethod]
         public void Parameter_AddWithValueOrDBNull_Test()
         {
-            using (var cmd = new DatabaseCommand(_connection))
+            using (var cmd = GetDatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SET ANSI_NULLS OFF ");
@@ -1038,5 +1037,26 @@ namespace Data.Core.Tests
         }
 
         #endregion
+
+        #region GET DBCOMMAND
+
+
+        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection)
+        {
+            return new DatabaseCommand(connection);
+        }
+
+        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection, DbTransaction transaction)
+        {
+            return new DatabaseCommand(connection, transaction);
+        }
+
+        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection, string commandText)
+        {
+            return new DatabaseCommand(connection, commandText);
+        }
+
+        #endregion
+
     }
 }
