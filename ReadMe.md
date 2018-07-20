@@ -444,6 +444,7 @@ For example:
 ### Version 2.7
 
 * Add DataRow converter when executing a command (ExecuteTable<T>(Func<DataRow, T> converter)).
+* Renamed IDatabaseCommandBase to IDatabaseCommand to simplify interface usage. IDatabaseCommandBase is always usable.
 
 ### [RoadMap]
 

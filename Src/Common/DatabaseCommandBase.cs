@@ -13,7 +13,7 @@ namespace Apps72.Dev.Data
     /// </summary>
 
     [DebuggerDisplay("{CommandText}")]
-    public abstract partial class DatabaseCommandBase : IDatabaseCommandBase
+    public abstract partial class DatabaseCommandBase : IDatabaseCommand, IDatabaseCommandBase
     {
         #region EVENTS
 
@@ -100,7 +100,21 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the command type
         /// </summary>
-        public virtual System.Data.CommandType CommandType { get; set; }
+        public virtual System.Data.CommandType CommandType
+        {
+            get
+            {
+                if (this.Command != null)
+                    return this.Command.CommandType;
+                else
+                    return System.Data.CommandType.Text;
+            }
+            set
+            {
+                if (this.Command != null)
+                    this.Command.CommandType = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current active connection
@@ -123,11 +137,12 @@ namespace Apps72.Dev.Data
         {
             get
             {
-                return this.Command.Transaction;
+                return this.Command?.Transaction;
             }
             set
             {
-                this.Command.Transaction = value as DbTransaction;
+                if (this.Command != null)
+                    this.Command.Transaction = value as DbTransaction;
             }
         }
 
@@ -138,7 +153,7 @@ namespace Apps72.Dev.Data
         {
             get
             {
-                return this.Command.Parameters;
+                return this.Command?.Parameters;
             }
         }
 
@@ -168,6 +183,15 @@ namespace Apps72.Dev.Data
         #endregion
 
         #region METHODS
+
+        /// <summary>
+        /// Gets the full CommandText, integrating parameters values.
+        /// </summary>
+        /// <returns>Formatted query</returns>
+        public virtual string GetCommandTextFormatted()
+        {
+            return GetCommandTextFormatted(QueryFormat.Text);
+        }
 
         /// <summary>
         /// Gets the CommandText formatted with specified format

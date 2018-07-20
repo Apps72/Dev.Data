@@ -6,8 +6,8 @@
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
-    <AssemblyVersion>2.7.0.0</AssemblyVersion>
-    <Version>2.7.0</Version>
+    <AssemblyVersion>2.7.3.0</AssemblyVersion>
+    <Version>2.7.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Apps72.Dev.Data.Core</PackageId>
     <Authors>Denis Voituron</Authors>
@@ -22,6 +22,7 @@
     <RepositoryUrl></RepositoryUrl>
     <AssemblyName>Apps72.Dev.Data.Core</AssemblyName>
     <RootNamespace>Apps72.Dev.Data.Core</RootNamespace>
+    <FileVersion>2.7.3.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
