@@ -5,10 +5,16 @@
 This C# library simplify all SQL Queries to external databases, using the base class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
 Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQLite** are included.
 
-```cs
-    int count = cmd.ExecuteScalar<int>();
-    var emps  = cmd.ExecuteTable<Employee>();
+```cs   
+    var cmd   = new DatabaseCommand(mySqlConnection);
+
+    var all   = cmd.ExecuteTable<Employee>();
     var smith = cmd.ExecuteRow<dynamic>();
+    int count = cmd.ExecuteScalar<int>();
+
+    var emps  = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
+                   .AddParameter("ID", 10)
+                   .ExecuteTable<Employee>();
 ```
 
 First, you need to add the NuGet packages. https://www.nuget.org/packages?q=Apps72.Dev.Data
@@ -46,8 +52,8 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 ```cs
     using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-	    var emps = cmd.ExecuteTable<Employee>();
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        var emps = cmd.ExecuteTable<Employee>();
     }
 ```
 
@@ -56,9 +62,9 @@ Using a Fluent syntax.
 ```cs
     using (var cmd = new DatabaseCommand(_connection))
     {
-	    var emps = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
-		              .AddParameter("ID", 10)
-		              .ExecuteTable<Employee>();
+        var emps = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
+                      .AddParameter("ID", 10)
+                      .ExecuteTable<Employee>();
     }
 ```
 
@@ -67,8 +73,8 @@ Calling an Execute method using a **dynamic** return type.
 ```cs
     using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-	    var emps = cmd.ExecuteTable<dynamic>();
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        var emps = cmd.ExecuteTable<dynamic>();
     }
 ```
 
@@ -94,7 +100,7 @@ Calling an Execute method using a **dynamic** return type.
 ```cs
     using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * ")
+        cmd.CommandText.AppendLine(" SELECT * ")
                        .AppendLine("   FROM EMP ")
                        .AppendLine("  WHERE EMPNO = @EmpNo ")
                        .AppendLine("    AND HIREDATE = @HireDate ");
@@ -105,7 +111,7 @@ Calling an Execute method using a **dynamic** return type.
                     HireDate = new DateTime(1980, 12, 17)
                 });
 
-	    var emps = cmd.ExecuteTable<Employee>();
+        var emps = cmd.ExecuteTable<Employee>();
     }
 ```
 
@@ -151,11 +157,11 @@ Calling an Execute method using a **dynamic** return type.
 ```cs
     using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
-	    cmd.CommandText.AppendLine(" SELECT * FROM DEPT; ");
-	    var data = cmd.ExecuteDataSet<Employee, Department>();
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
+        cmd.CommandText.AppendLine(" SELECT * FROM DEPT; ");
+        var data = cmd.ExecuteDataSet<Employee, Department>();
 
-	    int empCount = data.Item1.Count(); 
+        int empCount = data.Item1.Count(); 
     }
 ```
 
@@ -164,11 +170,11 @@ Calling an Execute method using a **dynamic** return type.
 ```cs
     using (var cmd = new DatabaseCommand(_connection))
     {
-	    int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
+        int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
                        .AddParameter("ID", 10)
                        .ExecuteScalar<int>();
 
-	    var employees = cmd.Query(@"SELECT EMPNO, ENAME 
+        var employees = cmd.Query(@"SELECT EMPNO, ENAME 
                                       FROM EMP 
                                      WHERE EMPNO > @ID",
                            .AddParameter( new { ID = 10 } )
