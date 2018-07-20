@@ -17,8 +17,8 @@ Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQL
                    .ExecuteTable<Employee>();
 ```
 
-First, you need to add the NuGet packages. https://www.nuget.org/packages?q=Apps72.Dev.Data
-Select the correct package for SQL Server, Oracle, SQLite or a generic .NET Core library.
+First, you need to add the .NET Core NuGet packages : https://www.nuget.org/packages/Apps72.Dev.Data.Core
+Many preconfigured packages are available for SQL Server, Oracle, SQLite or a generic .NET Core library: https://www.nuget.org/packages?q=Apps72.Dev.Data
 
 Next, you need to create a SqlConnection or other database connection. 
 The SqlConnection will be not closed by this library
