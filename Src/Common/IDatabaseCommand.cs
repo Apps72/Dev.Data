@@ -298,6 +298,24 @@ namespace Apps72.Dev.Data
         /// Gets the last raised exception 
         /// </summary>
         System.Data.Common.DbException Exception { get; }
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        FluentQuery Query();
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        /// <param name="sqlQuery">SQL query to execute.</param>
+        FluentQuery Query(string sqlQuery);
+
+        /// <summary>
+        /// Gets a Fluent Query tool to execute SQL request.
+        /// </summary>
+        /// <param name="sqlQuery">SQL query to execute.</param>
+        /// <param name="parameters">Object contains all SQL parameters (as object properties)</param>
+        FluentQuery Query<T>(string sqlQuery, T parameters);
     }
 
     /// <summary>
