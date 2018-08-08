@@ -618,7 +618,7 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                int rowsAffected = this.Command.ExecuteNonQuery();
+                int rowsAffected = this.Command.CommandText.Length > 0 ? this.Command.ExecuteNonQuery() : 0;
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
@@ -666,7 +666,7 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                object result = this.Command.ExecuteScalar();
+                object result = this.Command.CommandText.Length > 0 ? this.Command.ExecuteScalar() : null;
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
@@ -824,13 +824,20 @@ namespace Apps72.Dev.Data
                 var tables = new List<Schema.DataTable>();
 
                 // Send the request to the Database server
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                if (this.Command.CommandText.Length > 0)
                 {
-                    do
+                    using (DbDataReader dr = this.Command.ExecuteReader())
                     {
-                        tables.Add(new Schema.DataTable(dr, firstRowOnly));
+                        do
+                        {
+                            tables.Add(new Schema.DataTable(dr, firstRowOnly));
+                        }
+                        while (!firstRowOnly && dr.NextResult());
                     }
-                    while (!firstRowOnly && dr.NextResult());
+                }
+                else
+                {
+                    tables.Add(new Schema.DataTable());
                 }
 
                 // Action After Execution

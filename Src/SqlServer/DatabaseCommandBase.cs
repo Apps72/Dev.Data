@@ -29,11 +29,15 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                using (System.Data.Common.DbDataReader dr = this.Command.ExecuteReader())
+                if (this.Command.CommandText.Length > 0)
                 {
-                    data.Load(dr);
-                    return data;
+                    using (System.Data.Common.DbDataReader dr = this.Command.ExecuteReader())
+                    {
+                        data.Load(dr);
+                    }
                 }
+
+                return data;
             }
             catch (System.Data.Common.DbException ex)
             {

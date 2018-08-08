@@ -466,6 +466,10 @@ For example:
 * Add DataRow converter when executing a command (ExecuteTable<T>(Func<DataRow, T> converter)).
 * Renamed IDatabaseCommandBase to IDatabaseCommand to simplify interface usage. IDatabaseCommandBase is always usable.
 
+### Version 2.7.5
+
+* FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

@@ -106,6 +106,9 @@ namespace Apps72.Dev.Data.Schema
         /// <returns></returns>
         internal T[] ConvertTo<T>()
         {
+            if (this.Rows == null || this.Rows.Length <= 0)
+                return new T[0];
+
             T[] results = new T[this.Rows.Count()];
 
             // If is Primitive type (string, int, ...)
