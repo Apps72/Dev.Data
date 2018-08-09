@@ -5,14 +5,20 @@
 This C# library simplify all SQL Queries to external databases, using the base class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
 Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQLite** are included.
 
-```cs
-    int count = cmd.ExecuteScalar<int>();
-    var emps  = cmd.ExecuteTable<Employee>();
+```cs   
+    var cmd   = new DatabaseCommand(mySqlConnection);
+
+    var all   = cmd.ExecuteTable<Employee>();
     var smith = cmd.ExecuteRow<dynamic>();
+    int count = cmd.ExecuteScalar<int>();
+
+    var emps  = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
+                   .AddParameter("ID", 10)
+                   .ExecuteTable<Employee>();
 ```
 
-First, you need to add the NuGet packages. https://www.nuget.org/packages?q=Apps72.Dev.Data
-Select the correct package for SQL Server, Oracle, SQLite or a generic .NET Core library.
+First, you need to add the .NET Core NuGet packages : https://www.nuget.org/packages/Apps72.Dev.Data.Core
+Many preconfigured packages are available for SQL Server, Oracle, SQLite or a generic .NET Core library: [NuGet Packages](https://www.nuget.org/packages?q=Apps72.Dev.Data).
 
 Next, you need to create a SqlConnection or other database connection. 
 The SqlConnection will be not closed by this library
@@ -44,27 +50,38 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 #### <a name="ExecuteTable"></a>ExecuteTable
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-	    var emps = cmd.ExecuteTable<Employee>();
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        var emps = cmd.ExecuteTable<Employee>();
+    }
+```
+
+Using a Fluent syntax.
+
+```cs
+    using (var cmd = new DatabaseCommand(_connection))
+    {
+        var emps = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
+                      .AddParameter("ID", 10)
+                      .ExecuteTable<Employee>();
     }
 ```
 
 Calling an Execute method using a **dynamic** return type.
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
-	    var emps = cmd.ExecuteTable<dynamic>();
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        var emps = cmd.ExecuteTable<dynamic>();
     }
 ```
 
 #### ExecuteTable customized
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT EMPNO, HIREDATE FROM EMP ");
         var data = cmd.ExecuteTable<Employee>((row) =>
@@ -81,9 +98,9 @@ Calling an Execute method using a **dynamic** return type.
 #### <a name="ExecuteTableWithParameters"></a>ExecuteTable with parameters
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * ")
+        cmd.CommandText.AppendLine(" SELECT * ")
                        .AppendLine("   FROM EMP ")
                        .AppendLine("  WHERE EMPNO = @EmpNo ")
                        .AppendLine("    AND HIREDATE = @HireDate ");
@@ -94,24 +111,24 @@ Calling an Execute method using a **dynamic** return type.
                     HireDate = new DateTime(1980, 12, 17)
                 });
 
-	    var emps = cmd.ExecuteTable<Employee>();
+        var emps = cmd.ExecuteTable<Employee>();
     }
 ```
 
 #### <a name="ExecuteRow"></a>ExecuteRow
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
-        EMP emp = cmd.ExecuteRow<EMP>();
+        var emp = cmd.ExecuteRow<EMP>();
     }
 ```
 
 #### ExecuteRow customized
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
         var emp = cmd.ExecuteRow((row) =>
@@ -128,7 +145,7 @@ Calling an Execute method using a **dynamic** return type.
 #### <a name="ExecuteScalar"></a>ExecuteScalar
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
         int data = cmd.ExecuteScalar<int>();
@@ -138,41 +155,41 @@ Calling an Execute method using a **dynamic** return type.
 #### <a name="ExecuteDataSet"></a>ExecuteDataSet
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
-	    cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
-	    cmd.CommandText.AppendLine(" SELECT * FROM DEPT; ");
-	    var data = cmd.ExecuteDataSet<Employee, Department>();
+        cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
+        cmd.CommandText.AppendLine(" SELECT * FROM DEPT; ");
+        var data = cmd.ExecuteDataSet<Employee, Department>();
 
-	    int empCount = data.Item1.Count(); 
+        int empCount = data.Item1.Count(); 
     }
 ```
 
 #### <a name="FluentQuery"></a>FluentQuery
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
-	    int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
+        int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
                        .AddParameter("ID", 10)
                        .ExecuteScalar<int>();
 
-	    var employees = cmd.Query(@"SELECT EMPNO, ENAME 
-		                              FROM EMP 
-									 WHERE EMPNO > @ID",
-						   .AddParameter( new { ID = 10 } )
+        var employees = cmd.Query(@"SELECT EMPNO, ENAME 
+                                      FROM EMP 
+                                     WHERE EMPNO > @ID",
+                           .AddParameter( new { ID = 10 } )
                            .ExecuteTable( new 
-						   { 
-						       EmpNo = 0, 
-							   EName = String.Empty 
-						   });
+                           { 
+                               EmpNo = 0, 
+                               EName = String.Empty 
+                           });
     }
 ```
 
 #### <a name="TransactionBegin"></a>TransactionBegin
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" DELETE FROM EMP ");
 
@@ -185,12 +202,12 @@ Calling an Execute method using a **dynamic** return type.
 Other sample
 
 ```cs
-    using (var cmd1 = new SqlDatabaseCommand(_connection))
+    using (var cmd1 = new DatabaseCommand(_connection))
     {
         cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
         cmd1.TransactionBegin();
         cmd1.ExecuteNonQuery();
-        using (var cmd2 = new SqlDatabaseCommand(_connection, cmd1.Transaction))
+        using (var cmd2 = new DatabaseCommand(_connection, cmd1.Transaction))
         {
             cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
             int count = cmd2.ExecuteScalar<int>();
@@ -200,10 +217,10 @@ Other sample
 ```
 
 #### <a name="Logging"></a>Logging
-All SQL queries can be traced via the <b>.log</b> property.
+All SQL queries can be traced via the **Log** property.
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         // Easy
         cmd.Log = Console.WriteLine;
@@ -221,7 +238,7 @@ Define actions to execute code immediately before or after query execution.
 For example, to simplify unit tests or intergations with extra loggers.
 
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
         
@@ -247,8 +264,10 @@ For example, to simplify unit tests or intergations with extra loggers.
 
 #### <a name="RetryIfExceptionsOccured"></a>RetryIfExceptionsOccured
 
+Only for SqlDatabaseCommand (for SQL Server).
+
 ```cs
-    using (var cmd = new SqlDatabaseCommand(_connection))
+    using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.RetryIfExceptionsOccured.SetDeadLockCodes();
 
@@ -266,14 +285,14 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 ```cs
         public class DataService : IDataService
         {
-            public SqlDatabaseCommand GetDatabaseCommand()
+            public DatabaseCommand GetDatabaseCommand()
             {
-                return new SqlDatabaseCommand(CONNECTION_STRING);
+                return new DatabaseCommand(CONNECTION_STRING);
             }
 
-            public SqlDatabaseCommand GetDatabaseCommand(SqlTransaction transaction)
+            public DatabaseCommand GetDatabaseCommand(SqlTransaction transaction)
             {
-                return new SqlDatabaseCommand(transaction.Connection, transaction);
+                return new DatabaseCommand(transaction.Connection, transaction);
             }
         }
 ```
@@ -291,14 +310,14 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
                 _connection.Open();
             }
 
-            public SqlDatabaseCommand GetDatabaseCommand()
+            public DatabaseCommand GetDatabaseCommand()
             {
-                return new SqlDatabaseCommand(_connection);
+                return new DatabaseCommand(_connection);
             }
 
-            public SqlDatabaseCommand GetDatabaseCommand(SqlTransaction transaction)
+            public DatabaseCommand GetDatabaseCommand(SqlTransaction transaction)
             {
-                return new SqlDatabaseCommand(_connection, transaction);
+                return new DatabaseCommand(_connection, transaction);
             }
 
             protected virtual void Dispose(bool disposing)
@@ -334,6 +353,7 @@ You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformatio
 Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/SqlServer/Entities/Scott.tt) in your project and set your correct **Connection String**. Check if the .tt file properties are **Build Action** = Content and **Custom Tool = TextTemplatingFileGenerator**.
 
 **NEW** Since version 2.6, you can use the <a href="https://www.nuget.org/packages/Apps72.Dev.Data.Generator.Tools/">Data.Generator.Tools</a> to quickly generate all classes associated to your database tables.
+Requirements: install the .NET Core 2.1 SDK.
 Example: `DbCmd GenerateEntities -cs="Server=localhost;Database=Scott;" --provider=SqlServer` will create a Output.cs file with all entities.
 
 ```cs
@@ -441,8 +461,17 @@ For example:
 * Update SqlEntitiesGenerator to generate SQL Server, Oracle or SQLite entities.
 * Add a command line tool to generate entity classes.
 
+### Version 2.7
+
+* Add DataRow converter when executing a command (ExecuteTable<T>(Func<DataRow, T> converter)).
+* Renamed IDatabaseCommandBase to IDatabaseCommand to simplify interface usage. IDatabaseCommandBase is always usable.
+
+### Version 2.7.5
+
+* FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
+* FIX: For the Generator, set the correct type for SQL Server type TINYINT (System.Byte).
+
 ### [RoadMap]
 
-* Add DataRow manual management when executing a command (ExecuteTable<T>(Func<DataRow, T> action)).
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
 * Include Asynchronous methods.

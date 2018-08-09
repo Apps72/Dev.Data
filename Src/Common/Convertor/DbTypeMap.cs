@@ -28,12 +28,15 @@ namespace Apps72.Dev.Data.Convertor
                 DataTable allTypes = connection.GetSchema("DataTypes");
                 foreach (DataRow row in allTypes.Rows)
                 {
+                    if (String.Compare(Convert.ToString(row["TypeName"]), "tinyint", ignoreCase: true) == 0)
+                    {
+                        row["DataType"] = "System.Byte";    // TinyInt = System.Byte: Error in Microsoft SQL Server Type.
+                    }
+
                     _dbProviderTypeList.Add(new DbTypeMapEntry(Convert.ToString(row["TypeName"]),
                                                                Convert.ToInt32(row["ProviderDbType"]),
                                                                Convert.ToString(row["DataType"])));
                 }
-
-
             }
         }
 

@@ -50,7 +50,77 @@ namespace Data.Tests
 
         #endregion
 
-        #region EXECUTE METHODS
+        #region EMPTY REQUESTS
+
+        [TestMethod]
+        public void ExecuteEmptyScalarRequest_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual(string.Empty, cmd.CommandText.ToString());
+                Assert.AreEqual(null, data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteEmptyTableRequest_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                DataTable data = cmd.ExecuteTable();
+
+                Assert.AreEqual(string.Empty, cmd.CommandText.ToString());
+                Assert.AreEqual(0, data.Columns.Count);
+                Assert.AreEqual(0, data.Rows.Count);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteEmptyTypedTableRequest_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var data = cmd.ExecuteTable(new { id = 0, Name = ""});
+
+                Assert.AreEqual(string.Empty, cmd.CommandText.ToString());
+                Assert.AreEqual(0, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteNoResultTypedTableRequest_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EmpNo, EName FROM EMP WHERE 0 = 1 ");
+                var data = cmd.ExecuteTable(new { EmpNo = 0, EName = "" });
+
+                Assert.AreEqual(0, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteEmptyNonQueryRequest_Test()
+        {
+            using (SqlDatabaseCommand cmd = new SqlDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                int count = cmd.ExecuteNonQuery();
+
+                Assert.AreEqual(string.Empty, cmd.CommandText.ToString());
+                Assert.AreEqual(0, count);
+            }
+        }
+
+        #endregion
+
+        #region METHODS
 
         [TestMethod]
         public void Execute_Constructor1_Test()

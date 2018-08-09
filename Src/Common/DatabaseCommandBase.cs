@@ -13,7 +13,7 @@ namespace Apps72.Dev.Data
     /// </summary>
 
     [DebuggerDisplay("{CommandText}")]
-    public abstract partial class DatabaseCommandBase : IDatabaseCommandBase
+    public abstract partial class DatabaseCommandBase : IDatabaseCommand, IDatabaseCommandBase
     {
         #region EVENTS
 
@@ -100,7 +100,21 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the command type
         /// </summary>
-        public virtual System.Data.CommandType CommandType { get; set; }
+        public virtual System.Data.CommandType CommandType
+        {
+            get
+            {
+                if (this.Command != null)
+                    return this.Command.CommandType;
+                else
+                    return System.Data.CommandType.Text;
+            }
+            set
+            {
+                if (this.Command != null)
+                    this.Command.CommandType = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current active connection
@@ -123,11 +137,12 @@ namespace Apps72.Dev.Data
         {
             get
             {
-                return this.Command.Transaction;
+                return this.Command?.Transaction;
             }
             set
             {
-                this.Command.Transaction = value as DbTransaction;
+                if (this.Command != null)
+                    this.Command.Transaction = value as DbTransaction;
             }
         }
 
@@ -138,7 +153,7 @@ namespace Apps72.Dev.Data
         {
             get
             {
-                return this.Command.Parameters;
+                return this.Command?.Parameters;
             }
         }
 
@@ -168,6 +183,15 @@ namespace Apps72.Dev.Data
         #endregion
 
         #region METHODS
+
+        /// <summary>
+        /// Gets the full CommandText, integrating parameters values.
+        /// </summary>
+        /// <returns>Formatted query</returns>
+        public virtual string GetCommandTextFormatted()
+        {
+            return GetCommandTextFormatted(QueryFormat.Text);
+        }
 
         /// <summary>
         /// Gets the CommandText formatted with specified format
@@ -456,6 +480,26 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Execute the query and return an array of new instances of typed results filled with data table result.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="converter"></param>
+        /// <returns>Array of typed results</returns>
+        public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
+        {
+            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
+            int rowCount = table.Rows.Length;
+
+            var results = new T[rowCount];
+            for (int i = 0; i < rowCount; i++)
+            {
+                results[i] = converter.Invoke(table.Rows[i]);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
         /// <typeparam name="T">Object type</typeparam>
         /// <param name="itemOftype"></param>
         /// <returns>Array of typed results</returns>
@@ -529,6 +573,28 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter"></param>
+        /// <returns>First row of results</returns>
+        public virtual T ExecuteRow<T>(Func<Schema.DataRow, T> converter)
+        {
+            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return this.ExecuteScalar<T>();
+            }
+            else
+            {
+                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
+                if (table != null && table.Rows.Length > 0)
+                    return converter.Invoke(table.Rows[0]);
+                else
+                    return default(T);
+            }
+        }
+
+        /// <summary>
         /// Execute the query and return the count of modified rows
         /// </summary>
         /// <returns>Count of modified rows</returns>
@@ -552,7 +618,7 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                int rowsAffected = this.Command.ExecuteNonQuery();
+                int rowsAffected = this.Command.CommandText.Length > 0 ? this.Command.ExecuteNonQuery() : 0;
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
@@ -600,7 +666,7 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                object result = this.Command.ExecuteScalar();
+                object result = this.Command.CommandText.Length > 0 ? this.Command.ExecuteScalar() : null;
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
@@ -758,13 +824,20 @@ namespace Apps72.Dev.Data
                 var tables = new List<Schema.DataTable>();
 
                 // Send the request to the Database server
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                if (this.Command.CommandText.Length > 0)
                 {
-                    do
+                    using (DbDataReader dr = this.Command.ExecuteReader())
                     {
-                        tables.Add(new Schema.DataTable(dr, firstRowOnly));
+                        do
+                        {
+                            tables.Add(new Schema.DataTable(dr, firstRowOnly));
+                        }
+                        while (!firstRowOnly && dr.NextResult());
                     }
-                    while (!firstRowOnly && dr.NextResult());
+                }
+                else
+                {
+                    tables.Add(new Schema.DataTable());
                 }
 
                 // Action After Execution

@@ -26,6 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionOccuredEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\SqlEntitiesGenerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IDatabaseCommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IDatabaseCommand.cs" />
   </ItemGroup>
 </Project>

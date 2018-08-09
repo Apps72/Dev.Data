@@ -55,7 +55,7 @@ namespace Apps72.Dev.Data
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         /// <param name="commandTimeout">Maximum timeout of the queries</param>
         public DatabaseCommand(DbConnection connection, DbTransaction transaction, int commandTimeout)
-            : base(connection.CreateCommand(), transaction, commandTimeout)
+            : base(connection?.CreateCommand(), transaction, commandTimeout)
         {
 
         }
@@ -68,7 +68,7 @@ namespace Apps72.Dev.Data
         /// <param name="commandText">SQL query</param>
         /// <param name="commandTimeout">Maximum timeout of the queries</param>
         public DatabaseCommand(DbConnection connection, DbTransaction transaction, string commandText, int commandTimeout)
-            : base(connection.CreateCommand(), transaction, commandTimeout)
+            : base(connection?.CreateCommand(), transaction, commandTimeout)
         {
             base.CommandText = new System.Text.StringBuilder(commandText);
         }

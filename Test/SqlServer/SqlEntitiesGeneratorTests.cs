@@ -123,7 +123,7 @@ namespace Data.Tests
         }
 
         [TestMethod]
-        public void EntitiesGenerator_EmployeeSalary_MustBeInt64_Test()
+        public void EntitiesGenerator_EmployeeSalary_MustBeDecimal_Test()
         {
             SqlEntitiesGenerator entitiesGenerator = new SqlEntitiesGenerator(CONNECTION_STRING);
             DataTable table = entitiesGenerator.Tables.FirstOrDefault(t => t.Name == "EMP");
@@ -133,6 +133,29 @@ namespace Data.Tests
             Assert.AreEqual(typeof(decimal), column.DataType);
         }
 
+        [TestMethod]
+        public void EntitiesGenerator_SqlDataType_Test()
+        {
+            using (var connection = new System.Data.SqlClient.SqlConnection(CONNECTION_STRING))
+            {
+                connection.Open();
+
+                var privateTypeObject = new PrivateType("Apps72.Dev.Data", "Apps72.Dev.Data.Convertor.DbTypeMap");
+                privateTypeObject.InvokeStatic("Initialize", connection);
+
+                Type sqlInt = privateTypeObject.InvokeStatic("FirstType", "int") as Type;
+                Type sqlVarchar = privateTypeObject.InvokeStatic("FirstType", "varchar") as Type;
+                Type sqlTinyInt = privateTypeObject.InvokeStatic("FirstType", "tinyint") as Type;
+                Type sqlBit = privateTypeObject.InvokeStatic("FirstType", "bit") as Type;
+
+                Assert.AreEqual(typeof(int), sqlInt);
+                Assert.AreEqual(typeof(string), sqlVarchar);
+                Assert.AreEqual(typeof(byte), sqlTinyInt);
+                Assert.AreEqual(typeof(bool), sqlBit);
+
+                connection.Close();
+            }
+        }
 
         #endregion
     }

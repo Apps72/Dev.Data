@@ -139,13 +139,35 @@ namespace Apps72.Dev.Data.Schema
         }
 
         /// <summary>
+        /// Provides strongly-typed access of the column values in the specified row.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        public T Field<T>(string columnName)
+        {
+            return (T)this[columnName];
+        }
+
+        /// <summary>
+        /// Provides strongly-typed access of the column values in the specified row.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
+        public T Field<T>(int columnIndex)
+        {
+            return (T)this[columnIndex];
+        }
+
+        /// <summary>
         /// If item is null, creates a new instance of T type and sets all row values to the new T properties.
         /// If item is not null, sets all row values to item object properties
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
         /// <returns></returns>
-        public T ConvertTo<T>(T item)
+        internal T ConvertTo<T>(T item)
         {
             Type type = typeof(T);
             bool isDynamicType = Common.Convertor.DynamicConvertor.IsDynamic(type);
