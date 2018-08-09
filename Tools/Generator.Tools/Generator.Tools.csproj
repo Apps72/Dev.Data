@@ -10,22 +10,23 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>DbCmd</ToolCommandName>
     <PackageOutputPath>bin/nupkgs</PackageOutputPath>
-    <Version>2.6.0</Version>
+    <Version>2.7.5</Version>
     <Company>Denis Voituron</Company>
     <Authors>Denis Voituron</Authors>
     <Description>DbCmd is a command line tools to generate entities (class) from existing databases (SQL Server, Oracle or SQLite). This tool is also an assembly usable by your core project to retrieve tables and columns, and to generate C# or TypeScript code.
 
-Installation: `dotnet tool install -g Apps72.Dev.Data.Generator.Tools`
+Installation: dotnet tool install -g Apps72.Dev.Data.Generator.Tools
 
 Example: 
 This command gets all tables/columns and generates an Output.cs file with all equivalent classes.
-`DbCmd ge -cs=\"Server=localhost;Database=Scott;\" --provider=SqlServer`</Description>
+DbCmd ge -cs="Server=localhost;Database=Scott;" --provider=SqlServer</Description>
     <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
     <PackageTags>SQL SqlDatabaseCommand Entity DbCmd Generator</PackageTags>
     <Copyright>Copyright 2018 Denis Voituron</Copyright>
+    <PackageReleaseNotes>See https://github.com/Apps72/Dev.Data</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
