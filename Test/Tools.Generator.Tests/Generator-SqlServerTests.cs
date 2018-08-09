@@ -33,5 +33,6 @@ namespace Tools.Generator.Tests
 
             Assert.IsTrue(code.Contains("public virtual decimal? SAL { get; set; }"));
         }
+
     }
 }

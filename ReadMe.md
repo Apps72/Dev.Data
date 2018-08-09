@@ -469,6 +469,7 @@ For example:
 ### Version 2.7.5
 
 * FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
+* FIX: For the Generator, set the correct type for SQL Server type TINYINT (System.Byte).
 
 ### [RoadMap]
 
