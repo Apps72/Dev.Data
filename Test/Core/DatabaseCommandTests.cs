@@ -307,6 +307,44 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteScalarWithDbParameter_Test()
+        {
+            using (var cmd = GetDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ");
+
+                // Add manual parameter
+                cmd.AddParameter(new SqlParameter("@EmpNo", 7369));
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual("SMITH", data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithParameterTyped_Test()
+        {
+            using (var cmd = GetDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ");
+
+                // Add manual parameter
+                cmd.AddParameter("@EmpNo", 7369, System.Data.DbType.Int32, 4);
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual("SMITH", data);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteScalarTyped_Test()
         {
             using (var cmd = GetDatabaseCommand(_connection))
