@@ -736,6 +736,16 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Adds the specified <paramref name="dbParam"/> object to the parameters collection.
+        /// </summary>
+        /// <param name="dbParam">DbParameter value to add.</param>
+        public virtual DatabaseCommandBase AddParameter(DbParameter dbParam)
+        {
+            this.Command.Parameters.Add(dbParam);
+            return this;
+        }
+
+        /// <summary>
         /// Add all properties / values to the end of the <see cref="DbCommand.Parameters"/> property.
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
         /// </summary>
