@@ -471,6 +471,11 @@ For example:
 * FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
 * FIX: For the Generator, set the correct type for SQL Server type TINYINT (System.Byte).
 
+### Version 2.8
+
+* FIX: Check if the argument of `AddParameter<T>(T values)` method is a DbParameter.
+* Add a new argument to `AddParameter` method, to define the parameter size.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

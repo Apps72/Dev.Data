@@ -724,25 +724,44 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public virtual DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type)
         {
+            return AddParameter(name, value, type, 0);
+        }
+
+        /// <summary>
+        /// Adds a value to the end of the <see cref="DbCommand.Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <param name="type">Type of parameter.</param>
+        /// <param name="size">Size of parameter.</param>
+        /// <returns></returns>
+        public virtual DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type, int size)
+        {
             var dbCommand = this.Command;
             var param = dbCommand.CreateParameter();
 
             param.ParameterName = name;
             param.Value = value ?? DBNull.Value;
             if (type.HasValue) param.DbType = type.Value;
+            if (size > 0) param.Size = size;
 
             dbCommand.Parameters.Add(param);
             return this;
         }
 
         /// <summary>
-        /// Add all properties / values to the end of the <see cref="DbCommand.Parameters"/> property.
+        /// Add all properties / values to the end of the <see cref="DbCommand.Parameters"/> collection.
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
+        /// If <paramref name="values"/> is a DbParameter object, it will be immediately added to the <see cref="DbCommand.Parameters"/> collection.
         /// </summary>
-        /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
+        /// <param name="values">Object or anonymous object to convert all properties to parameters... or a DbParameter object.</param>
         public virtual DatabaseCommandBase AddParameter<T>(T values)
         {
-            Schema.DataParameter.AddValues<T>(this.Command, values);
+            if (values is DbParameter)
+                this.Command.Parameters.Add(values);
+            else
+                Schema.DataParameter.AddValues<T>(this.Command, values);
+
             return this;
         }
 

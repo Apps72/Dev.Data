@@ -97,6 +97,16 @@ namespace Apps72.Dev.Data
         DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type);
 
         /// <summary>
+        /// Adds a value to the end of the <see cref="Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <param name="type">Type of parameter.</param>
+        /// <param name="size">Size of parameter.</param>
+        /// <returns></returns>
+        DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type, int size);
+
+        /// <summary>
         /// Add all properties / values to the end of the <see cref="Parameters"/> property.
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
         /// </summary>
