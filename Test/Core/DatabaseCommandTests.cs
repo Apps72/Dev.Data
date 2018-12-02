@@ -319,6 +319,25 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteScalarWithObjectParameter_Test()
+        {
+            using (var cmd = GetDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ");
+
+                // Add manual parameter
+                cmd.AddParameter(new { EmpNo = 7369 });
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual("SMITH", data);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteScalarWithDbParameter_Test()
         {
             using (var cmd = GetDatabaseCommand(_connection))
@@ -329,7 +348,7 @@ namespace Data.Core.Tests
                                .AppendLine(" WHERE EMPNO = @EmpNo ");
 
                 // Add manual parameter
-                cmd.AddParameter(new SqlParameter("@EmpNo", 7369));
+                cmd.Parameters.Add(new SqlParameter("@EmpNo", 7369));
 
                 object data = cmd.ExecuteScalar();
 
@@ -1091,17 +1110,17 @@ namespace Data.Core.Tests
         #region GET DBCOMMAND
 
 
-        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection)
+        private IDatabaseCommand GetDatabaseCommand(DbConnection connection)
         {
             return new DatabaseCommand(connection);
         }
 
-        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection, DbTransaction transaction)
+        private IDatabaseCommand GetDatabaseCommand(DbConnection connection, DbTransaction transaction)
         {
             return new DatabaseCommand(connection, transaction);
         }
 
-        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection, string commandText)
+        private IDatabaseCommand GetDatabaseCommand(DbConnection connection, string commandText)
         {
             return new DatabaseCommand(connection, commandText);
         }

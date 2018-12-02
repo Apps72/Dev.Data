@@ -104,7 +104,7 @@ namespace Apps72.Dev.Data
         /// <param name="type">Type of parameter.</param>
         /// <param name="size">Size of parameter.</param>
         /// <returns></returns>
-        DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type, int size);
+        DatabaseCommand AddParameter(string name, object value, System.Data.DbType? type, int size);
 
         /// <summary>
         /// Add all properties / values to the end of the <see cref="Parameters"/> property.

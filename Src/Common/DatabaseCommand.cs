@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using Apps72.Dev.Data.Convertor;
+using System.Data;
 
 namespace Apps72.Dev.Data
 {
@@ -780,6 +781,20 @@ namespace Apps72.Dev.Data
             return AddParameter(name, value, null);
         }
 
+        public DatabaseCommand AddParameter(string name, object value, DbType? type, int size)
+        {
+            var dbCommand = this.Command;
+            var param = dbCommand.CreateParameter();
+
+            param.ParameterName = name;
+            param.Value = value ?? DBNull.Value;
+            if (type.HasValue) param.DbType = type.Value;
+            if (size > 0) param.Size = size;
+
+            dbCommand.Parameters.Add(param);
+            return this;
+        }
+
         /// <summary>
         /// Adds a value to the end of the <see cref="DbCommand.Parameters"/> property.
         /// </summary>
@@ -789,15 +804,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public virtual DatabaseCommand AddParameter(string name, object value, System.Data.DbType? type)
         {
-            var dbCommand = this.Command;
-            var param = dbCommand.CreateParameter();
-
-            param.ParameterName = name;
-            param.Value = value ?? DBNull.Value;
-            if (type.HasValue) param.DbType = type.Value;
-
-            dbCommand.Parameters.Add(param);
-            return this;
+            return AddParameter(name, value, null, 0);
         }
 
         /// <summary>
