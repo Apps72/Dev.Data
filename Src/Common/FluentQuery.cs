@@ -74,6 +74,21 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Add a new parameter to the current query.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">Name of this parameter</param>
+        /// <param name="value">Value of this paramater</param>
+        /// <param name="type">Type of this parameter</param>
+        /// <param name="size">Size of this parameter</param>
+        /// <returns></returns>
+        public virtual FluentQuery AddParameter<T>(string name, T value, DbType type, int size)
+        {
+            _databaseCommand.AddParameter(name, value, type, size);
+            return this;
+        }
+
+        /// <summary>
+        /// Add a new parameter to the current query.
+        /// </summary>
         /// <typeparam name="T">Type of this parameter</typeparam>
         /// <param name="values">Object contains properties to define parameter names and values</param>
         /// <returns></returns>
