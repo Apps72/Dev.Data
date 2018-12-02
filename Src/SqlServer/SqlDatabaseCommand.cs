@@ -15,7 +15,7 @@ namespace Apps72.Dev.Data
     /// }
     /// </code>
     /// </example>
-    public class SqlDatabaseCommand : DatabaseCommandBase
+    public class SqlDatabaseCommand : DatabaseCommand
     {
         private SqlDatabaseRetryExceptions _retryIfExceptionsOccured = null;
         private bool _mustAutoDisconnect = false;

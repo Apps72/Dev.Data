@@ -11,13 +11,13 @@ namespace Apps72.Dev.Data
     /// </summary>
     public partial class FluentQuery
     {
-        private DatabaseCommandBase _databaseCommand;
+        private DatabaseCommand _databaseCommand;
 
         /// <summary>
         /// Creates a new instance of FluentQuery
         /// </summary>
         /// <param name="databaseCommand"></param>
-        protected internal FluentQuery(DatabaseCommandBase databaseCommand)
+        protected internal FluentQuery(DatabaseCommand databaseCommand)
         {
             _databaseCommand = databaseCommand;
         }

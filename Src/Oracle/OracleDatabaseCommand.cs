@@ -15,7 +15,7 @@ namespace Apps72.Dev.Data.Oracle
     /// }
     /// </code>
     /// </example>
-    public class OracleDatabaseCommand : DatabaseCommandBase
+    public class OracleDatabaseCommand : DatabaseCommand
     {
         private bool _mustAutoDisconnect = false;
 

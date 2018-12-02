@@ -15,7 +15,7 @@ namespace Apps72.Dev.Data.Sqlite
     /// }
     /// </code>
     /// </example>
-    public class SqliteDatabaseCommand : DatabaseCommandBase
+    public class SqliteDatabaseCommand : DatabaseCommand
     {
         private bool _mustAutoDisconnect = false;
         

@@ -29,6 +29,18 @@ namespace Data.Core.Tests
             var cmd = GetDatabaseCommand(null);
 
             Assert.IsNotNull(cmd);
+
+            //using (var cmd = new DatabaseCommand(mySqlConnection))
+            //{
+            //    cmd.CommandText.AppendLine("SELECT ID, Name FROM EMployee");
+            //    var all = cmd.ExecuteTable<Employee>();     // List of all employees
+            //    var smith = cmd.ExecuteRow<Employee>();     // First employee
+            //    var id = cmd.ExecuteScalar<int>();          // ID of first employee
+
+            //    var emps = cmd.Query(" SELECT * FROM Employee WHERE ID > @ID ")
+            //                    .AddParameter("@ID", 10)
+            //                    .ExecuteTable<Employee>();
+            //}
         }
 
         [TestMethod]

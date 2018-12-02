@@ -17,28 +17,7 @@ namespace Common.Convertor
         internal const string DYNAMIC_NAMESPACE = "Apps72.Dev.Data.Dynamic";
         internal const string DYNAMIC_CLASS_NAME = "AnonymousClass";
 
-#if NETCOREAPP1_1
-        /// <summary>
-        /// Returns always False.
-        /// </summary>
-        /// <param name="type">NA</param>
-        /// <returns></returns>
-        public static bool IsDynamic(Type type)
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Returns always null.
-        /// </summary>
-        /// <param name="className">NA</param>
-        /// <param name="properties">NA</param>
-        /// <returns></returns>
-        public static Type GetDynamicType(string className, IDictionary<string, Type> properties)
-        {
-            return null;
-        }
-#else
+#if NETCOREAPP2_0 || NET46
         /// <summary>
         /// Returns True if the <paramref name="type"/> is dynamic.
         /// </summary>
@@ -161,6 +140,27 @@ namespace Common.Convertor
             }
             return result.ToString();
         }
-#endif
+#else
+        /// <summary>
+        /// Returns always False.
+        /// </summary>
+        /// <param name="type">NA</param>
+        /// <returns></returns>
+        public static bool IsDynamic(Type type)
+        {
+            return false;
         }
+
+        /// <summary>
+        /// Returns always null.
+        /// </summary>
+        /// <param name="className">NA</param>
+        /// <param name="properties">NA</param>
+        /// <returns></returns>
+        public static Type GetDynamicType(string className, IDictionary<string, Type> properties)
+        {
+            return null;
+        }
+#endif
     }
+}

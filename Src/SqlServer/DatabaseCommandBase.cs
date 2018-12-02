@@ -7,7 +7,7 @@ namespace Apps72.Dev.Data
     /// <summary>
     /// Base class with common methods to retrieve or manage data.
     /// </summary>
-    public partial class DatabaseCommandBase
+    public partial class DatabaseCommand
     {
         /// <summary>
         /// Execute query and return results by using a Datatable
