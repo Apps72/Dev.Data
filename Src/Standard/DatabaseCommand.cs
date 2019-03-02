@@ -132,18 +132,9 @@ namespace Apps72.Dev.Data
         public virtual SqlString CommandText { get; set; }
 
         /// <summary>
-        /// Gets a Fluent Query tool to execute SQL request.
+        /// Returns a Fluent Query tool to execute SQL request.
         /// </summary>
-        public FluentQuery Query => new FluentQuery(this);
-    
-        /// <summary>
-        /// Gets a Fluent Query tool to execute SQL request.
-        /// </summary>
-        /// <param name="commandText">SQL query to execute.</param>
-        public FluentQuery ForSql(SqlString commandText)
-        {
-            return new FluentQuery(this).ForSql(commandText);
-        }
+        public FluentQuery Query() => new FluentQuery(this);
 
         /// <summary>
         /// Gets the last raised exception 

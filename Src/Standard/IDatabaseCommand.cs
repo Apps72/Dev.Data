@@ -328,14 +328,8 @@ namespace Apps72.Dev.Data
         DbException Exception { get; }
 
         /// <summary>
-        /// Gets a Fluent Query tool to execute SQL request.
+        /// Returns a Fluent Query tool to execute SQL request.
         /// </summary>
-        FluentQuery Query { get; }
-
-        /// <summary>
-        /// Gets a Fluent Query tool to execute SQL request.
-        /// </summary>
-        /// <param name="sqlQuery">SQL query to execute.</param>
-        FluentQuery ForSql(SqlString sqlQuery);
+        FluentQuery Query();
     }
 }
