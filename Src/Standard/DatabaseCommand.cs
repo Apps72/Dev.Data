@@ -195,7 +195,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets the <see cref="CommandText"/> where parameters are filled by values.
         /// </summary>
-        public virtual string FormattedText => GetCommandTextFormatted(QueryFormat.Text);
+        public virtual string FormattedCommandText => GetCommandTextFormatted(QueryFormat.Text);
 
         #endregion
 

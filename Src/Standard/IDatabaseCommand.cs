@@ -51,7 +51,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets the <see cref="CommandText"/> where parameters are filled by values.
         /// </summary>
-        string FormattedText { get; }
+        string FormattedCommandText { get; }
 
         /// <summary>
         /// Set this property to execute an action immediately BEFORE the database request.
