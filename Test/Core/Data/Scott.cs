@@ -44,6 +44,15 @@ namespace Data.Core.Tests
             }
         }
 
+        public static int GetEmployeesCount(DbConnection currentConnection, DbTransaction transaction)
+        {
+            using (var cmd = new DatabaseCommand(currentConnection, transaction))
+            {
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                return cmd.ExecuteScalar<int>();
+            }
+        }
+
         public static int GetEmployeesCount(DbTransaction currentTransaction)
         {
             using (var cmd = new DatabaseCommand(currentTransaction))

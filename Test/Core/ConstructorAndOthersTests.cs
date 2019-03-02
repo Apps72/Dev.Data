@@ -52,6 +52,83 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void Constructor_Connection_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_Connection_Timeout_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection, 33))
+            {
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+                Assert.AreEqual(33, cmd.CommandTimeout);
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_Connection_CommandText_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection, "SELECT COUNT(*) FROM EMP"))
+            {
+                Assert.AreEqual("SELECT COUNT(*) FROM EMP", cmd.CommandText);
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_Transaction_Test()
+        {
+            var transaction = _connection.BeginTransaction();
+            using (var cmd = new DatabaseCommand(transaction))
+            {
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_Transaction_CommandText_Test()
+        {
+            var transaction = _connection.BeginTransaction();
+            using (var cmd = new DatabaseCommand(transaction, "SELECT COUNT(*) FROM EMP"))
+            {
+                Assert.AreEqual("SELECT COUNT(*) FROM EMP", cmd.CommandText);
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_Transaction_Timeout_Test()
+        {
+            var transaction = _connection.BeginTransaction();
+            using (var cmd = new DatabaseCommand(transaction, 33))
+            {
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+                Assert.AreEqual(33, cmd.CommandTimeout);
+            }
+        }
+
+        [TestMethod]
+        public void Constructor_Transaction_CommandText_Timeout_Test()
+        {
+            var transaction = _connection.BeginTransaction();
+            using (var cmd = new DatabaseCommand(transaction, "SELECT COUNT(*) FROM EMP", 33))
+            {
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+            }
+        }
+
+        [TestMethod]
         public void Command_ChangeCommandType_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))

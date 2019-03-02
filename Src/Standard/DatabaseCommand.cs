@@ -36,21 +36,10 @@ namespace Apps72.Dev.Data
         /// Create a command for a specified <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">Active connection</param>
-        public DatabaseCommand(DbConnection connection) 
+        public DatabaseCommand(DbConnection connection)
             : this(connection?.CreateCommand(), null, null, -1)
         {
 
-        }
-
-        /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
-        /// </summary>
-        /// <param name="connection">Active connection</param>
-        /// <param name="commandText">SQL query</param>
-        public DatabaseCommand(DbConnection connection, SqlString commandText)
-            : this(connection?.CreateCommand(), null, commandText, -1)
-        {
-           
         }
 
         /// <summary>
@@ -61,40 +50,6 @@ namespace Apps72.Dev.Data
             : this(transaction?.Connection?.CreateCommand(), transaction, null, -1)
         {
 
-        }
-
-        /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
-        /// </summary>
-        /// <param name="transaction">The transaction in which the SQL Query executes</param>
-        /// <param name="commandText">SQL query</param>
-        public DatabaseCommand(DbTransaction transaction, string commandText)
-            : this(transaction?.Connection?.CreateCommand(), transaction, commandText, -1)
-        {
-
-        }
-
-        /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
-        /// </summary>
-        /// <param name="transaction">The transaction in which the SQL Query executes</param>
-        /// <param name="commandTimeout">Maximum timeout of the queries</param>
-        public DatabaseCommand(DbTransaction transaction, int commandTimeout)
-            : this(transaction?.Connection?.CreateCommand(), transaction, null, commandTimeout)
-        {
-
-        }
-
-        /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
-        /// </summary>
-        /// <param name="transaction">The transaction in which the SQL Query executes</param>
-        /// <param name="commandText">SQL query</param>
-        /// <param name="commandTimeout">Maximum timeout of the queries</param>
-        public DatabaseCommand(DbTransaction transaction, string commandText, int commandTimeout)
-            : this(transaction?.Connection?.CreateCommand(), transaction, commandText, commandTimeout)
-        {
-            
         }
 
         /// <summary>
@@ -116,10 +71,10 @@ namespace Apps72.Dev.Data
             this.Command = command;
             this.Transaction = transaction;
 
-            if (commandTimeout >= 0) 
+            if (commandTimeout >= 0)
                 this.Command.CommandTimeout = commandTimeout;
 
-            this.CommandText = CommandText ?? new SqlString();
+            this.CommandText = commandText ?? new SqlString();
         }
 
         #endregion
@@ -155,6 +110,22 @@ namespace Apps72.Dev.Data
             {
                 if (this.Command != null)
                     this.Command.CommandType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the wait time in seconds, before terminating the attempt to execute a command
+        /// and generating an error.
+        /// </summary>
+        public int CommandTimeout
+        {
+            get
+            {
+                return this.Command.CommandTimeout;
+            }
+            set
+            {
+                this.Command.CommandTimeout = value;
             }
         }
 
