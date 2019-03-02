@@ -8,11 +8,10 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Returns a Fluent Query tool to execute SQL request.
         /// </summary>
-        /// <param name="commandText">Sql query</param>
-        [Obsolete("Use .Query().ForSql(commandText) methods.")]
-        public FluentQuery Query(SqlString commandText)
+        [Obsolete("Use .Query(commandText) method.")]
+        public FluentQuery Query()
         {
-            return new FluentQuery(this).ForSql(commandText);
+            return new FluentQuery(this);
         }
 
         /// <summary>

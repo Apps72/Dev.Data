@@ -167,6 +167,11 @@ namespace Apps72.Dev.Data
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return this.GetHashCode() ^ Value.GetHashCode();
+        }
+
         #endregion
     }
 }

@@ -330,6 +330,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Returns a Fluent Query tool to execute SQL request.
         /// </summary>
-        FluentQuery Query();
+        /// <param name="commandText">SQL query command</param>
+        FluentQuery Query(SqlString commandText);
     }
 }

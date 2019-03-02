@@ -134,7 +134,8 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Returns a Fluent Query tool to execute SQL request.
         /// </summary>
-        public FluentQuery Query() => new FluentQuery(this);
+        /// <param name="commandText">SQL query command</param>
+        public FluentQuery Query(SqlString commandText) => new FluentQuery(this).ForSql(commandText);
 
         /// <summary>
         /// Gets the last raised exception 

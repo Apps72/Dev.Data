@@ -40,7 +40,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         public virtual FluentQuery ForSql(SqlString commandText)
         {
-            _databaseCommand.CommandText = commandText;
+            _databaseCommand.CommandText.Append(commandText.Value);
             return this;
         }
 
