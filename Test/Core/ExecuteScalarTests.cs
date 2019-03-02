@@ -264,5 +264,18 @@ namespace Data.Core.Tests
                 Assert.AreEqual(null, data);
             }
         }
+
+        [TestMethod]
+        public void ExecuteScalarDynamic_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT COUNT(*) FROM EMP ";
+                var count = cmd.ExecuteScalar<dynamic>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
     }
 }

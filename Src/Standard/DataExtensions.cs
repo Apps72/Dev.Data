@@ -10,11 +10,12 @@ public static class DataExtensions
     /// Convert the parameter value to a DBNull.Value if this value is null.
     /// </summary>
     /// <param name="parameter"></param>
-    public static void ConvertToDBNull(this DbParameter parameter)
+    public static DbParameter ConvertToDBNull(this DbParameter parameter)
     {
         if (parameter.Value == null)
         {
             parameter.Value = DBNull.Value;
         }
+        return parameter;
     }
 }

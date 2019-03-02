@@ -94,5 +94,15 @@ namespace Data.Core.Tests
             var query = new SqlString("Hello");
             Assert.AreEqual("Hello", query.ToString());
         }
+
+        [TestMethod]
+        public void Replace_Test()
+        {
+            var query = new SqlString("Hello World");
+            var newQuery = query.Replace("World", "Belgium");
+
+            Assert.AreEqual("Hello Belgium", query);
+            Assert.AreEqual("Hello Belgium", newQuery);
+        }
     }
 }

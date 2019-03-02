@@ -152,5 +152,63 @@ namespace Data.Core.Tests
                 Assert.AreEqual(null, comm);
             }
         }
+
+        [TestMethod]
+        public void ExecuteRowDynamic_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO, ENAME, HIREDATE, COMM FROM EMP WHERE EMPNO = 7369";
+                var emp = cmd.ExecuteRow<dynamic>();
+
+                Assert.AreEqual(7369, emp.EMPNO);
+                Assert.AreEqual("SMITH", emp.ENAME);
+                Assert.AreEqual(new DateTime(1980, 12, 17), emp.HIREDATE);
+                Assert.AreEqual(null, emp.COMM);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteStarRowDynamic_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT * FROM EMP WHERE EMPNO = 7369";
+                var emp = cmd.ExecuteRow<dynamic>();
+
+                Assert.AreEqual(7369, emp.EMPNO);
+                Assert.AreEqual("SMITH", emp.ENAME);
+                Assert.AreEqual(new DateTime(1980, 12, 17), emp.HIREDATE);
+                Assert.AreEqual(null, emp.COMM);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTwoRowsDynamic_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO, ENAME, HIREDATE, COMM FROM EMP WHERE EMPNO = 7369";
+                var emp1 = cmd.ExecuteRow<dynamic>();
+
+                cmd.Clear();
+                cmd.CommandText = " SELECT EMPNO, ENAME, HIREDATE, COMM FROM EMP WHERE EMPNO = 7499";
+                var emp2 = cmd.ExecuteRow<dynamic>();
+
+                Assert.AreEqual(7369, emp1.EMPNO);
+                Assert.AreEqual("SMITH", emp1.ENAME);
+                Assert.AreEqual(new DateTime(1980, 12, 17), emp1.HIREDATE);
+                Assert.AreEqual(null, emp1.COMM);
+
+                Assert.AreEqual(7499, emp2.EMPNO);
+                Assert.AreEqual("ALLEN", emp2.ENAME);
+                Assert.AreEqual(new DateTime(1981, 02, 20), emp2.HIREDATE);
+                Assert.AreEqual(300, emp2.COMM);
+            }
+        }
+
     }
 }

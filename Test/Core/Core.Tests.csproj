@@ -7,11 +7,9 @@
 
   <ItemGroup>
     <Compile Remove="FluentQueryTests.cs" />
-    <Compile Remove="OLD.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="OLD.cs" />
     <None Include="FluentQueryTests.cs" />
   </ItemGroup>
 

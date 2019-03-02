@@ -107,6 +107,19 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Replaces all occurrences of a specified string in this instance with another
+        /// specified string.
+        /// </summary>
+        /// <param name="oldValue">The string to replace.</param>
+        /// <param name="newValue">The string that replaces oldValue, or null.</param>
+        public virtual SqlString Replace(string oldValue, string newValue)
+        {
+            _commandText.Replace(oldValue, newValue);
+            return this;
+        }
+
+
+        /// <summary>
         /// Implicit conversion of a string to a SqlString.
         /// So, you can use `SqlString sql = "SELECT * FROM MyTable"`.
         /// </summary>
