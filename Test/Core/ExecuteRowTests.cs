@@ -42,7 +42,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine("SELECT * FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = "SELECT * FROM EMP WHERE EMPNO = 7369";
                 EMP emp = cmd.ExecuteRow<EMP>();
 
                 Assert.AreEqual(7369, emp.EmpNo);
@@ -55,7 +55,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = " SELECT * FROM EMP WHERE EMPNO = 7369";
                 EMP emp = cmd.ExecuteRow<EMP>((row) =>
                 {
                     return new EMP()
@@ -75,7 +75,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = " SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 7369";
                 var emp = cmd.ExecuteRow((row) =>
                 {
                     return new
@@ -95,7 +95,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = " SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369";
                 var emp = cmd.ExecuteRow(new
                 {
                     EmpNo = 0,
@@ -114,7 +114,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = " SELECT EMPNO, ENAME, HIREDATE FROM EMP WHERE EMPNO = 7369";
                 var emp = cmd.ExecuteRow(new
                 {
                     EmpNo = 0,
@@ -133,7 +133,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT EMPNO FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = " SELECT EMPNO FROM EMP WHERE EMPNO = 7369";
                 int empno = cmd.ExecuteRow<int>();
 
                 Assert.AreEqual(7369, empno);
@@ -146,14 +146,11 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" SELECT COMM FROM EMP WHERE EMPNO = 7369");
+                cmd.CommandText = " SELECT COMM FROM EMP WHERE EMPNO = 7369";
                 int? comm = cmd.ExecuteRow<int?>();
 
                 Assert.AreEqual(null, comm);
             }
         }
-
-
-
     }
 }
