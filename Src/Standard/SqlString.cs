@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Common;
 using System.Text;
 
 namespace Apps72.Dev.Data
@@ -10,6 +9,15 @@ namespace Apps72.Dev.Data
     public class SqlString
     {
         private StringBuilder _commandText = new StringBuilder();
+
+        /// <summary>
+        /// Initializes a new empty instance of SqlString.
+        /// </summary>
+        /// <param name="value"></param>
+        public SqlString()
+        {
+            _commandText = new StringBuilder();
+        }
 
         /// <summary>
         /// Initializes a new instance of SqlString.
@@ -127,15 +135,25 @@ namespace Apps72.Dev.Data
             return _commandText.ToString();
         }
 
-        //internal DbCommand UpdateDbCommand(DbCommand command)
-        //{
+        #region COMPARAISONS
 
-        //    string sql = _commandText.ToString();
+        public static bool operator ==(SqlString obj1, SqlString obj2)
+        {
+            if (System.Object.ReferenceEquals(obj1, obj2)) return true;
+            return obj1?.Value.CompareTo(obj2?.Value) == 0;
+        }
 
-        //    if (String.CompareOrdinal(sql, command.CommandText) != 0)
-        //        command.CommandText = sql;
+        public static bool operator !=(SqlString obj1, SqlString obj2)
+        {
+            return !(obj1 == obj2);
+        }
 
-        //    return command;
-        //}
+        public override bool Equals(object obj)
+        {
+            if (obj is SqlString) return this == (obj as SqlString);
+            return false;
+        }
+
+        #endregion
     }
 }

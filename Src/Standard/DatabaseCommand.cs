@@ -37,7 +37,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="connection">Active connection</param>
         public DatabaseCommand(DbConnection connection) 
-            : this(connection.CreateCommand(), null, null, -1)
+            : this(connection?.CreateCommand(), null, null, -1)
         {
 
         }
@@ -48,7 +48,7 @@ namespace Apps72.Dev.Data
         /// <param name="connection">Active connection</param>
         /// <param name="commandText">SQL query</param>
         public DatabaseCommand(DbConnection connection, SqlString commandText)
-            : this(connection.CreateCommand(), null, commandText, -1)
+            : this(connection?.CreateCommand(), null, commandText, -1)
         {
            
         }
@@ -58,7 +58,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         public DatabaseCommand(DbTransaction transaction)
-            : this(transaction.Connection.CreateCommand(), transaction, null, -1)
+            : this(transaction?.Connection?.CreateCommand(), transaction, null, -1)
         {
 
         }
@@ -69,7 +69,7 @@ namespace Apps72.Dev.Data
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         /// <param name="commandText">SQL query</param>
         public DatabaseCommand(DbTransaction transaction, string commandText)
-            : this(transaction.Connection.CreateCommand(), transaction, commandText, -1)
+            : this(transaction?.Connection?.CreateCommand(), transaction, commandText, -1)
         {
 
         }
@@ -80,7 +80,7 @@ namespace Apps72.Dev.Data
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         /// <param name="commandTimeout">Maximum timeout of the queries</param>
         public DatabaseCommand(DbTransaction transaction, int commandTimeout)
-            : this(transaction.Connection.CreateCommand(), transaction, null, commandTimeout)
+            : this(transaction?.Connection?.CreateCommand(), transaction, null, commandTimeout)
         {
 
         }
@@ -92,7 +92,7 @@ namespace Apps72.Dev.Data
         /// <param name="commandText">SQL query</param>
         /// <param name="commandTimeout">Maximum timeout of the queries</param>
         public DatabaseCommand(DbTransaction transaction, string commandText, int commandTimeout)
-            : this(transaction.Connection.CreateCommand(), transaction, commandText, commandTimeout)
+            : this(transaction?.Connection?.CreateCommand(), transaction, commandText, commandTimeout)
         {
             
         }
@@ -106,7 +106,10 @@ namespace Apps72.Dev.Data
         /// <param name="commandTimeout">the wait time (in seconds) before terminating the attempt to execute a command and generating an error.</param>
         protected DatabaseCommand(DbCommand command, DbTransaction transaction, SqlString commandText, int commandTimeout)
         {
-            if (command.Connection != transaction.Connection)
+            if (command == null)
+                throw new ArgumentException("The DbCommand must be set. Check if your DbConnection or your DbTransaction is correctly defined.");
+
+            if (transaction != null && command.Connection != transaction.Connection)
                 throw new ArgumentException("Internal error: the DbTransaction and the DbCommand must be share the same DbConnection.");
 
             this.ThrowException = true;
@@ -116,7 +119,7 @@ namespace Apps72.Dev.Data
             if (commandTimeout >= 0) 
                 this.Command.CommandTimeout = commandTimeout;
 
-            this.CommandText = CommandText;
+            this.CommandText = CommandText ?? new SqlString();
         }
 
         #endregion
