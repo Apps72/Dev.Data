@@ -2,11 +2,12 @@
 
 DatabaseCommand is a set of components helping .NET developers to execute SQL Queries and to retrieve data.
 
-This C# library simplify all SQL Queries to external databases, using the base system class DbConnection. Several libraries are available for SQLServer, Oracle or SQLite. They all use the same kernel based on System.Data.DbConnection.
+This C# library simplify all SQL Queries to external databases, using the base system class DbConnection. 
+Your can use your favorites libraries for SQLServer, Oracle, SQLite, ...
 
 ## 1. Installation
 
-1. Add the [NuGet package Apps72.Dev.Data.Core](https://www.nuget.org/packages/Apps72.Dev.Data.Core) or a  preconfigured package for SQL Server, Oracle or SQLite (including the Core package and .NET database drivers).
+1. Add the [NuGet package Apps72.Dev.Data](https://www.nuget.org/packages/Apps72.Dev.Data).
 
 2. create a **SqlConnection** (or other database connection) in your project, and call the `Open()` method.
    
