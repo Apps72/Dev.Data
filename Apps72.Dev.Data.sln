@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{DF85A84E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator.Tools", "Tools\Generator.Tools\Generator.Tools.csproj", "{51A3ABB1-7522-453D-9204-697D51BC0383}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Src\Standard\Core.csproj", "{6F5316B6-52FF-4C8A-9581-D0B21ED21BC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Src\Core\Core.csproj", "{6F5316B6-52FF-4C8A-9581-D0B21ED21BC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
