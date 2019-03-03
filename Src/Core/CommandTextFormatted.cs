@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Apps72.Dev.Data
 {
     /// <summary>
-    /// Manage the CommantText to display SQL Query including parameters.
+    /// Manage the CommantText to display SQL Query including parameters. x
     /// </summary>
     public class CommandTextFormatted
     {

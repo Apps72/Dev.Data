@@ -5,12 +5,10 @@
         {
           "files": ["*.csproj"],
           "exclude": [ "**/bin/**", "**/obj/**" ],
-          "src": "../../Dev.Data/Src/Core"
+          "src": "../Src/Core"
         }
       ],
-      "dest": "api",
-      "disableGitFeatures": false,
-      "disableDefaultFilter": false
+      "dest": "api"
     }
   ],
   "build": {
@@ -59,7 +57,7 @@
     "markdownEngineName": "markdig",
     "noLangKeyword": false,
     "keepFileLink": false,
-    "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "cleanupCacheHistory": true,
+    "disableGitFeatures": true
   }
 }
