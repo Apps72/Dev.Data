@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Text;
 
 namespace Apps72.Dev.Data
 {
@@ -11,7 +12,7 @@ namespace Apps72.Dev.Data
     ///  Base class with common methods to retrieve or manage data.
     /// </summary>
 
-    [DebuggerDisplay("{FormattedText}")]
+    [DebuggerDisplay("{FormattedCommandText}")]
     public partial class DatabaseCommand : IDatabaseCommand
     {
         #region EVENTS
@@ -69,6 +70,7 @@ namespace Apps72.Dev.Data
 
             this.ThrowException = true;
             this.Command = command;
+            this.Tags = new List<string>();
             this.Transaction = transaction;
 
             if (commandTimeout >= 0)
@@ -170,6 +172,11 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Gets a list of tags, used to annotate the SQL query (using SQL comments)
+        /// </summary>
+        public virtual List<string> Tags { get; private set; }
+
+        /// <summary>
         /// Enable or disable the raise of exceptions when queries are executed.
         /// Default is True (Enabled).
         /// </summary>
@@ -217,8 +224,28 @@ namespace Apps72.Dev.Data
         /// <returns>Formatted query</returns>
         public virtual string GetCommandTextFormatted(QueryFormat format)
         {
-            this.Command.CommandText = this.CommandText.Value;
+            this.Command.CommandText = GetCommandTextWithTags();
             return new CommandTextFormatted(this.Command).GetSqlFormatted(format);
+        }
+
+        /// <summary>
+        /// Annotate the SQL query with a tag (as a SQL comment)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public virtual DatabaseCommand WithTag(string name)
+        {
+            if (name.Contains(Environment.NewLine))
+            {
+                foreach (var item in name.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    this.Tags.Add(item);
+                }
+            }
+            else
+                this.Tags.Add(name);
+
+            return this;
         }
 
         /// <summary>
@@ -226,6 +253,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         public virtual DatabaseCommand Clear()
         {
+            this.Tags.Clear();
             this.CommandText.Clear();
             this.Parameters.Clear();
             return this;
@@ -236,7 +264,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         public virtual DatabaseCommand Prepare()
         {
-            this.Command.CommandText = this.CommandText.Value;
+            this.Command.CommandText = GetCommandTextWithTags();
             this.Command.Prepare();
             return this;
         }
@@ -931,12 +959,36 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         private string Update_CommandDotCommandText_If_CommandText_IsNew()
         {
-            string sql = this.CommandText.ToString();
+            string sql = GetCommandTextWithTags();
 
             if (String.CompareOrdinal(sql, this.Command.CommandText) != 0)
                 this.Command.CommandText = sql;
 
             return this.Command.CommandText;
+        }
+
+        /// <summary>
+        /// Returns the complete CommandText, including Tags in comments.
+        /// </summary>
+        /// <returns></returns>
+        protected string GetCommandTextWithTags()
+        {
+            var sql = new StringBuilder();
+
+            // Add tags
+            foreach (var tag in this.Tags)
+            {
+                string[] splittedTag = tag.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                foreach (var item in splittedTag)
+                {
+                    sql.AppendLine($"-- {item}");
+                }
+            }
+
+            // Add SQL
+            sql.Append(this.CommandText.Value);
+
+            return sql.ToString();
         }
 
         #endregion
@@ -1011,6 +1063,13 @@ namespace Apps72.Dev.Data
         IDatabaseCommand IDatabaseCommand.AddParameter<T>(T values)
         {
             return AddParameter<T>(values);
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.WithTag(string name)
+        {
+            return WithTag(name);
         }
 
         #endregion

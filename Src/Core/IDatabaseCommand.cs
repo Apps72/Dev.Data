@@ -21,6 +21,11 @@ namespace Apps72.Dev.Data
         CommandType CommandType { get; set; }
 
         /// <summary>
+        /// Gets a list of tags, used to annotate the SQL query (using SQL comments)
+        /// </summary>
+        List<string> Tags { get; }       
+
+        /// <summary>
         /// Gets or sets the current transaction
         /// </summary>
         DbTransaction Transaction { get; set; }
@@ -67,6 +72,13 @@ namespace Apps72.Dev.Data
         /// Prepare a query
         /// </summary>
         IDatabaseCommand Prepare();
+
+        /// <summary>
+        /// Annotate the SQL query with a tag (using SQL comments)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        IDatabaseCommand WithTag(string name);
 
         /// <summary>
         /// Begin a transaction into the database

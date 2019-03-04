@@ -228,6 +228,11 @@
             Gets sql parameters of the query
             </summary>
         </member>
+        <member name="P:Apps72.Dev.Data.DatabaseCommand.Tags">
+            <summary>
+            Gets a list of tags, used to annotate the SQL query (using SQL comments)
+            </summary>
+        </member>
         <member name="P:Apps72.Dev.Data.DatabaseCommand.ThrowException">
             <summary>
             Enable or disable the raise of exceptions when queries are executed.
@@ -268,6 +273,13 @@
             </summary>
             <param name="format">Use Text to format as Simple SQL Query or use HTML to format as Colored SQL Query.</param>
             <returns>Formatted query</returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.WithTag(System.String)">
+            <summary>
+            Annotate the SQL query with a tag (as a SQL comment)
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.Clear">
             <summary>
@@ -623,6 +635,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.GetCommandTextWithTags">
+            <summary>
+            Returns the complete CommandText, including Tags in comments.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#Clear">
             <summary />
         </member>
@@ -645,6 +663,9 @@
             <summary />
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#AddParameter``1(``0)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#WithTag(System.String)">
             <summary />
         </member>
         <member name="T:Apps72.Dev.Data.Convertor.DbTypeMap">
@@ -1126,6 +1147,11 @@
             Gets or sets the command type
             </summary>
         </member>
+        <member name="P:Apps72.Dev.Data.IDatabaseCommand.Tags">
+            <summary>
+            Gets a list of tags, used to annotate the SQL query (using SQL comments)
+            </summary>
+        </member>
         <member name="P:Apps72.Dev.Data.IDatabaseCommand.Transaction">
             <summary>
             Gets or sets the current transaction
@@ -1173,6 +1199,13 @@
             <summary>
             Prepare a query
             </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.IDatabaseCommand.WithTag(System.String)">
+            <summary>
+            Annotate the SQL query with a tag (using SQL comments)
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
         </member>
         <member name="M:Apps72.Dev.Data.IDatabaseCommand.TransactionBegin">
             <summary>
