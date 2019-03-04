@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 
 namespace Apps72.Dev.Data
 {
@@ -11,11 +10,6 @@ namespace Apps72.Dev.Data
     /// </summary>
     public partial interface IDatabaseCommand : IDisposable
     {
-        /// <summary>
-        /// Event raised when an SQL Exception occured (in Execute Methods)
-        /// </summary>
-        event DatabaseCommand.ExceptionOccuredEventHandler ExceptionOccured;
-
         /// <summary>
         /// Gets or sets the sql query
         /// </summary>
@@ -56,23 +50,23 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Set this property to execute an action immediately BEFORE the database request.
         /// </summary>
-        Action<DatabaseCommand> ActionBeforeExecution { get; set; }
+        Action<IDatabaseCommand> ActionBeforeExecution { get; set; }
 
         /// <summary>
         /// Set this property to execute an action immediately AFTER the database request,
         /// and before the type convertions.
         /// </summary>
-        Action<DatabaseCommand, IEnumerable<Schema.DataTable>> ActionAfterExecution { get; set; }
+        Action<IDatabaseCommand, IEnumerable<Schema.DataTable>> ActionAfterExecution { get; set; }
 
         /// <summary>
         /// Delete the CommandText and the all sql parameters
         /// </summary>
-        DatabaseCommand Clear();
+        IDatabaseCommand Clear();
 
         /// <summary>
         /// Prepare a query
         /// </summary>
-        DatabaseCommand Prepare();
+        IDatabaseCommand Prepare();
 
         /// <summary>
         /// Begin a transaction into the database
@@ -96,7 +90,7 @@ namespace Apps72.Dev.Data
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <returns></returns>
-        DatabaseCommand AddParameter(string name, object value);
+        IDatabaseCommand AddParameter(string name, object value);
 
         /// <summary>
         /// Adds a value to the end of the <see cref="Parameters"/> property.
@@ -105,7 +99,7 @@ namespace Apps72.Dev.Data
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <param name="type">Type of parameter.</param>
         /// <returns></returns>
-        DatabaseCommand AddParameter(string name, object value, DbType type);
+        IDatabaseCommand AddParameter(string name, object value, DbType type);
 
         /// <summary>
         /// Adds a value to the end of the <see cref="Parameters"/> property.
@@ -115,14 +109,14 @@ namespace Apps72.Dev.Data
         /// <param name="type">Type of parameter.</param>
         /// <param name="size">Size of parameter.</param>
         /// <returns></returns>
-        DatabaseCommand AddParameter(string name, object value, DbType? type, int? size);
+        IDatabaseCommand AddParameter(string name, object value, DbType? type, int? size);
 
         /// <summary>
         /// Add all properties / values to the end of the <see cref="Parameters"/> property.
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
         /// </summary>
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
-        DatabaseCommand AddParameter<T>(T values);
+        IDatabaseCommand AddParameter<T>(T values);
 
         /// <summary>
         /// Gets the full CommandText, integrating parameters values.

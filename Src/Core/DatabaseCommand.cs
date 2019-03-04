@@ -940,5 +940,79 @@ namespace Apps72.Dev.Data
         }
 
         #endregion
+
+        #region Interface
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.Clear()
+        {
+            return Clear();
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.Prepare()
+        {
+            return Prepare();
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        Action<IDatabaseCommand> IDatabaseCommand.ActionBeforeExecution
+        {
+            get
+            {
+                return (Action<IDatabaseCommand>)ActionBeforeExecution;
+            }
+            set
+            {
+                ActionBeforeExecution = value;
+            }
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        Action<IDatabaseCommand, IEnumerable<Schema.DataTable>> IDatabaseCommand.ActionAfterExecution
+        {
+            get
+            {
+                return (Action<IDatabaseCommand, IEnumerable<Schema.DataTable>>)ActionAfterExecution;
+            }
+            set
+            {
+                ActionAfterExecution = value;
+            }
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value)
+        {
+            return AddParameter(name, value);
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, DbType type)
+        {
+            return AddParameter(name, value, type);
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, DbType? type, int? size)
+        {
+            return AddParameter(name, value, type, size);
+        }
+
+        /// <summary />
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        IDatabaseCommand IDatabaseCommand.AddParameter<T>(T values)
+        {
+            return AddParameter<T>(values);
+        }
+
+        #endregion
     }
 }
