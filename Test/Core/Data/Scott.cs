@@ -44,6 +44,7 @@ namespace Data.Core.Tests
             }
         }
 
+        [Obsolete]
         public static int GetEmployeesCount(DbConnection currentConnection, DbTransaction transaction)
         {
             using (var cmd = new DatabaseCommand(currentConnection, transaction))
