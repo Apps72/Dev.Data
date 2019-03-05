@@ -14,12 +14,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DbTypeMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\DynamicConvertor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertor\TypeExtension.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DatabaseCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FluentQuery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\DatabaseFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\SchemaFields.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generator\TableAndColumn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Obsolete.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataColumn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Schema\DataRow.cs" />

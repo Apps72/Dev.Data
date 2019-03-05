@@ -29,6 +29,18 @@ namespace Data.Core.Tests
             var cmd = GetDatabaseCommand(null);
 
             Assert.IsNotNull(cmd);
+
+            //using (var cmd = new DatabaseCommand(mySqlConnection))
+            //{
+            //    cmd.CommandText.AppendLine("SELECT ID, Name FROM EMployee");
+            //    var all = cmd.ExecuteTable<Employee>();     // List of all employees
+            //    var smith = cmd.ExecuteRow<Employee>();     // First employee
+            //    var id = cmd.ExecuteScalar<int>();          // ID of first employee
+
+            //    var emps = cmd.Query(" SELECT * FROM Employee WHERE ID > @ID ")
+            //                    .AddParameter("@ID", 10)
+            //                    .ExecuteTable<Employee>();
+            //}
         }
 
         [TestMethod]
@@ -303,6 +315,63 @@ namespace Data.Core.Tests
                 object data = cmd.ExecuteScalar();
 
                 Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithObjectParameter_Test()
+        {
+            using (var cmd = GetDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ");
+
+                // Add manual parameter
+                cmd.AddParameter(new { EmpNo = 7369 });
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual("SMITH", data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithDbParameter_Test()
+        {
+            using (var cmd = GetDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ");
+
+                // Add manual parameter
+                cmd.Parameters.Add(new SqlParameter("@EmpNo", 7369));
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual("SMITH", data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithParameterTyped_Test()
+        {
+            using (var cmd = GetDatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT ENAME ")
+                               .AppendLine("  FROM EMP ")
+                               .AppendLine(" WHERE EMPNO = @EmpNo ");
+
+                // Add manual parameter
+                cmd.AddParameter("@EmpNo", 7369, System.Data.DbType.Int32, 4);
+
+                object data = cmd.ExecuteScalar();
+
+                Assert.AreEqual("SMITH", data);
             }
         }
 
@@ -1041,17 +1110,17 @@ namespace Data.Core.Tests
         #region GET DBCOMMAND
 
 
-        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection)
+        private IDatabaseCommand GetDatabaseCommand(DbConnection connection)
         {
             return new DatabaseCommand(connection);
         }
 
-        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection, DbTransaction transaction)
+        private IDatabaseCommand GetDatabaseCommand(DbConnection connection, DbTransaction transaction)
         {
             return new DatabaseCommand(connection, transaction);
         }
 
-        private IDatabaseCommandBase GetDatabaseCommand(DbConnection connection, string commandText)
+        private IDatabaseCommand GetDatabaseCommand(DbConnection connection, string commandText)
         {
             return new DatabaseCommand(connection, commandText);
         }

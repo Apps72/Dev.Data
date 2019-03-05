@@ -11,13 +11,13 @@ namespace Apps72.Dev.Data
     /// </summary>
     public partial class FluentQuery
     {
-        private DatabaseCommandBase _databaseCommand;
+        private DatabaseCommand _databaseCommand;
 
         /// <summary>
         /// Creates a new instance of FluentQuery
         /// </summary>
         /// <param name="databaseCommand"></param>
-        protected internal FluentQuery(DatabaseCommandBase databaseCommand)
+        protected internal FluentQuery(DatabaseCommand databaseCommand)
         {
             _databaseCommand = databaseCommand;
         }
@@ -68,6 +68,21 @@ namespace Apps72.Dev.Data
         public virtual FluentQuery AddParameter<T>(string name, T value, DbType type)
         {
             _databaseCommand.AddParameter(name, value, type);
+            return this;
+        }
+
+        /// <summary>
+        /// Add a new parameter to the current query.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">Name of this parameter</param>
+        /// <param name="value">Value of this paramater</param>
+        /// <param name="type">Type of this parameter</param>
+        /// <param name="size">Size of this parameter</param>
+        /// <returns></returns>
+        public virtual FluentQuery AddParameter<T>(string name, T value, DbType type, int size)
+        {
+            _databaseCommand.AddParameter(name, value, type, size);
             return this;
         }
 

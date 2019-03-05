@@ -2,27 +2,27 @@
 
 ## Introduction
 
-This C# library simplify all SQL Queries to external databases, using the base class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
-Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQLite** are included.
+This C# library simplify SQL Queries to external databases, using the standard class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
+Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQLite**.
+
+First, create a SqlConnection or an other DbConnection. 
+
 
 ```cs   
-    var cmd   = new DatabaseCommand(mySqlConnection);
-
-    var all   = cmd.ExecuteTable<Employee>();
-    var smith = cmd.ExecuteRow<dynamic>();
-    int count = cmd.ExecuteScalar<int>();
-
-    var emps  = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
-                   .AddParameter("ID", 10)
-                   .ExecuteTable<Employee>();
+using (var cmd = new DatabaseCommand(mySqlConnection))
+{
+    cmd.CommandText.AppendLine("SELECT ID, Name FROM EMployee");
+    var all = cmd.ExecuteTable<Employee>();     // List of all employees
+    var smith = cmd.ExecuteRow<Employee>();     // First employee
+    var id = cmd.ExecuteScalar<int>();          // ID of first employee
+    
+    var emps = cmd.Query(" SELECT * FROM Employee WHERE ID > @ID ")
+                  .AddParameter("@ID", 10)
+                  .ExecuteTable<Employee>();
+}
 ```
 
-First, you need to add the .NET Core NuGet packages : https://www.nuget.org/packages/Apps72.Dev.Data.Core
 Many preconfigured packages are available for SQL Server, Oracle, SQLite or a generic .NET Core library: [NuGet Packages](https://www.nuget.org/packages?q=Apps72.Dev.Data).
-
-Next, you need to create a SqlConnection or other database connection. 
-The SqlConnection will be not closed by this library
-The ConnectionString will instanciated a temporary SqlConnection for this query and will be closed after using.
 
 Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications, or SQL Server 2008 R2 for SQL CLR Stored procedures, or .NET Standard 2.0 for .NET Core library.
 
@@ -470,6 +470,11 @@ For example:
 
 * FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
 * FIX: For the Generator, set the correct type for SQL Server type TINYINT (System.Byte).
+
+### Version 2.8
+
+* FIX: Check if the argument of `AddParameter<T>(T values)` method is a DbParameter.
+* Add a new argument to `AddParameter` method, to define the parameter size.
 
 ### [RoadMap]
 

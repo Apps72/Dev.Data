@@ -45,13 +45,13 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Set this property to execute an action immediately BEFORE the database request.
         /// </summary>
-        Action<DatabaseCommandBase> ActionBeforeExecution { get; set; }
+        Action<DatabaseCommand> ActionBeforeExecution { get; set; }
 
         /// <summary>
         /// Set this property to execute an action immediately AFTER the database request,
         /// and before the type convertions.
         /// </summary>
-        Action<DatabaseCommandBase, IEnumerable<Schema.DataTable>> ActionAfterExecution { get; set; }
+        Action<DatabaseCommand, IEnumerable<Schema.DataTable>> ActionAfterExecution { get; set; }
 
         /// <summary>
         /// Delete the CommandText and the all sql parameters
@@ -85,7 +85,7 @@ namespace Apps72.Dev.Data
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <returns></returns>
-        DatabaseCommandBase AddParameter(string name, object value);
+        DatabaseCommand AddParameter(string name, object value);
 
         /// <summary>
         /// Adds a value to the end of the <see cref="Parameters"/> property.
@@ -94,14 +94,24 @@ namespace Apps72.Dev.Data
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <param name="type">Type of parameter.</param>
         /// <returns></returns>
-        DatabaseCommandBase AddParameter(string name, object value, System.Data.DbType? type);
+        DatabaseCommand AddParameter(string name, object value, System.Data.DbType? type);
+
+        /// <summary>
+        /// Adds a value to the end of the <see cref="Parameters"/> property.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
+        /// <param name="type">Type of parameter.</param>
+        /// <param name="size">Size of parameter.</param>
+        /// <returns></returns>
+        DatabaseCommand AddParameter(string name, object value, System.Data.DbType? type, int size);
 
         /// <summary>
         /// Add all properties / values to the end of the <see cref="Parameters"/> property.
         /// If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
         /// </summary>
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
-        DatabaseCommandBase AddParameter<T>(T values);
+        DatabaseCommand AddParameter<T>(T values);
 
         /// <summary>
         /// Gets the full CommandText, integrating parameters values.
@@ -318,13 +328,4 @@ namespace Apps72.Dev.Data
         FluentQuery Query<T>(string sqlQuery, T parameters);
     }
 
-    /// <summary>
-    /// Base Interface to manage all DataBaseCommands.
-    /// IDatabaseCommandBase and IDatabaseCommand are exactly same interfaces.
-    /// </summary>
-    [Obsolete("Renamed. Use IDatabaseCommand instead.")]
-    public partial interface IDatabaseCommandBase : IDatabaseCommand
-    {
-
-    }
-    }
+}
