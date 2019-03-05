@@ -9,7 +9,9 @@
     <Authors>Denis Voituron</Authors>
     <Company>Denis Voituron</Company>
     <Product>DatabaseCommand</Product>
-    <PackageId>Apps72.Dev.Data</PackageId>
+    <Title>DatabaseCommand to execute SQL Queries</Title>
+    <PackageId>Apps72.Dev.Data.Core</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>

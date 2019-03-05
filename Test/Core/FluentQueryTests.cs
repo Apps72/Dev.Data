@@ -39,6 +39,7 @@ namespace Data.Core.Tests
         #endregion
 
         [TestMethod]
+        [Obsolete]
         public void ForSql_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
@@ -66,6 +67,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        [Obsolete]
         public void CompactFluent_WithParameters_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
