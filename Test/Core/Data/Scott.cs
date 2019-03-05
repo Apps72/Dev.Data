@@ -16,11 +16,15 @@ namespace Data.Core.Tests
     public class EMP : EMPBase
     {
         public int? SAL { get; set; }       // Not used, because there are a Salary property tagged [Column("SAL")]
+
         [Apps72.Dev.Data.Annotations.Column("sal")]
         public decimal? Salary { get; set; }
+
         [Apps72.Dev.Data.Annotations.Column("MGR")]
         public int? Manager { get; set; }
+
         public int? MGR { get; set; }       // Not used, because there are a Manager property tagged [Column("MGR")]
+
         public string ColumnNotUse { get; set; }
 
         public static EMP Smith
@@ -33,12 +37,26 @@ namespace Data.Core.Tests
 
         public static int GetEmployeesCount(DbConnection currentConnection)
         {
-            return GetEmployeesCount(currentConnection, null);
+            using (var cmd = new DatabaseCommand(currentConnection))
+            {
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                return cmd.ExecuteScalar<int>();
+            }
         }
 
-        public static int GetEmployeesCount(DbConnection currentConnection, DbTransaction currentTransaction)
+        [Obsolete]
+        public static int GetEmployeesCount(DbConnection currentConnection, DbTransaction transaction)
         {
-            using (var cmd = new DatabaseCommand(currentConnection, currentTransaction, string.Empty))
+            using (var cmd = new DatabaseCommand(currentConnection, transaction))
+            {
+                cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+                return cmd.ExecuteScalar<int>();
+            }
+        }
+
+        public static int GetEmployeesCount(DbTransaction currentTransaction)
+        {
+            using (var cmd = new DatabaseCommand(currentTransaction))
             {
                 cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
                 return cmd.ExecuteScalar<int>();
@@ -49,6 +67,7 @@ namespace Data.Core.Tests
     public partial class DEPT
     {
         public virtual int DeptNo { get; set; }
+
         public virtual string DName { get; set; }
         public virtual string Loc { get; set; }
 
@@ -57,7 +76,7 @@ namespace Data.Core.Tests
             get
             {
                 return new DEPT() { DeptNo = 10, DName = "ACCOUNTING", Loc = "NEW YORK" };
-                }
+            }
         }
     }
 }

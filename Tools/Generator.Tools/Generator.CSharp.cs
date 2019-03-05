@@ -6,10 +6,10 @@ namespace Apps72.Dev.Data.Generator.Tools
 {
     internal class GeneratorCSharp
     {
-        private SqlEntitiesGenerator _generator;
+        private EntityGenerator _generator;
         private Arguments _arguments;
 
-        public GeneratorCSharp(SqlEntitiesGenerator generator, Arguments arguments)
+        public GeneratorCSharp(EntityGenerator generator, Arguments arguments)
         {
             _generator = generator;
             _arguments = arguments;

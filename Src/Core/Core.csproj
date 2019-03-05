@@ -1,42 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ApplicationIcon />
-    <OutputTypeEx>library</OutputTypeEx>
-    <StartupObject />
-    <AssemblyVersion>2.8.0.0</AssemblyVersion>
-    <Version>2.8</Version>
+    <TargetFrameworks>net40;netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <AssemblyName>Apps72.Dev.Data</AssemblyName>
+    <RootNamespace>Apps72.Dev.Data</RootNamespace>
+    <Version>3.0.1-beta</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>Apps72.Dev.Data.Core</PackageId>
     <Authors>Denis Voituron</Authors>
-    <Copyright>Copyright 2018 Denis Voituron</Copyright>
-    <Description>The Dev.Data.DatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from servers. It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</Description>
-    <Company />
-    <Product>SqlDatabaseCommand .NET Core version</Product>
+    <Company>Denis Voituron</Company>
+    <Product>DatabaseCommand</Product>
+    <Title>DatabaseCommand to execute SQL Queries</Title>
+    <PackageId>Apps72.Dev.Data.Core</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>
     <PackageReleaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</PackageReleaseNotes>
-    <PackageTags>Data Databse SQL DatabaseCommand DotNetCore Oracle SQLite SqlServer Dapper</PackageTags>
-    <RepositoryUrl></RepositoryUrl>
-    <AssemblyName>Apps72.Dev.Data.Core</AssemblyName>
-    <RootNamespace>Apps72.Dev.Data.Core</RootNamespace>
-    <FileVersion>2.8.0.0</FileVersion>
+    <PackageTags>Data Database SQL DatabaseCommand DotNetCore Oracle SQLite SqlServer Dapper</PackageTags>
+    <Copyright>Copyright 2019 Denis Voituron</Copyright>
+    <Description>This DatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQL Server, Oracle, SQLite, ... It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+    <DocumentationFile>C:\VSO\Perso\Apps72\Dev.Data\Src\Core\Apps72.Dev.Data.xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.0\Apps72.Dev.Data.Core.xml</DocumentationFile>
-  </PropertyGroup>
+  <!--NET 4.0-->
+  <ItemGroup Condition=" $(TargetFramework) =='net40' ">
 
-  <Import Project="..\Common\Common.projitems" Label="Shared" />
-
-  <ItemGroup>
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
+
+  <!--NET Core 2.0-->
+  <ItemGroup Condition=" $(TargetFramework) =='netcoreapp2.0' ">
+    <PackageReference Include="System.Data.Common" Version=" 4.3.0" />
+  </ItemGroup>
+
+  <!--NET Standard 2.0-->
+  <ItemGroup Condition=" $(TargetFramework) =='netstandard2.0' ">
+    <PackageReference Include="System.Data.Common" Version=" 4.3.0" />
+  </ItemGroup>
+
 
 </Project>

@@ -10,7 +10,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>DbCmd</ToolCommandName>
     <PackageOutputPath>bin/nupkgs</PackageOutputPath>
-    <Version>2.7.5</Version>
+    <Version>3.0.0</Version>
     <Company>Denis Voituron</Company>
     <Authors>Denis Voituron</Authors>
     <Description>DbCmd is a command line tools to generate entities (class) from existing databases (SQL Server, Oracle or SQLite). This tool is also an assembly usable by your core project to retrieve tables and columns, and to generate C# or TypeScript code.
@@ -22,7 +22,7 @@ This command gets all tables/columns and generates an Output.cs file with all eq
 DbCmd ge -cs="Server=localhost;Database=Scott;" --provider=SqlServer</Description>
     <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
     <PackageTags>SQL SqlDatabaseCommand Entity DbCmd Generator</PackageTags>
     <Copyright>Copyright 2018 Denis Voituron</Copyright>
@@ -30,28 +30,12 @@ DbCmd ge -cs="Server=localhost;Database=Scott;" --provider=SqlServer</Descriptio
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.1.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.2.2" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Src\Core\Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Oracle.ManagedDataAccess">
-      <HintPath>Oracle.ManagedDataAccess.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Oracle.ManagedDataAccess.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>
