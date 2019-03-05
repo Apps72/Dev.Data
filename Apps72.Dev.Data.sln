@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A50066B3-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C95A18A-6163-4B25-832A-C5F6E82C1F45}"
 	ProjectSection(SolutionItems) = preProject
-		licence.txt = licence.txt
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
