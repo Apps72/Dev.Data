@@ -109,7 +109,7 @@ namespace Apps72.Dev.Data.Schema
             if (this.Rows == null || this.Rows.Length <= 0)
                 return new T[0];
 
-            T[] results = new T[this.Rows.Count()];
+            var results = new T[this.Rows.Count()];
 
             // If is Primitive type (string, int, ...)
             if (Apps72.Dev.Data.Convertor.TypeExtension.IsPrimitive(typeof(T)))

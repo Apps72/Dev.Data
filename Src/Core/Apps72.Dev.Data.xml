@@ -39,11 +39,29 @@
             Manage the CommantText to display SQL Query including parameters. x
             </summary>
         </member>
-        <member name="M:Apps72.Dev.Data.CommandTextFormatted.#ctor(System.Data.Common.DbCommand)">
+        <member name="M:Apps72.Dev.Data.CommandTextFormatted.#ctor(Apps72.Dev.Data.DatabaseCommand)">
             <summary>
             Initializes a new instance of CommandTextFormatted
             </summary>
             <param name="command"></param>
+        </member>
+        <member name="P:Apps72.Dev.Data.CommandTextFormatted.CommandAsText">
+            <summary>
+            Gets the <see cref="P:Apps72.Dev.Data.DatabaseCommand.CommandText"/> 
+            with parameters replaced by values.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.CommandTextFormatted.CommandAsHtml">
+            <summary>
+            Gets the <see cref="P:Apps72.Dev.Data.DatabaseCommand.CommandText"/> 
+            with parameters replaced by values, and colorized using HTML tags.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.CommandTextFormatted.CommandAsVariables">
+            <summary>
+            Gets the <see cref="P:Apps72.Dev.Data.DatabaseCommand.CommandText"/> 
+            with parameters replaced by SQL variable delcarations.
+            </summary>
         </member>
         <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetSqlFormatted(Apps72.Dev.Data.QueryFormat)">
             <summary>
@@ -52,18 +70,25 @@
             <param name="format">Use Text to format as Simple SQL Query or use HTML to format as Colored SQL Query.</param>
             <returns>Formatted query</returns>
         </member>
-        <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetQueryFormattedAsText(System.Data.Common.DbCommand)">
+        <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetQueryFormattedAsText(Apps72.Dev.Data.DatabaseCommand)">
             <summary>
             Returns the CommandText with all parameter values included.
             </summary>
             <param name="command">DBCommand to manage</param>
             <returns></returns>
         </member>
-        <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetQueryFormattedAsHtml(System.Data.Common.DbCommand)">
+        <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetQueryFormattedAsHtml(Apps72.Dev.Data.DatabaseCommand)">
             <summary>
             Format the SQL command in HTML (coloring, ...)
             </summary>
             <param name="command">Command to format in HTML</param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetQueryFormattedAsVariables(Apps72.Dev.Data.DatabaseCommand)">
+            <summary>
+            Format the SQL command with parameters as variables.
+            </summary>
+            <param name="command">Command to format</param>
             <returns></returns>
         </member>
         <member name="M:Apps72.Dev.Data.CommandTextFormatted.GetValueFormatted(System.Data.Common.DbParameter)">
@@ -88,6 +113,11 @@
             SQL Command Text formatted in HTML for coloring, ...
             </summary>
         </member>
+        <member name="F:Apps72.Dev.Data.QueryFormat.Variables">
+            <summary>
+            SQL Command Text formatted with parameters as variable declarations, ...
+            </summary>
+        </member>
         <member name="T:Apps72.Dev.Data.DatabaseCommand">
             <summary />
             <summary>
@@ -106,26 +136,25 @@
             Create a command for a specified <paramref name="connection"/>
             </summary>
             <param name="connection">Active connection</param>
-            <param name="commandText">SQL query</param>
             <param name="commandTimeout">Maximum timeout of the queries</param>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.#ctor(System.Data.Common.DbTransaction,System.String)">
             <summary>
-            Create a command for a specified <paramref name="connection"/>
+            Create a command for a specified <paramref name="transaction"/>
             </summary>
             <param name="transaction">The transaction in which the SQL Query executes</param>
             <param name="commandText">SQL query</param>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.#ctor(System.Data.Common.DbTransaction,System.Int32)">
             <summary>
-            Create a command for a specified <paramref name="connection"/>
+            Create a command for a specified <paramref name="transaction"/>
             </summary>
             <param name="transaction">The transaction in which the SQL Query executes</param>
             <param name="commandTimeout">Maximum timeout of the queries</param>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.#ctor(System.Data.Common.DbTransaction,System.String,System.Int32)">
             <summary>
-            Create a command for a specified <paramref name="connection"/>
+            Create a command for a specified <paramref name="transaction"/>
             </summary>
             <param name="transaction">The transaction in which the SQL Query executes</param>
             <param name="commandText">SQL query</param>
@@ -133,9 +162,10 @@
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.#ctor(System.Data.Common.DbConnection,System.Data.Common.DbTransaction)">
             <summary>
-            Create a command for a specified <paramref name="connection"/>
+            Create a command for a specified <paramref name="transaction"/>
             </summary>
             <param name="connection">Active connection</param>
+            <param name="transaction"></param>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.Query">
             <summary>
@@ -147,6 +177,7 @@
             Returns a Fluent Query tool to execute SQL request.
             </summary>
             <param name="commandText">Sql query</param>
+            <param name="values">Paremeters</param>
         </member>
         <member name="T:Apps72.Dev.Data.DatabaseCommand.ExceptionOccuredEventHandler">
             <summary>
@@ -168,7 +199,7 @@
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.#ctor(System.Data.Common.DbTransaction)">
             <summary>
-            Create a command for a specified <paramref name="connection"/>
+            Create a command for a specified <paramref name="transaction"/>
             </summary>
             <param name="transaction">The transaction in which the SQL Query executes</param>
         </member>
@@ -256,23 +287,10 @@
             and before the type convertions.
             </summary>
         </member>
-        <member name="P:Apps72.Dev.Data.DatabaseCommand.FormattedCommandText">
+        <member name="P:Apps72.Dev.Data.DatabaseCommand.Formatted">
             <summary>
             Gets the <see cref="P:Apps72.Dev.Data.DatabaseCommand.CommandText"/> where parameters are filled by values.
             </summary>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseCommand.GetCommandTextFormatted">
-            <summary>
-            Gets the full CommandText, integrating parameters values.
-            </summary>
-            <returns>Formatted query</returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseCommand.GetCommandTextFormatted(Apps72.Dev.Data.QueryFormat)">
-            <summary>
-            Gets the CommandText formatted with specified format
-            </summary>
-            <param name="format">Use Text to format as Simple SQL Query or use HTML to format as Colored SQL Query.</param>
-            <returns>Formatted query</returns>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.WithTag(System.String)">
             <summary>
@@ -548,7 +566,7 @@
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.AddParameter(System.String,System.Object,System.Nullable{System.Data.DbType},System.Nullable{System.Int32})">
             <summary>
-            Adds a value to the end of the <see cref="!:DbCmd.Parameters"/> property.
+            Adds a value to the end of the <see cref="P:Apps72.Dev.Data.DatabaseCommand.Parameters"/> property.
             </summary>
             <param name="name">The name of the parameter.</param>
             <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
@@ -558,7 +576,7 @@
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.AddParameter(System.String,System.Object)">
             <summary>
-            Adds a value to the end of the <see cref="!:DbCmd.Parameters"/> property.
+            Adds a value to the end of the <see cref="P:Apps72.Dev.Data.DatabaseCommand.Parameters"/> property.
             </summary>
             <param name="name">The name of the parameter.</param>
             <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
@@ -640,6 +658,15 @@
             Returns the complete CommandText, including Tags in comments.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.GetTagsAsSqlComments">
+            <summary>
+            Returns the tags formatted in SQL comments
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.GetInternalCommand">
+            <summary/>
         </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#Clear">
             <summary />
@@ -1174,7 +1201,7 @@
             For example, to log to the console, set this property to Console.Write.
             </summary>
         </member>
-        <member name="P:Apps72.Dev.Data.IDatabaseCommand.FormattedCommandText">
+        <member name="P:Apps72.Dev.Data.IDatabaseCommand.Formatted">
             <summary>
             Gets the <see cref="P:Apps72.Dev.Data.IDatabaseCommand.CommandText"/> where parameters are filled by values.
             </summary>
@@ -1256,19 +1283,6 @@
             If a property is already exist in Parameters collection, the parameter is removed and new added with new value.
             </summary>
             <param name="values">Object or anonymous object to convert all properties to parameters</param>
-        </member>
-        <member name="M:Apps72.Dev.Data.IDatabaseCommand.GetCommandTextFormatted">
-            <summary>
-            Gets the full CommandText, integrating parameters values.
-            </summary>
-            <returns>Formatted query</returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.IDatabaseCommand.GetCommandTextFormatted(Apps72.Dev.Data.QueryFormat)">
-            <summary>
-            Gets the full CommandText, integrating parameters values.
-            </summary>
-            <param name="format">Format to generate</param>
-            <returns>Formatted query</returns>
         </member>
         <member name="M:Apps72.Dev.Data.IDatabaseCommand.ExecuteDataSet``5(``0,``1,``2,``3,``4)">
             <summary>
@@ -1764,7 +1778,6 @@
             <summary>
             Initializes a new empty instance of SqlString.
             </summary>
-            <param name="value"></param>
         </member>
         <member name="M:Apps72.Dev.Data.SqlString.#ctor(System.String)">
             <summary>
@@ -1841,6 +1854,18 @@
             Returns the SQL String content.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.op_Equality(Apps72.Dev.Data.SqlString,Apps72.Dev.Data.SqlString)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.op_Inequality(Apps72.Dev.Data.SqlString,Apps72.Dev.Data.SqlString)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.Equals(System.Object)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.GetHashCode">
+            <summary />
         </member>
         <member name="T:DataExtensions">
             <summary>

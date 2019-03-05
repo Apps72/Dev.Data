@@ -12,7 +12,7 @@ namespace Apps72.Dev.Data
     ///  Base class with common methods to retrieve or manage data.
     /// </summary>
 
-    [DebuggerDisplay("{FormattedCommandText}")]
+    [DebuggerDisplay("{Command.CommandText}")]
     public partial class DatabaseCommand : IDatabaseCommand
     {
         #region EVENTS
@@ -44,7 +44,7 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
+        /// Create a command for a specified <paramref name="transaction"/>
         /// </summary>
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         public DatabaseCommand(DbTransaction transaction)
@@ -202,31 +202,18 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets the <see cref="CommandText"/> where parameters are filled by values.
         /// </summary>
-        public virtual string FormattedCommandText => GetCommandTextFormatted(QueryFormat.Text);
+        //public virtual string FormattedCommandText => GetCommandTextFormatted(QueryFormat.Text);
+        public virtual CommandTextFormatted Formatted
+        {
+            get
+            {
+                return new CommandTextFormatted(this);
+            }
+        }
 
         #endregion
 
         #region METHODS
-
-        /// <summary>
-        /// Gets the full CommandText, integrating parameters values.
-        /// </summary>
-        /// <returns>Formatted query</returns>
-        public virtual string GetCommandTextFormatted()
-        {
-            return GetCommandTextFormatted(QueryFormat.Text);
-        }
-
-        /// <summary>
-        /// Gets the CommandText formatted with specified format
-        /// </summary>
-        /// <param name="format">Use Text to format as Simple SQL Query or use HTML to format as Colored SQL Query.</param>
-        /// <returns>Formatted query</returns>
-        public virtual string GetCommandTextFormatted(QueryFormat format)
-        {
-            this.Command.CommandText = GetCommandTextWithTags();
-            return new CommandTextFormatted(this.Command).GetSqlFormatted(format);
-        }
 
         /// <summary>
         /// Annotate the SQL query with a tag (as a SQL comment)
@@ -749,7 +736,7 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Adds a value to the end of the <see cref="DbCmd.Parameters"/> property.
+        /// Adds a value to the end of the <see cref="DatabaseCommand.Parameters"/> property.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
@@ -773,7 +760,7 @@ namespace Apps72.Dev.Data
 
 
         /// <summary>
-        /// Adds a value to the end of the <see cref="DbCmd.Parameters"/> property.
+        /// Adds a value to the end of the <see cref="DatabaseCommand.Parameters"/> property.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
@@ -971,7 +958,16 @@ namespace Apps72.Dev.Data
         /// Returns the complete CommandText, including Tags in comments.
         /// </summary>
         /// <returns></returns>
-        protected string GetCommandTextWithTags()
+        internal string GetCommandTextWithTags()
+        {
+            return $"{GetTagsAsSqlComments()}{this.CommandText.Value}";
+        }
+
+        /// <summary>
+        /// Returns the tags formatted in SQL comments
+        /// </summary>
+        /// <returns></returns>
+        internal string GetTagsAsSqlComments()
         {
             var sql = new StringBuilder();
 
@@ -985,10 +981,13 @@ namespace Apps72.Dev.Data
                 }
             }
 
-            // Add SQL
-            sql.Append(this.CommandText.Value);
-
             return sql.ToString();
+        }
+
+        /// <summary/>
+        internal DbCommand GetInternalCommand()
+        {
+            return this.Command;
         }
 
         #endregion

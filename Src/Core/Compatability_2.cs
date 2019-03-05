@@ -22,7 +22,6 @@ namespace Apps72.Dev.Data
         /// Create a command for a specified <paramref name="connection"/>
         /// </summary>
         /// <param name="connection">Active connection</param>
-        /// <param name="commandText">SQL query</param>
         /// <param name="commandTimeout">Maximum timeout of the queries</param>
         [Obsolete("Use DatabaseCommand(connection) constructor and set CommandTimeout next.")]
         public DatabaseCommand(DbConnection connection, int commandTimeout)
@@ -32,7 +31,7 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
+        /// Create a command for a specified <paramref name="transaction"/>
         /// </summary>
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         /// <param name="commandText">SQL query</param>
@@ -44,7 +43,7 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
+        /// Create a command for a specified <paramref name="transaction"/>
         /// </summary>
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         /// <param name="commandTimeout">Maximum timeout of the queries</param>
@@ -56,7 +55,7 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
+        /// Create a command for a specified <paramref name="transaction"/>
         /// </summary>
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
         /// <param name="commandText">SQL query</param>
@@ -69,9 +68,10 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Create a command for a specified <paramref name="connection"/>
+        /// Create a command for a specified <paramref name="transaction"/>
         /// </summary>
         /// <param name="connection">Active connection</param>
+        /// <param name="transaction"></param>
         [Obsolete("Use DatabaseCommand(transaction) constructor.")]
         public DatabaseCommand(DbConnection connection, DbTransaction transaction)
             : this(connection?.CreateCommand(), transaction, null, -1)
@@ -92,6 +92,7 @@ namespace Apps72.Dev.Data
         /// Returns a Fluent Query tool to execute SQL request.
         /// </summary>
         /// <param name="commandText">Sql query</param>
+        /// <param name="values">Paremeters</param>
         [Obsolete("Use .Query().ForSql(commandText).AddParameter(values) methods.")]
         public FluentQuery Query<T>(SqlString commandText, T values)
         {

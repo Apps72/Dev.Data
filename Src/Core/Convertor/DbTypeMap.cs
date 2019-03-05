@@ -14,6 +14,7 @@ namespace Apps72.Dev.Data.Convertor
     /// </summary>
     internal static class DbTypeMap
     {
+        private static DbTypeMapEntry DEFAULT_ENTRY;
         private static readonly List<DbTypeMapEntry> _dbProviderTypeList = new List<DbTypeMapEntry>();
         private static readonly List<Type2DbType> _dbTypeList = FillDbTypeList();
 
@@ -37,6 +38,8 @@ namespace Apps72.Dev.Data.Convertor
                                                                Convert.ToInt32(row["ProviderDbType"]),
                                                                Convert.ToString(row["DataType"])));
                 }
+
+                DEFAULT_ENTRY = _dbProviderTypeList.First(i => String.Compare(i.SqlTypeName, "VARCHAR", ignoreCase: true) == 0);
             }
         }
 
@@ -75,11 +78,39 @@ namespace Apps72.Dev.Data.Convertor
         /// <param name="sqlType">Name of SQL type to search.</param>
         /// <returns></returns>
 
-        public static Type FirstType(string sqlType) => _dbProviderTypeList.FirstOrDefault(i => String.Compare(i.SqlTypeName, sqlType, ignoreCase: true) == 0)?.DotNetType ?? typeof(System.Object);
+        public static Type FirstType(string sqlType)
+        {
+            return _dbProviderTypeList.FirstOrDefault(i => String.Compare(i.SqlTypeName, sqlType, ignoreCase: true) == 0)?.DotNetType ?? typeof(System.Object);
+        }
+        public static DbType FirstDbType(Type type)
+        {
+            if (type == null) return DbType.Object;
+            return _dbTypeList.First(i => i.Type == type).DbType;
+        }
+        public static DbTypeMapEntry FirstMappedType(DbType dbType)
+        {
+            return _dbProviderTypeList.FirstOrDefault(i => i.DbType == dbType) ?? DEFAULT_ENTRY;
+        }
 
-        public static DbType FirstDbType(Type type) => _dbTypeList.First(i => i.Type == type).DbType;
+        public static bool IsStringRepresentation(DbType dbType)
+        {
+            if (_dbProviderTypeList.Any(i => i.DbType == dbType) == false)
+                return true;
 
-        public static Type FirstType(DbType type) => _dbTypeList.First(i => i.DbType == type).Type;
+            switch (dbType)
+            {
+                case DbType.AnsiString:
+                case DbType.Binary:
+                case DbType.Object:
+                case DbType.String:
+                case DbType.AnsiStringFixedLength:
+                case DbType.StringFixedLength:
+                case DbType.Xml:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         static List<Type2DbType> FillDbTypeList()
         {
@@ -99,7 +130,9 @@ namespace Apps72.Dev.Data.Convertor
             list.Add(new Type2DbType(typeof(Double), DbType.Double));
             list.Add(new Type2DbType(typeof(Decimal), DbType.Currency));
             list.Add(new Type2DbType(typeof(Double), DbType.VarNumeric));
+            list.Add(new Type2DbType(typeof(Single), DbType.Single));
 
+            list.Add(new Type2DbType(typeof(Char), DbType.String));
             list.Add(new Type2DbType(typeof(String), DbType.String));
             list.Add(new Type2DbType(typeof(String), DbType.AnsiString));
             list.Add(new Type2DbType(typeof(String), DbType.AnsiStringFixedLength));
@@ -109,8 +142,9 @@ namespace Apps72.Dev.Data.Convertor
             list.Add(new Type2DbType(typeof(DateTime), DbType.Date));
             list.Add(new Type2DbType(typeof(DateTime), DbType.DateTime2));
             list.Add(new Type2DbType(typeof(DateTime), DbType.DateTime));
-            list.Add(new Type2DbType(typeof(DateTime), DbType.DateTimeOffset));
+            list.Add(new Type2DbType(typeof(DateTimeOffset), DbType.DateTimeOffset));
             list.Add(new Type2DbType(typeof(DateTime), DbType.Time));
+            list.Add(new Type2DbType(typeof(TimeSpan), DbType.Time));
 
             list.Add(new Type2DbType(typeof(Guid), DbType.Guid));
             list.Add(new Type2DbType(typeof(Object), DbType.Object));
@@ -133,6 +167,8 @@ namespace Apps72.Dev.Data.Convertor
             this.SqlTypeName = sqlTypeName;
             this.EnumProviderDbType = enumProviderDbType;
             this.DotNetDataType = dotNetDataType;
+            this.DotNetType = Type.GetType(DotNetDataType);
+            this.DbType = DbTypeMap.FirstDbType(DotNetType);
         }
 
         /// <summary />
@@ -142,9 +178,9 @@ namespace Apps72.Dev.Data.Convertor
         /// <summary />
         public string DotNetDataType { get; }           // System.SByte
         /// <summary />
-        public Type DotNetType => Type.GetType(DotNetDataType);
+        public Type DotNetType { get; }
         /// <summary />
-        public DbType DbType => DbTypeMap.FirstDbType(DotNetType);
+        public DbType DbType { get; }
         /// <summary />
         public T GetProviderDbType<T>() where T : struct, IConvertible
         {
@@ -154,7 +190,7 @@ namespace Apps72.Dev.Data.Convertor
     }
 
     /// <summary />
-    internal struct Type2DbType
+    internal class Type2DbType
     {
         /// <summary />
         public Type2DbType(Type type, DbType dbType)

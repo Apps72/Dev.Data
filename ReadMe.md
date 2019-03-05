@@ -8,10 +8,10 @@ Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQL
 First, create a SqlConnection or an other DbConnection. 
 
 
-```cs   
+```csharp   
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText.AppendLine("SELECT ID, Name FROM EMployee");
+    cmd.CommandText = "SELECT ID, Name FROM EMployee";
     var all = cmd.ExecuteTable<Employee>();     // List of all employees
     var smith = cmd.ExecuteRow<Employee>();     // First employee
     var id = cmd.ExecuteScalar<int>();          // ID of first employee
@@ -21,8 +21,6 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
                   .ExecuteTable<Employee>();
 }
 ```
-
-Many preconfigured packages are available for SQL Server, Oracle, SQLite or a generic .NET Core library: [NuGet Packages](https://www.nuget.org/packages?q=Apps72.Dev.Data).
 
 Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications, or SQL Server 2008 R2 for SQL CLR Stored procedures, or .NET Standard 2.0 for .NET Core library.
 
@@ -49,17 +47,17 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 
 #### <a name="ExecuteTable"></a>ExecuteTable
 
-```cs
+```csharpharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        cmd.CommandText = " SELECT * FROM EMP ";
         var emps = cmd.ExecuteTable<Employee>();
     }
 ```
 
 Using a Fluent syntax.
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         var emps = cmd.Query(" SELECT * FROM EMP WHERE EMPNO > @ID ")
@@ -70,20 +68,20 @@ Using a Fluent syntax.
 
 Calling an Execute method using a **dynamic** return type.
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
+        cmd.CommandText = " SELECT * FROM EMP ";
         var emps = cmd.ExecuteTable<dynamic>();
     }
 ```
 
 #### ExecuteTable customized
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT EMPNO, HIREDATE FROM EMP ");
+        cmd.CommandText = " SELECT EMPNO, HIREDATE FROM EMP ";
         var data = cmd.ExecuteTable<Employee>((row) =>
         {
             return new Employee()
@@ -97,7 +95,7 @@ Calling an Execute method using a **dynamic** return type.
 
 #### <a name="ExecuteTableWithParameters"></a>ExecuteTable with parameters
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * ")
@@ -117,20 +115,20 @@ Calling an Execute method using a **dynamic** return type.
 
 #### <a name="ExecuteRow"></a>ExecuteRow
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
+        cmd.CommandText = " SELECT * FROM EMP WHERE EMPNO = 7369 ";
         var emp = cmd.ExecuteRow<EMP>();
     }
 ```
 
 #### ExecuteRow customized
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT * FROM EMP WHERE EMPNO = 7369 ");
+        cmd.CommandText = " SELECT * FROM EMP WHERE EMPNO = 7369 ";
         var emp = cmd.ExecuteRow((row) =>
         {
             return new
@@ -144,17 +142,17 @@ Calling an Execute method using a **dynamic** return type.
 
 #### <a name="ExecuteScalar"></a>ExecuteScalar
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+        cmd.CommandText = " SELECT COUNT(*) FROM EMP ";
         int data = cmd.ExecuteScalar<int>();
     }
 ```
 
 #### <a name="ExecuteDataSet"></a>ExecuteDataSet
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
@@ -167,7 +165,7 @@ Calling an Execute method using a **dynamic** return type.
 
 #### <a name="FluentQuery"></a>FluentQuery
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
@@ -188,10 +186,10 @@ Calling an Execute method using a **dynamic** return type.
 
 #### <a name="TransactionBegin"></a>TransactionBegin
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.CommandText.AppendLine(" DELETE FROM EMP ");
+        cmd.CommandText = " DELETE FROM EMP ";
 
         cmd.TransactionBegin();
         cmd.ExecuteNonQuery();
@@ -201,7 +199,7 @@ Calling an Execute method using a **dynamic** return type.
 
 Other sample
 
-```cs
+```csharp
     using (var cmd1 = new DatabaseCommand(_connection))
     {
         cmd1.CommandText.AppendLine(" DELETE FROM EMP ");
@@ -209,7 +207,7 @@ Other sample
         cmd1.ExecuteNonQuery();
         using (var cmd2 = new DatabaseCommand(_connection, cmd1.Transaction))
         {
-            cmd2.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
+            cmd2.CommandText = " SELECT COUNT(*) FROM EMP ";
             int count = cmd2.ExecuteScalar<int>();
         }
         cmd1.TransactionRollback();
@@ -219,7 +217,7 @@ Other sample
 #### <a name="Logging"></a>Logging
 All SQL queries can be traced via the **Log** property.
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         // Easy
@@ -228,7 +226,7 @@ All SQL queries can be traced via the **Log** property.
         // Lambda expression
         cmd.Log = (query) => 
         {
-            Console.WriteLine(cmd.GetCommandTextFormatted(QueryFormat.Html));
+            Console.WriteLine(cmd.Formatted.CommandAsVariables);
         };
     }
 ```
@@ -237,7 +235,7 @@ All SQL queries can be traced via the **Log** property.
 Define actions to execute code immediately before or after query execution.
 For example, to simplify unit tests or intergations with extra loggers.
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.CommandText.AppendLine(" SELECT COUNT(*) FROM EMP ");
@@ -254,7 +252,7 @@ For example, to simplify unit tests or intergations with extra loggers.
 
 #### <a name="ThrowException"></a>ThrowException
 
-```cs
+```csharp
     cmd.ThrowException = false;
     cmd1.ExceptionOccured += (sender, e) =>
     {
@@ -266,7 +264,7 @@ For example, to simplify unit tests or intergations with extra loggers.
 
 Only for SqlDatabaseCommand (for SQL Server).
 
-```cs
+```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
         cmd.RetryIfExceptionsOccured.SetDeadLockCodes();
@@ -282,7 +280,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 
 ##### 1. Using ConnectionString for all applications or threads (ex. Web Applications, WebAPI, Web Services, ...)
 
-```cs
+```csharp
         public class DataService : IDataService
         {
             public DatabaseCommand GetDatabaseCommand()
@@ -299,7 +297,7 @@ In you project, create a <b>DataService</b> implementing IDisposable and add a m
 
 ##### 2. Using One SqlConnection for the application (ex. Desktop Apps, Universal Apps, ...)
 
-```cs
+```csharp
         public class DataService : IDataService, IDisposable
         {
             private SqlConnection _connection = null;
@@ -356,7 +354,7 @@ Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/
 Requirements: install the .NET Core 2.1 SDK.
 Example: `DbCmd GenerateEntities -cs="Server=localhost;Database=Scott;" --provider=SqlServer` will create a Output.cs file with all entities.
 
-```cs
+```csharp
     // UPDATE THIS CONNECTION STRING
     const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
 ```
@@ -365,7 +363,7 @@ Each time you save this .tt file, you create an equivalent .cs file with all cla
 
 For example:
 
-```cs
+```csharp
     // *********************************************
     // Code Generated with Apps72.Dev.Data.Generator
     // *********************************************
@@ -475,6 +473,13 @@ For example:
 
 * FIX: Check if the argument of `AddParameter<T>(T values)` method is a DbParameter.
 * Add a new argument to `AddParameter` method, to define the parameter size.
+
+### Version 3.0
+
+* Migrate the code to .NET Standard 2.0
+* Breaking changes: refactoring methods (old methods are flagged Obsolete)
+* Add `Tags` property and `WithTag` method to identify SQL queries.
+* Add `Formatted.CommandAsVariables` property to get the SQL query with parameters defined as SQL variables (to be executable in Query tool).
 
 ### [RoadMap]
 

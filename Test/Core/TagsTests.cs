@@ -52,7 +52,7 @@ namespace Data.Core.Tests
                 {
                     Assert.AreEqual($"My command", query.Tags.First());
                     Assert.AreEqual($"SELECT * FROM EMP", query.CommandText);
-                    Assert.AreEqual($"-- My command{NEW_LINE}SELECT * FROM EMP", query.FormattedCommandText);
+                    Assert.AreEqual($"-- My command{NEW_LINE}SELECT * FROM EMP", query.Formatted.CommandAsText);
                 };
 
                 cmd.ExecuteNonQuery();
@@ -74,7 +74,7 @@ namespace Data.Core.Tests
                     Assert.AreEqual($"Tag1", query.Tags.ElementAt(0));
                     Assert.AreEqual($"Tag2", query.Tags.ElementAt(1));
                     Assert.AreEqual($"SELECT * FROM EMP", query.CommandText);
-                    Assert.AreEqual($"-- Tag1{NEW_LINE}-- Tag2{NEW_LINE}SELECT * FROM EMP", query.FormattedCommandText);
+                    Assert.AreEqual($"-- Tag1{NEW_LINE}-- Tag2{NEW_LINE}SELECT * FROM EMP", query.Formatted.CommandAsText);
                 };
 
                 cmd.ExecuteNonQuery();
@@ -95,7 +95,42 @@ namespace Data.Core.Tests
                     Assert.AreEqual($"Tag1", query.Tags.ElementAt(0));
                     Assert.AreEqual($"Tag2", query.Tags.ElementAt(1));
                     Assert.AreEqual($"SELECT * FROM EMP", query.CommandText);
-                    Assert.AreEqual($"-- Tag1{NEW_LINE}-- Tag2{NEW_LINE}SELECT * FROM EMP", query.FormattedCommandText);
+                    Assert.AreEqual($"-- Tag1{NEW_LINE}-- Tag2{NEW_LINE}SELECT * FROM EMP", query.Formatted.CommandAsText);
+                };
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        [TestMethod]
+        public void UpdateTagAfterExecution_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+
+                // Tag 1
+                cmd.WithTag("Tag1");
+                cmd.CommandText = "SELECT * FROM EMP";
+
+                cmd.ActionBeforeExecution = (query) =>
+                {
+                    Assert.AreEqual($"Tag1", query.Tags.First());
+                    Assert.AreEqual($"SELECT * FROM EMP", query.CommandText);
+                    Assert.AreEqual($"-- Tag1{NEW_LINE}SELECT * FROM EMP", query.Formatted.CommandAsText);
+                };
+
+                cmd.ExecuteNonQuery();
+
+                // Tag 2
+                cmd.WithTag("Tag2");
+                cmd.CommandText = "SELECT * FROM EMP";
+
+                cmd.ActionBeforeExecution = (query) =>
+                {
+                    Assert.AreEqual($"Tag1", query.Tags.First());
+                    Assert.AreEqual($"SELECT * FROM EMP", query.CommandText);
+                    Assert.AreEqual($"-- Tag1{NEW_LINE}-- Tag2{NEW_LINE}SELECT * FROM EMP", query.Formatted.CommandAsText);
                 };
 
                 cmd.ExecuteNonQuery();

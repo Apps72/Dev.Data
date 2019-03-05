@@ -63,6 +63,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        [Obsolete]
         public void Constructor_Connection_Timeout_Test()
         {
             using (var cmd = new DatabaseCommand(_connection, 33))
@@ -74,6 +75,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        [Obsolete]
         public void Constructor_Connection_CommandText_Test()
         {
             using (var cmd = new DatabaseCommand(_connection, "SELECT COUNT(*) FROM EMP"))
@@ -96,6 +98,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        [Obsolete]
         public void Constructor_Transaction_CommandText_Test()
         {
             var transaction = _connection.BeginTransaction();
@@ -107,6 +110,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        [Obsolete]
         public void Constructor_Transaction_Timeout_Test()
         {
             var transaction = _connection.BeginTransaction();
@@ -119,6 +123,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        [Obsolete]
         public void Constructor_Transaction_CommandText_Timeout_Test()
         {
             var transaction = _connection.BeginTransaction();

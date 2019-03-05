@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Apps72.Dev.Data
@@ -10,16 +11,35 @@ namespace Apps72.Dev.Data
     /// </summary>
     public class CommandTextFormatted
     {
-        private DbCommand _command;
+        private DatabaseCommand _dbCommand;
 
         /// <summary>
         /// Initializes a new instance of CommandTextFormatted
         /// </summary>
         /// <param name="command"></param>
-        public CommandTextFormatted(DbCommand command)
+        internal CommandTextFormatted(DatabaseCommand command)
         {
-            _command = command;
+            _dbCommand = command;
         }
+
+        /// <summary>
+        /// Gets the <see cref="DatabaseCommand.CommandText"/> 
+        /// with parameters replaced by values.
+        /// </summary>
+        public virtual string CommandAsText => GetSqlFormatted(QueryFormat.Text);
+
+
+        /// <summary>
+        /// Gets the <see cref="DatabaseCommand.CommandText"/> 
+        /// with parameters replaced by values, and colorized using HTML tags.
+        /// </summary>
+        public virtual string CommandAsHtml => GetSqlFormatted(QueryFormat.Html);
+
+        /// <summary>
+        /// Gets the <see cref="DatabaseCommand.CommandText"/> 
+        /// with parameters replaced by SQL variable delcarations.
+        /// </summary>
+        public virtual string CommandAsVariables => GetSqlFormatted(QueryFormat.Variables);
 
         /// <summary>
         /// Gets the CommandText formatted with specified format
@@ -31,10 +51,13 @@ namespace Apps72.Dev.Data
             switch (format)
             {
                 case QueryFormat.Text:
-                    return this.GetQueryFormattedAsText(_command);
+                    return this.GetQueryFormattedAsText(_dbCommand);
 
                 case QueryFormat.Html:
-                    return this.GetQueryFormattedAsHtml(_command);
+                    return this.GetQueryFormattedAsHtml(_dbCommand);
+
+                case QueryFormat.Variables:
+                    return this.GetQueryFormattedAsVariables(_dbCommand);
 
                 default:
                     return string.Empty;
@@ -46,15 +69,15 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="command">DBCommand to manage</param>
         /// <returns></returns>
-        protected virtual string GetQueryFormattedAsText(DbCommand command)
+        protected virtual string GetQueryFormattedAsText(DatabaseCommand command)
         {
-            string commandText = command.CommandText;
+            string commandText = command.GetCommandTextWithTags();
 
             // Sort by ParameterName DESC to replace @abcdef before @abc.
             foreach (DbParameter param in command.Parameters.Cast<DbParameter>().OrderByDescending(i => i.ParameterName))
             {
                 string paramName = param.ParameterName;
-                string prefix = Schema.DataParameter.GetPrefixParameter(command);
+                string prefix = Schema.DataParameter.GetPrefixParameter(command.GetInternalCommand());
 
                 if (!paramName.StartsWith(prefix)) paramName = prefix + paramName;
 
@@ -69,7 +92,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="command">Command to format in HTML</param>
         /// <returns></returns>
-        protected virtual string GetQueryFormattedAsHtml(DbCommand command)
+        protected virtual string GetQueryFormattedAsHtml(DatabaseCommand command)
         {
             string output = this.GetQueryFormattedAsText(command);
 
@@ -125,6 +148,39 @@ namespace Apps72.Dev.Data
             );
 
             return output;
+        }
+
+        /// <summary>
+        /// Format the SQL command with parameters as variables.
+        /// </summary>
+        /// <param name="command">Command to format</param>
+        /// <returns></returns>
+        protected virtual string GetQueryFormattedAsVariables(DatabaseCommand command)
+        {
+            string commentTags = command.GetTagsAsSqlComments();
+            string commandText = command.CommandText.Value;
+
+            // Sort by ParameterName DESC to replace @abcdef before @abc.
+            var declarations = new StringBuilder();
+            Convertor.DbTypeMap.Initialize(command.GetInternalCommand().Connection);
+
+            foreach (DbParameter param in command.Parameters.Cast<DbParameter>().OrderByDescending(i => i.ParameterName))
+            {
+                string paramName = param.ParameterName;
+                string prefix = Schema.DataParameter.GetPrefixParameter(command.GetInternalCommand());
+                string sqlType = Convertor.DbTypeMap.IsStringRepresentation(param.DbType)
+                                 ? $"VARCHAR({(param.Size > 0 ? param.Size : 4000)})"
+                                 : Convertor.DbTypeMap.FirstMappedType(param.DbType).SqlTypeName;
+
+                if (!paramName.StartsWith(prefix)) paramName = prefix + paramName;
+
+                declarations.AppendLine($"DECLARE {paramName} AS {sqlType.ToUpper()} = {GetValueFormatted(param)}");
+            }
+
+            if (declarations.Length > 0)
+                declarations.AppendLine();
+
+            return $"{commentTags}{declarations}{commandText}";
         }
 
         /// <summary>
@@ -226,6 +282,10 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// SQL Command Text formatted in HTML for coloring, ...
         /// </summary>
-        Html
+        Html,
+        /// <summary>
+        /// SQL Command Text formatted with parameters as variable declarations, ...
+        /// </summary>
+        Variables
     }
 }

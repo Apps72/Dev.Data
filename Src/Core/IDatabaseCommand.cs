@@ -50,7 +50,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets the <see cref="CommandText"/> where parameters are filled by values.
         /// </summary>
-        string FormattedCommandText { get; }
+        CommandTextFormatted Formatted { get; }
 
         /// <summary>
         /// Set this property to execute an action immediately BEFORE the database request.
@@ -129,19 +129,6 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="values">Object or anonymous object to convert all properties to parameters</param>
         IDatabaseCommand AddParameter<T>(T values);
-
-        /// <summary>
-        /// Gets the full CommandText, integrating parameters values.
-        /// </summary>
-        /// <returns>Formatted query</returns>
-        string GetCommandTextFormatted();
-
-        /// <summary>
-        /// Gets the full CommandText, integrating parameters values.
-        /// </summary>
-        /// <param name="format">Format to generate</param>
-        /// <returns>Formatted query</returns>
-        string GetCommandTextFormatted(QueryFormat format);
 
         /// <summary>
         /// Execute the query and return a list or array of new instances of typed results filled with data table results.

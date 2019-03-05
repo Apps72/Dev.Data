@@ -13,7 +13,6 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Initializes a new empty instance of SqlString.
         /// </summary>
-        /// <param name="value"></param>
         public SqlString()
         {
             _commandText = new StringBuilder();
@@ -150,23 +149,27 @@ namespace Apps72.Dev.Data
 
         #region COMPARAISONS
 
+        /// <summary />
         public static bool operator ==(SqlString obj1, SqlString obj2)
         {
             if (System.Object.ReferenceEquals(obj1, obj2)) return true;
             return obj1?.Value.CompareTo(obj2?.Value) == 0;
         }
 
+        /// <summary />
         public static bool operator !=(SqlString obj1, SqlString obj2)
         {
             return !(obj1 == obj2);
         }
 
+        /// <summary />
         public override bool Equals(object obj)
         {
             if (obj is SqlString) return this == (obj as SqlString);
             return false;
         }
 
+        /// <summary />
         public override int GetHashCode()
         {
             return this.GetHashCode() ^ Value.GetHashCode();
