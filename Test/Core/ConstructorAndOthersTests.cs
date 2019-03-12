@@ -99,6 +99,19 @@ namespace Data.Core.Tests
 
         [TestMethod]
         [Obsolete]
+        public void Constructor_ConnectionAndTransaction_Test()
+        {
+            var transaction = _connection.BeginTransaction();
+            using (var cmd = new DatabaseCommand(_connection, transaction, 0))
+            {
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+
+                Assert.AreEqual(14, cmd.ExecuteScalar());
+            }
+        }
+
+        [TestMethod]
+        [Obsolete]
         public void Constructor_Transaction_CommandText_Test()
         {
             var transaction = _connection.BeginTransaction();

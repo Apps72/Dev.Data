@@ -8,7 +8,7 @@ namespace Apps72.Dev.Data
     /// </summary>
     public class SqlString
     {
-        private StringBuilder _commandText = new StringBuilder();
+        private StringBuilder _commandText;
 
         /// <summary>
         /// Initializes a new empty instance of SqlString.
@@ -33,17 +33,28 @@ namespace Apps72.Dev.Data
         /// <param name="value"></param>
         public SqlString(StringBuilder value)
         {
-            _commandText = value;
+            _commandText = value ?? new StringBuilder();
         }
 
         /// <summary>
-        /// 
+        /// Gets the query content.
         /// </summary>
         public virtual string Value
         {
             get
             {
                 return _commandText.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets the length of the current <see cref="SqlString"/> object.
+        /// </summary>
+        public virtual int Length
+        {
+            get
+            {
+                return _commandText.Length;
             }
         }
 

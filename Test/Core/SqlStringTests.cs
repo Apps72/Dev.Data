@@ -22,6 +22,24 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void StringNull_Test()
+        {
+            var query = new SqlString((string)null);
+            Assert.AreEqual(String.Empty, query);
+            Assert.AreEqual(String.Empty, query.Value);
+            Assert.AreEqual(0, query.Length);
+        }
+
+        [TestMethod]
+        public void StringBuilderNull_Test()
+        {
+            var query = new SqlString((StringBuilder)null);
+            Assert.AreEqual(String.Empty, query);
+            Assert.AreEqual(String.Empty, query.Value);
+            Assert.AreEqual(0, query.Length);
+        }
+
+        [TestMethod]
         public void Value_Test()
         {
             var query = new SqlString("Text");
@@ -104,5 +122,19 @@ namespace Data.Core.Tests
             Assert.AreEqual("Hello Belgium", query);
             Assert.AreEqual("Hello Belgium", newQuery);
         }
+
+        [TestMethod]
+        public void Length_ForEmpty_Test()
+        {
+            var query = new SqlString();
+            Assert.AreEqual(0, query.Length);
+        }
+
+        [TestMethod]
+        public void Length_ForQuery_Test()
+        {
+            var query = new SqlString("SELECT");
+            Assert.AreEqual(6, query.Length);
+        }    
     }
 }

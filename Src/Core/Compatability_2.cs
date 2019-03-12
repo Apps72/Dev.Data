@@ -31,6 +31,19 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Create a command for a specified <paramref name="connection"/>
+        /// </summary>
+        /// <param name="connection">Active connection</param>
+        /// <param name="transaction">Active transaction</param>
+        /// <param name="commandTimeout">Maximum timeout of the queries</param>
+        [Obsolete("Use DatabaseCommand(transaction) constructor and set CommandTimeout next.")]
+        public DatabaseCommand(DbConnection connection, DbTransaction transaction, int commandTimeout)
+            : this(transaction?.Connection?.CreateCommand(), transaction, null, commandTimeout)
+        {
+
+        }
+
+        /// <summary>
         /// Create a command for a specified <paramref name="transaction"/>
         /// </summary>
         /// <param name="transaction">The transaction in which the SQL Query executes</param>
@@ -98,5 +111,17 @@ namespace Apps72.Dev.Data
         {
             return new FluentQuery(this).ForSql(commandText).AddParameter(values);
         }
+    }
+
+    /// <summary>
+    /// Base Interface to manage all DataBaseCommands
+    /// </summary>
+    public partial interface IDatabaseCommand
+    {
+        /// <summary>
+        /// Returns a Fluent Query tool to execute SQL request.
+        /// </summary>
+        [Obsolete("Use .Query(commandText) method.")]
+        FluentQuery Query();
     }
 }

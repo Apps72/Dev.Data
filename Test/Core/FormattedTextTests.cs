@@ -42,7 +42,7 @@ namespace Data.Core.Tests
         {
             using (var cmd = new DatabaseCommand(_connection))
             {
-                cmd.CommandText= " SELECT * FROM EMP ";
+                cmd.CommandText = " SELECT * FROM EMP ";
                 Assert.AreEqual(" SELECT * FROM EMP ", cmd.Formatted.CommandAsText);
             }
         }
@@ -133,6 +133,19 @@ DECLARE @Comm AS VARCHAR(4000) = NULL
     AND HIREDATE > @Hire
     AND COMM = @Comm
 ");
+            }
+        }
+
+        [TestMethod]
+        public void GetFormatted_Unknown_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText.AppendLine(" SELECT * FROM EMP");
+
+                string formatted = cmd.Formatted.GetSqlFormatted((QueryFormat)999);
+
+                Assert.AreEqual(String.Empty, formatted);
             }
         }
     }
