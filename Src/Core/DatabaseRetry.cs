@@ -1,16 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
 
-namespace Apps72.Dev.Data.Retry
+namespace Apps72.Dev.Data
 {
     /// <summary>
-    /// Parameters to retry a query when a SqlException occured (ex. DeadLock exception).
+    /// Retry a query when a SqlException occured (ex. DeadLock exception).
     /// </summary>
-    public class DatabaseRetryExceptions
+    public class DatabaseRetry
     {
         // Gets or sets the number of retries already occured.
         private int _retryCount = 0;
+        private IDatabaseCommand _command;
+
+        /// <summary>
+        /// Initializes a new instance of DatabaseRetryExceptions
+        /// </summary>
+        /// <param name="command"></param>
+        internal DatabaseRetry(IDatabaseCommand command)
+        {
+            _command = command;
+        }
 
         /// <summary>
         /// Gets or sets the number of retries to execute before the process failed.
@@ -23,16 +32,35 @@ namespace Apps72.Dev.Data.Retry
         public virtual int MillisecondsBetweenTwoRetries { get; set; } = 1000;
 
         /// <summary>
-        /// Gets or sets the list of error codes to catch and to retry.
+        /// Gets or sets the list of methods executed to check the error codes and to retry.
         /// </summary>
-        public virtual List<int> ErrorCodesToRetry { get; set; } = new List<int>();
+        public virtual Func<DbException, bool> ExceptionsToRetry { get; set; }
 
         /// <summary>
         /// Sets the default ErrorCodesToRetry list with DeadLock codes (1205).
         /// </summary>
-        public virtual void AddSqlServerDeadLockCodes()
+        public virtual void SetDefaultExceptionsToRetry(DefaultExceptionsToRetry value)
         {
-            this.ErrorCodesToRetry.Add(1205);
+            switch (value)
+            {
+                case DefaultExceptionsToRetry.SqlServer_DeadLock:
+                    this.ExceptionsToRetry = (ex) =>
+                    {
+                        return ex.Message.Contains("deadlock");
+                    };
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Activate the retry process, defining ExceptionsToRetry criterias.
+        /// Ex. ExceptionsToRetry = (ex) => { return ex.Message.Contains("deadlock"); };
+        /// </summary>
+        /// <param name="options"></param>
+        public virtual void Activate(Action<DatabaseRetry> options)
+        {
+            this.SetDefaultExceptionsToRetry(DefaultExceptionsToRetry.SqlServer_DeadLock);
+            options.Invoke(this);
         }
 
         /// <summary>
@@ -41,7 +69,7 @@ namespace Apps72.Dev.Data.Retry
         /// <returns></returns>
         protected virtual bool IsCodeDefined()
         {
-            return this.ErrorCodesToRetry.Count > 0;
+            return this.ExceptionsToRetry != null;
         }
 
         /// <summary>
@@ -51,27 +79,7 @@ namespace Apps72.Dev.Data.Retry
         /// <returns></returns>
         protected virtual bool IsExceptionToRetry(DbException ex)
         {
-            if (ex != null)
-            {
-                // Check if error occured is known
-                if (this.ErrorCodesToRetry.Contains(ex.ErrorCode))
-                {
-                    return true;
-                }
-                //else
-                //{
-                //    // Check also all sub errors
-                //    foreach (var exToCheck in ex.InnerException.Errors)
-                //    {
-                //        if (retryExceptions.ErrorCodesToRetry.Contains(exToCheck.Number))
-                //        {
-                //            return true;
-                //        }
-                //    }
-                //    return false;
-                //}
-            }
-            return false;
+            return this.ExceptionsToRetry?.Invoke(ex) == true;
         }
 
         /// <summary>
@@ -108,7 +116,6 @@ namespace Apps72.Dev.Data.Retry
         /// <summary>
         /// Reset the Retry Counter to zero.
         /// </summary>
-        /// <param name="retryExceptions"></param>
         protected virtual void ResetRetryCounter()
         {
             _retryCount = 0;
@@ -121,7 +128,7 @@ namespace Apps72.Dev.Data.Retry
         /// <typeparam name="T"></typeparam>
         /// <param name="action"></param>
         /// <returns></returns>
-        public virtual T ExecuteCommandOrRetryIfErrorOccured<T>(Func<T> action)
+        internal virtual T ExecuteCommandOrRetryIfErrorOccured<T>(Func<T> action)
         {
             if (this.IsCodeDefined())
             {
@@ -140,19 +147,18 @@ namespace Apps72.Dev.Data.Retry
                         lastException = ex;
 
                         // Check if a unknown Exception
-                        if (this.IsNotAnExceptionToRetry(ex)) throw;
+                        if (this.IsNotAnExceptionToRetry(ex))
+                            throw;
 
                         // Need to execute this command (action) again
                         toRetry = this.WaitBeforeRetry();
 
                         // If exeed the number of retries... So, throw this last exception
-                        if (!toRetry) throw;
+                        if (!toRetry)
+                            throw;
 
                         // Trace the error occured
-                        //if (toRetry && this.Log != null)
-                        //{
-                        //    this.Log.Invoke(String.Format("Retry activated. SqlException #{1} was: \"{0}\".", this.Exception.Message, this.RetryIfExceptionsOccured.RetryCount - 1));
-                        //}
+                        _command.Log?.Invoke($"Retry activated. SqlException #{_retryCount} was: \"{ex.Message}\".");
                     }
                 } while (toRetry);
 
@@ -163,6 +169,18 @@ namespace Apps72.Dev.Data.Retry
                 return action.Invoke();
             }
         }
+
+        /// <summary>
+        /// List of default definitions for <see cref="ExceptionsToRetry"/>
+        /// </summary>
+        public enum DefaultExceptionsToRetry
+        {
+            /// <summary>
+            /// Deadlock in SQL Server (Message contains "deadlock").
+            /// </summary>
+            SqlServer_DeadLock
+        }
     }
+
 
 }

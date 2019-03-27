@@ -15,6 +15,8 @@ namespace Apps72.Dev.Data
     [DebuggerDisplay("{Command.CommandText}")]
     public partial class DatabaseCommand : IDatabaseCommand
     {
+        private DatabaseRetry _retry = null;
+
         #region EVENTS
 
         /// <summary>
@@ -134,7 +136,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets options for the automatic Retry process.
         /// </summary>
-        public Retry.DatabaseRetryExceptions RetryExceptions { get; private set; } = new Retry.DatabaseRetryExceptions();
+        public DatabaseRetry Retry => _retry ?? (_retry = new DatabaseRetry(this));
 
         /// <summary>
         /// Gets or sets the current active connection
