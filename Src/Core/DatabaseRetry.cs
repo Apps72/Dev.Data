@@ -34,21 +34,33 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the list of methods executed to check the error codes and to retry.
         /// </summary>
-        public virtual Func<DbException, bool> ExceptionsToRetry { get; set; }
+        public virtual Func<DbException, bool> CriteriaToRetry { get; set; }
 
         /// <summary>
         /// Sets the default ErrorCodesToRetry list with DeadLock codes (1205).
         /// </summary>
-        public virtual void SetDefaultExceptionsToRetry(DefaultExceptionsToRetry value)
+        public virtual void SetDefaultCriteriaToRetry(RetryDefaultCriteria value)
         {
             switch (value)
             {
-                case DefaultExceptionsToRetry.SqlServer_DeadLock:
-                    this.ExceptionsToRetry = (ex) =>
+                case RetryDefaultCriteria.SqlServer_DeadLock:
+                    this.CriteriaToRetry = (ex) =>
                     {
-                        return ex.Message.Contains("deadlock");
+                        return ex.Message.Contains("deadlock") ||
+                               ex.InnerException?.Message.Contains("deadlock") == true;
                     };
                     break;
+
+                case RetryDefaultCriteria.OracleServer_DeadLock:
+                    this.CriteriaToRetry = (ex) =>
+                    {
+                        return ex.Message.Contains("ORA-04061") ||
+                               ex.Message.Contains("ORA-04068") ||
+                               ex.InnerException?.Message.Contains("ORA-04061") == true ||
+                               ex.InnerException?.Message.Contains("ORA-04068") == true;
+                    };
+                    break;
+
             }
         }
 
@@ -59,17 +71,8 @@ namespace Apps72.Dev.Data
         /// <param name="options"></param>
         public virtual void Activate(Action<DatabaseRetry> options)
         {
-            this.SetDefaultExceptionsToRetry(DefaultExceptionsToRetry.SqlServer_DeadLock);
+            this.SetDefaultCriteriaToRetry(RetryDefaultCriteria.SqlServer_DeadLock);
             options.Invoke(this);
-        }
-
-        /// <summary>
-        /// Returns True if at least one error code to check is defined.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual bool IsCodeDefined()
-        {
-            return this.ExceptionsToRetry != null;
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         protected virtual bool IsExceptionToRetry(DbException ex)
         {
-            return this.ExceptionsToRetry?.Invoke(ex) == true;
+            return this.CriteriaToRetry?.Invoke(ex) == true;
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         internal virtual T ExecuteCommandOrRetryIfErrorOccured<T>(Func<T> action)
         {
-            if (this.IsCodeDefined())
+            if (this.IsActivated())
             {
                 bool toRetry = false;
                 DbException lastException = null;
@@ -169,18 +172,32 @@ namespace Apps72.Dev.Data
                 return action.Invoke();
             }
         }
-
-        /// <summary>
-        /// List of default definitions for <see cref="ExceptionsToRetry"/>
-        /// </summary>
-        public enum DefaultExceptionsToRetry
-        {
-            /// <summary>
-            /// Deadlock in SQL Server (Message contains "deadlock").
-            /// </summary>
-            SqlServer_DeadLock
-        }
     }
 
+    /// <summary>
+    /// List of default definitions for <see cref="CriteriaToRetry"/>
+    /// </summary>
+    public enum RetryDefaultCriteria
+    {
+        /// <summary>
+        /// Deadlock in SQL Server (Message contains "deadlock").
+        /// </summary>
+        SqlServer_DeadLock,
+        /// <summary>
+        /// Existing state of package in Oracle Server (Message contains "ORA-04068" or "ORA-04061").
+        /// </summary>
+        OracleServer_DeadLock
+    }
 
+    internal static class DatabaseRetryExtensions
+    {
+        /// <summary>
+        /// Returns True if a check criteria is defined.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsActivated(this DatabaseRetry retry)
+        {
+            return retry != null && retry.CriteriaToRetry != null;
+        }
+    }
 }

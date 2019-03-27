@@ -2,7 +2,6 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Common;
 
@@ -40,23 +39,44 @@ namespace Data.Core.Tests
         #endregion
 
         [TestMethod()]
-        public void RaiseSQLDeadLock_Test()
+        public void RaiseSQLWithDeadLock_Test()
         {
-            DbException ex = this.RaiseSqlDeadLock(false);
+            DbException ex = this.RaiseSqlDeadLock(withRetry: false, throwException: false);
 
             Assert.IsNotNull(ex);
             Assert.IsTrue(ex.Message.Contains("deadlock"));
         }
 
         [TestMethod()]
+        [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
+        public void RaiseSQLWithDeadLock_Exception_Test()
+        {
+            this.RaiseSqlDeadLock(withRetry: false, throwException: true);
+        }
+
+        [TestMethod()]
+        public void RetryWhenNoDeadLock_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Retry.SetDefaultCriteriaToRetry(RetryDefaultCriteria.SqlServer_DeadLock);
+
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+                int count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
+        [TestMethod()]
         public void RetryWhenDeadLockOccured_Test()
         {
-            DbException ex = this.RaiseSqlDeadLock(true);
+            DbException ex = this.RaiseSqlDeadLock(withRetry: true, throwException: false);
 
             Assert.IsNull(ex);
         }
 
-        private DbException RaiseSqlDeadLock(bool withRetry)
+        private DbException RaiseSqlDeadLock(bool withRetry, bool throwException)
         {
             // See: http://stackoverflow.com/questions/22825147/how-to-simulate-deadlock-on-sql-server
 
@@ -70,26 +90,25 @@ namespace Data.Core.Tests
                 {
                     cmd.Log = Console.WriteLine;
 
-                    cmd.CommandText.AppendLine(" CREATE TABLE ##Employees ( ");
-                    cmd.CommandText.AppendLine("     EmpId INT IDENTITY, ");
-                    cmd.CommandText.AppendLine("     EmpName VARCHAR(16), ");
-                    cmd.CommandText.AppendLine("     Phone VARCHAR(16) ");
-                    cmd.CommandText.AppendLine(" ) ");
+                    cmd.CommandText = @" CREATE TABLE ##Employees ( 
+                                             EmpId INT IDENTITY, 
+                                             EmpName VARCHAR(16), 
+                                             Phone VARCHAR(16) 
+                                         ) 
 
-                    cmd.CommandText.AppendLine(" INSERT INTO ##Employees (EmpName, Phone) ");
-                    cmd.CommandText.AppendLine(" VALUES('Martha', '800-555-1212'), ('Jimmy', '619-555-8080') ");
+                                         INSERT INTO ##Employees (EmpName, Phone) 
+                                         VALUES('Martha', '800-555-1212'), ('Jimmy', '619-555-8080') 
 
-                    cmd.CommandText.AppendLine(" CREATE TABLE ##Suppliers( ");
-                    cmd.CommandText.AppendLine("     SupplierId INT IDENTITY, ");
-                    cmd.CommandText.AppendLine("     SupplierName VARCHAR(64), ");
-                    cmd.CommandText.AppendLine("     Fax VARCHAR(16) ");
-                    cmd.CommandText.AppendLine(" ) ");
+                                         CREATE TABLE ##Suppliers ( 
+                                             SupplierId INT IDENTITY, 
+                                             SupplierName VARCHAR(64), 
+                                             Fax VARCHAR(16) 
+                                         ) 
 
-                    cmd.CommandText.AppendLine(" INSERT INTO ##Suppliers (SupplierName, Fax) ");
-                    cmd.CommandText.AppendLine(" VALUES ('Acme', '877-555-6060'), ('Rockwell', '800-257-1234') ");
+                                         INSERT INTO ##Suppliers (SupplierName, Fax) 
+                                         VALUES ('Acme', '877-555-6060'), ('Rockwell', '800-257-1234') ";
 
                     cmd.ExecuteNonQuery();
-
                 }
 
                 using (var cmd1 = new DatabaseCommand(_connection))
@@ -102,31 +121,27 @@ namespace Data.Core.Tests
                         cmd1.TransactionBegin();
                         cmd2.TransactionBegin();
 
-                        cmd1.Clear();
-                        cmd1.CommandText.AppendLine(" UPDATE ##Employees SET EmpName = 'Mary'    WHERE empid = 1 ");
+                        cmd1.CommandText = " UPDATE ##Employees SET EmpName = 'Mary'    WHERE empid = 1 ";
                         cmd1.ExecuteNonQuery();
 
-                        cmd2.Clear();
-                        cmd2.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
+                        cmd2.CommandText = " UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ";
                         cmd2.ExecuteNonQuery();
 
                         // Start and when cmd2.ExecuteNonQuery command will be executed, an DeadLock exception will be raised.
                         Task task1 = Task.Factory.StartNew(() =>
                         {
-                            cmd1.Clear();
-                            cmd1.ThrowException = false;
+                            cmd1.ThrowException = throwException;
                             if (withRetry)
                             {
-                                cmd1.Retry.SetDefaultExceptionsToRetry(DatabaseRetry.DefaultExceptionsToRetry.SqlServer_DeadLock);
+                                cmd1.Retry.SetDefaultCriteriaToRetry(RetryDefaultCriteria.SqlServer_DeadLock);
                             }
-                            cmd1.CommandText.AppendLine(" UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ");
+                            cmd1.CommandText = " UPDATE ##Suppliers SET Fax = N'555-1212'   WHERE supplierid = 1 ";
                             cmd1.ExecuteNonQuery();
                         });
 
-                        System.Threading.Thread.Sleep(1000);
+                        System.Threading.Thread.Sleep(500);
 
-                        cmd2.Clear();
-                        cmd2.CommandText.AppendLine(" UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ");
+                        cmd2.CommandText = " UPDATE ##Employees SET phone = N'555-9999' WHERE empid = 1 ";
                         cmd2.ExecuteNonQuery();
 
                         cmd2.Dispose();
@@ -139,14 +154,7 @@ namespace Data.Core.Tests
                     }
                 }
 
-                using (var cmd = new DatabaseCommand(_connection))
-                {
-                    cmd.Log = Console.WriteLine;
-
-                    cmd.CommandText.AppendLine(" DROP TABLE ##Employees ");
-                    cmd.CommandText.AppendLine(" DROP TABLE ##Suppliers ");
-                    cmd.ExecuteNonQuery();
-                }
+                DropTemporaryTable();
             }
             finally
             {
@@ -156,6 +164,18 @@ namespace Data.Core.Tests
             }
 
             return exToReturn;
+        }
+
+        private void DropTemporaryTable()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+
+                cmd.CommandText = @" DROP TABLE ##Employees
+                                     DROP TABLE ##Suppliers ";
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

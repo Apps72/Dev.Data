@@ -141,6 +141,19 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteRowPrimitiveWithFunction_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO FROM EMP WHERE EMPNO = 7369";
+                int empno = cmd.ExecuteRow<int>((row) => Convert.ToInt32(row[0]));
+
+                Assert.AreEqual(7369, empno);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteRowPrimitiveNullable_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
