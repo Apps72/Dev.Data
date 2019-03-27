@@ -132,6 +132,11 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Gets options for the automatic Retry process.
+        /// </summary>
+        public Retry.DatabaseRetryExceptions RetryExceptions { get; private set; } = new Retry.DatabaseRetryExceptions();
+
+        /// <summary>
         /// Gets or sets the current active connection
         /// </summary>
 #if SQL_CLR
