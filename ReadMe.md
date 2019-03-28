@@ -262,15 +262,20 @@ For example, to simplify unit tests or intergations with extra loggers.
 
 #### <a name="RetryIfExceptionsOccured"></a>RetryIfExceptionsOccured
 
-Only for SqlDatabaseCommand (for SQL Server).
+When a specific error occured (DeadLock exception), you can define an automatic retry process.
 
 ```csharp
     using (var cmd = new DatabaseCommand(_connection))
     {
-        cmd.RetryIfExceptionsOccured.SetDeadLockCodes();
+        cmd.Retry.Activate(options =>
+        {
+            options.SetDefaultCriteriaToRetry(RetryDefaultCriteria.SqlServer_DeadLock);
+            options.MillisecondsBetweenTwoRetries = 1000;
+            options.NumberOfRetriesBeforeFailed = 3;
+        });
 
-        cmd.CommandText.AppendLine(" DELETE FROM EMP ");
-        cmd.ExecuteNonQuery();
+        cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+        int count = cmd.ExecuteScalar<int>();
     }
 ```
 
@@ -480,6 +485,7 @@ For example:
 * Breaking changes: refactoring methods (old methods are flagged Obsolete)
 * Add `Tags` property and `WithTag` method to identify SQL queries.
 * Add `Formatted.CommandAsVariables` property to get the SQL query with parameters defined as SQL variables (to be executable in Query tool).
+* Add `Reply` property to automatically reply a query when an specified error occured (ex. for DeadLock).
 
 ### [RoadMap]
 

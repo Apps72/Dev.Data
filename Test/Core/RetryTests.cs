@@ -69,6 +69,25 @@ namespace Data.Core.Tests
         }
 
         [TestMethod()]
+        public void RetryUsingOptionsWhenNoDeadLock_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Retry.Activate(options =>
+                {
+                    options.SetDefaultCriteriaToRetry(RetryDefaultCriteria.SqlServer_DeadLock);
+                    options.MillisecondsBetweenTwoRetries = 1000;
+                    options.NumberOfRetriesBeforeFailed = 3;
+                });
+
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+                int count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
+        [TestMethod()]
         public void RetryWhenDeadLockOccured_Test()
         {
             DbException ex = this.RaiseSqlDeadLock(withRetry: true, throwException: false);
