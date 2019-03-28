@@ -4,7 +4,7 @@
     <TargetFrameworks>net40;netcoreapp2.0;netstandard2.0</TargetFrameworks>
     <AssemblyName>Apps72.Dev.Data</AssemblyName>
     <RootNamespace>Apps72.Dev.Data</RootNamespace>
-    <Version>3.0.1-rc1</Version>
+    <Version>3.0.2-rc2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Denis Voituron</Authors>
     <Company>Denis Voituron</Company>
@@ -19,6 +19,8 @@
     <PackageTags>Data Database SQL DatabaseCommand DotNetCore Oracle SQLite SqlServer Dapper</PackageTags>
     <Copyright>Copyright 2019 Denis Voituron</Copyright>
     <Description>This DatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQL Server, Oracle, SQLite, ... It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</Description>
+    <AssemblyVersion>3.0.2.0</AssemblyVersion>
+    <FileVersion>3.0.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
