@@ -247,6 +247,11 @@
             and generating an error.
             </summary>
         </member>
+        <member name="P:Apps72.Dev.Data.DatabaseCommand.Retry">
+            <summary>
+            Gets options for the automatic Retry process.
+            </summary>
+        </member>
         <member name="P:Apps72.Dev.Data.DatabaseCommand.Connection">
             <summary>
             Gets or sets the current active connection
@@ -726,6 +731,17 @@
             Gets or sets the command type
             </summary>
         </member>
+        <member name="P:Apps72.Dev.Data.IDatabaseCommand.CommandTimeout">
+            <summary>
+            Gets or sets the wait time in seconds, before terminating the attempt to execute a command
+            and generating an error.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.IDatabaseCommand.Retry">
+            <summary>
+            Gets options for the automatic Retry process.
+            </summary>
+        </member>
         <member name="P:Apps72.Dev.Data.IDatabaseCommand.Tags">
             <summary>
             Gets a list of tags, used to annotate the SQL query (using SQL comments)
@@ -1183,6 +1199,101 @@
             Convert the string to a boolean
             </summary>
             <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Apps72.Dev.Data.DatabaseRetry">
+            <summary>
+            Retry a query when a SqlException occured (ex. DeadLock exception).
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.#ctor(Apps72.Dev.Data.IDatabaseCommand)">
+            <summary>
+            Initializes a new instance of DatabaseRetryExceptions
+            </summary>
+            <param name="command"></param>
+        </member>
+        <member name="P:Apps72.Dev.Data.DatabaseRetry.NumberOfRetriesBeforeFailed">
+            <summary>
+            Gets or sets the number of retries to execute before the process failed.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.DatabaseRetry.MillisecondsBetweenTwoRetries">
+            <summary>
+            Gets or sets the number of milliseconds to wait before a new command will be executed.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.DatabaseRetry.CriteriaToRetry">
+            <summary>
+            Gets or sets the list of methods executed to check the error codes and to retry.
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.SetDefaultCriteriaToRetry(Apps72.Dev.Data.RetryDefaultCriteria)">
+            <summary>
+            Sets the default ErrorCodesToRetry list with DeadLock codes (1205).
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.Activate(System.Action{Apps72.Dev.Data.DatabaseRetry})">
+            <summary>
+            Activate the retry process, defining ExceptionsToRetry criterias.
+            Ex. ExceptionsToRetry = (ex) => { return ex.Message.Contains("deadlock"); };
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.IsExceptionToRetry(System.Data.Common.DbException)">
+            <summary>
+            Returns True if the specified DbException is known by the ErrorCodesToRetry list
+            </summary>
+            <param name="ex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.IsNotAnExceptionToRetry(System.Data.Common.DbException)">
+            <summary>
+            Returns True if the specified DbException is unknown by the ErrorCodesToRetry list
+            </summary>
+            <param name="ex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.WaitBeforeRetry">
+            <summary>
+            Increment the Retry Counter,
+            And wait some milliseconds before to continue.
+            Returns False if the counter is greater than NumberOfRetriesBeforeFailed value.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.ResetRetryCounter">
+            <summary>
+            Reset the Retry Counter to zero.
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetry.ExecuteCommandOrRetryIfErrorOccured``1(System.Func{``0})">
+            <summary>
+            Execute the specified method (ExecuteTable, ExecuteNonQuery or ExecuteScalar)
+            And retry x times if asked by RetryIfExceptionsOccured property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Apps72.Dev.Data.RetryDefaultCriteria">
+            <summary>
+            List of default definitions for <see cref="!:CriteriaToRetry"/>
+            </summary>
+        </member>
+        <member name="F:Apps72.Dev.Data.RetryDefaultCriteria.SqlServer_DeadLock">
+            <summary>
+            Deadlock in SQL Server (Message contains "deadlock").
+            </summary>
+        </member>
+        <member name="F:Apps72.Dev.Data.RetryDefaultCriteria.OracleServer_DeadLock">
+            <summary>
+            Existing state of package in Oracle Server (Message contains "ORA-04068" or "ORA-04061").
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.DatabaseRetryExtensions.IsActivated(Apps72.Dev.Data.DatabaseRetry)">
+            <summary>
+            Returns True if a check criteria is defined.
+            </summary>
             <returns></returns>
         </member>
         <member name="T:Apps72.Dev.Data.ExceptionOccuredEventArgs">

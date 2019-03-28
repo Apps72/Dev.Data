@@ -21,6 +21,17 @@ namespace Apps72.Dev.Data
         CommandType CommandType { get; set; }
 
         /// <summary>
+        /// Gets or sets the wait time in seconds, before terminating the attempt to execute a command
+        /// and generating an error.
+        /// </summary>
+        int CommandTimeout { get; set; }
+
+        /// <summary>
+        /// Gets options for the automatic Retry process.
+        /// </summary>
+        DatabaseRetry Retry { get; }
+
+        /// <summary>
         /// Gets a list of tags, used to annotate the SQL query (using SQL comments)
         /// </summary>
         List<string> Tags { get; }       

@@ -15,6 +15,8 @@ namespace Apps72.Dev.Data
     [DebuggerDisplay("{Command.CommandText}")]
     public partial class DatabaseCommand : IDatabaseCommand
     {
+        private DatabaseRetry _retry = null;
+
         #region EVENTS
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace Apps72.Dev.Data
         /// Gets or sets the wait time in seconds, before terminating the attempt to execute a command
         /// and generating an error.
         /// </summary>
-        public int CommandTimeout
+        public virtual int CommandTimeout
         {
             get
             {
@@ -130,6 +132,11 @@ namespace Apps72.Dev.Data
                 this.Command.CommandTimeout = value;
             }
         }
+
+        /// <summary>
+        /// Gets options for the automatic Retry process.
+        /// </summary>
+        public virtual DatabaseRetry Retry => _retry ?? (_retry = new DatabaseRetry(this));
 
         /// <summary>
         /// Gets or sets the current active connection
@@ -649,7 +656,15 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                int rowsAffected = this.Command.CommandText.Length > 0 ? this.Command.ExecuteNonQuery() : 0;
+                int rowsAffected = 0;
+
+                if (this.Command.CommandText.Length > 0)
+                {
+                    if (Retry.IsActivated())
+                        rowsAffected = Retry.ExecuteCommandOrRetryIfErrorOccured(() => this.Command.ExecuteNonQuery());
+                    else
+                        rowsAffected = this.Command.ExecuteNonQuery();
+                }
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
@@ -697,7 +712,15 @@ namespace Apps72.Dev.Data
                     this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                object result = this.Command.CommandText.Length > 0 ? this.Command.ExecuteScalar() : null;
+                object result = null;
+
+                if (this.Command.CommandText.Length > 0)
+                {
+                    if (Retry.IsActivated())
+                        result = Retry.ExecuteCommandOrRetryIfErrorOccured(() => this.Command.ExecuteScalar());
+                    else
+                        result = this.Command.ExecuteScalar();
+                }
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
@@ -873,14 +896,18 @@ namespace Apps72.Dev.Data
                 // Send the request to the Database server
                 if (this.Command.CommandText.Length > 0)
                 {
-                    using (DbDataReader dr = this.Command.ExecuteReader())
+                    Retry.ExecuteCommandOrRetryIfErrorOccured<bool>(() =>
                     {
-                        do
+                        using (DbDataReader dr = this.Command.ExecuteReader())
                         {
-                            tables.Add(new Schema.DataTable(dr, firstRowOnly));
+                            do
+                            {
+                                tables.Add(new Schema.DataTable(dr, firstRowOnly));
+                            }
+                            while (!firstRowOnly && dr.NextResult());
                         }
-                        while (!firstRowOnly && dr.NextResult());
-                    }
+                        return true;
+                    });
                 }
                 else
                 {
