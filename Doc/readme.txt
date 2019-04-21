@@ -11,4 +11,4 @@ To modify this documentation
 3. Generate a static documentation (folder '_site') using this command:
       $> docfx --serve
 
-PS: You need to build the C# project to have a DLL in "bin/Release/netstandard2.0" folder.
+PS: You need to build the C# project to have a DLL in "bin/Release/netstandard2.0" folder.   
