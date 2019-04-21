@@ -181,7 +181,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets a list of tags, used to annotate the SQL query (using SQL comments)
         /// </summary>
-        public virtual List<string> Tags { get; private set; }
+        public virtual IEnumerable<string> Tags { get; private set; }
 
         /// <summary>
         /// Enable or disable the raise of exceptions when queries are executed.
@@ -227,17 +227,19 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public virtual DatabaseCommand WithTag(string name)
+        public virtual DatabaseCommand TagWith(string name)
         {
+            var listOfTags = this.Tags as List<string> ?? new List<string>();
+
             if (name.Contains(Environment.NewLine))
             {
                 foreach (var item in name.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
                 {
-                    this.Tags.Add(item);
+                    listOfTags.Add(item);
                 }
             }
             else
-                this.Tags.Add(name);
+                listOfTags.Add(name);
 
             return this;
         }
@@ -247,7 +249,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         public virtual DatabaseCommand Clear()
         {
-            this.Tags.Clear();
+            this.Tags = new List<string>();
             this.CommandText.Clear();
             this.Parameters.Clear();
             return this;
@@ -1093,9 +1095,9 @@ namespace Apps72.Dev.Data
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        IDatabaseCommand IDatabaseCommand.WithTag(string name)
+        IDatabaseCommand IDatabaseCommand.TagWith(string name)
         {
-            return WithTag(name);
+            return TagWith(name);
         }
 
         #endregion

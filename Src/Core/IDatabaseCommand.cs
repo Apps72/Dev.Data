@@ -34,7 +34,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets a list of tags, used to annotate the SQL query (using SQL comments)
         /// </summary>
-        List<string> Tags { get; }       
+        IEnumerable<string> Tags { get; }       
 
         /// <summary>
         /// Gets or sets the current transaction
@@ -89,7 +89,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        IDatabaseCommand WithTag(string name);
+        IDatabaseCommand TagWith(string name);
 
         /// <summary>
         /// Begin a transaction into the database

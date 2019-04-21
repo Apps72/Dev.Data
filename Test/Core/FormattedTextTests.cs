@@ -52,7 +52,7 @@ namespace Data.Core.Tests
         {
             using (var cmd = new DatabaseCommand(_connection))
             {
-                cmd.WithTag("MyTag");
+                cmd.TagWith("MyTag");
                 cmd.CommandText = " SELECT * FROM EMP ";
                 Assert.AreEqual($"-- MyTag{Environment.NewLine} SELECT * FROM EMP ", cmd.Formatted.CommandAsText);
             }
@@ -101,7 +101,7 @@ namespace Data.Core.Tests
         {
             using (var cmd = new DatabaseCommand(_connection))
             {
-                cmd.WithTag("Sample");
+                cmd.TagWith("Sample");
 
                 cmd.CommandText.AppendLine(" SET ANSI_NULLS OFF");
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP");

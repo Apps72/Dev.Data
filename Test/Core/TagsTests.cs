@@ -45,7 +45,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.WithTag("My command");
+                cmd.TagWith("My command");
                 cmd.CommandText = "SELECT * FROM EMP";
 
                 cmd.ActionBeforeExecution = (query) =>
@@ -65,8 +65,8 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.WithTag("Tag1");
-                cmd.WithTag("Tag2");
+                cmd.TagWith("Tag1");
+                cmd.TagWith("Tag2");
                 cmd.CommandText = "SELECT * FROM EMP";
 
                 cmd.ActionBeforeExecution = (query) =>
@@ -87,7 +87,7 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.WithTag($"Tag1{NEW_LINE}Tag2");
+                cmd.TagWith($"Tag1{NEW_LINE}Tag2");
                 cmd.CommandText = "SELECT * FROM EMP";
 
                 cmd.ActionBeforeExecution = (query) =>
@@ -110,7 +110,7 @@ namespace Data.Core.Tests
                 cmd.Log = Console.WriteLine;
 
                 // Tag 1
-                cmd.WithTag("Tag1");
+                cmd.TagWith("Tag1");
                 cmd.CommandText = "SELECT * FROM EMP";
 
                 cmd.ActionBeforeExecution = (query) =>
@@ -123,7 +123,7 @@ namespace Data.Core.Tests
                 cmd.ExecuteNonQuery();
 
                 // Tag 2
-                cmd.WithTag("Tag2");
+                cmd.TagWith("Tag2");
                 cmd.CommandText = "SELECT * FROM EMP";
 
                 cmd.ActionBeforeExecution = (query) =>

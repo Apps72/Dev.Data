@@ -482,8 +482,8 @@ For example:
 ### Version 3.0
 
 * Migrate the code to .NET Standard 2.0
-* Breaking changes: refactoring methods (old methods are flagged Obsolete)
-* Add `Tags` property and `WithTag` method to identify SQL queries.
+* Refactoring some methods (old methods are flagged [Obsolete])
+* Add `Tags` property and `TagWith` method to identify SQL queries.
 * Add `Formatted.CommandAsVariables` property to get the SQL query with parameters defined as SQL variables (to be executable in Query tool).
 * Add `Reply` property to automatically reply a query when an specified error occured (ex. for DeadLock).
 
