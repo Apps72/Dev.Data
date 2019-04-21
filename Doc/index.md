@@ -2,3 +2,7 @@
 
 1. [Tutorials and samples are here](tutorials/quickstart.md)
 2. [API documentation is here](api/index.md)
+
+<script>
+  window.location = "./tutorials/quickstart.html";
+</script>

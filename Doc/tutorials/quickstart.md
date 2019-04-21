@@ -9,7 +9,7 @@ Your can use your favorites libraries for SQLServer, Oracle, SQLite, ...
 
 1. Add the [NuGet package Apps72.Dev.Data](https://www.nuget.org/packages/Apps72.Dev.Data).
 
-2. Create a **SqlConnection** (or other database connection) in your project, and call the `Open()` method.
+2. Create a `SqlConnection` (or other database connection) in your project, and call the `Open()` method.
 
 ```CSharp
 var mySqlConnection = new SqlConnection("server=.;Database=Scott;");

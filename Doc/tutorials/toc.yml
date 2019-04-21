@@ -2,3 +2,17 @@
   href: quickstart.md
 - name: Basic samples
   href: basic-samples.md
+- name: CommandText
+  href: commandtext.md
+- name: Fluent queries
+  href: fluent.md
+- name: Tracing and Logging
+  href: log.md
+- name: Tags
+  href: tag.md
+- name: Actions before and after
+  href: action-before-after.md
+- name: Retry queries
+  href: retry.md
+- name: The Generator tool
+  href: tool-generator.md
