@@ -1,2 +1,4 @@
 - name: Quickstart
   href: quickstart.md
+- name: Basic samples
+  href: basic-samples.md

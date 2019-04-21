@@ -9,4 +9,6 @@ To modify this documentation
    And referenced it via toc.ylm
 
 3. Generate a static documentation (folder '_site') using this command:
-      $> docfx   
+      $> docfx --serve
+
+PS: You need to build the C# project to have a DLL in "bin/Release/netstandard2.0" folder.

@@ -106,7 +106,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="commandText">Sql query</param>
         /// <param name="values">Paremeters</param>
-        [Obsolete("Use .Query().ForSql(commandText).AddParameter(values) methods.")]
+        [Obsolete("Use .Query(commandText).AddParameter(values) methods.")]
         public FluentQuery Query<T>(SqlString commandText, T values)
         {
             return new FluentQuery(this).ForSql(commandText).AddParameter(values);
