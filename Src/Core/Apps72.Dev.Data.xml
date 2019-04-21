@@ -305,7 +305,7 @@
             Gets the <see cref="P:Apps72.Dev.Data.DatabaseCommand.CommandText"/> where parameters are filled by values.
             </summary>
         </member>
-        <member name="M:Apps72.Dev.Data.DatabaseCommand.WithTag(System.String)">
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.TagWith(System.String)">
             <summary>
             Annotate the SQL query with a tag (as a SQL comment)
             </summary>
@@ -705,7 +705,7 @@
         <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#AddParameter``1(``0)">
             <summary />
         </member>
-        <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#WithTag(System.String)">
+        <member name="M:Apps72.Dev.Data.DatabaseCommand.Apps72#Dev#Data#IDatabaseCommand#TagWith(System.String)">
             <summary />
         </member>
         <member name="T:Apps72.Dev.Data.IDatabaseCommand">
@@ -795,7 +795,7 @@
             Prepare a query
             </summary>
         </member>
-        <member name="M:Apps72.Dev.Data.IDatabaseCommand.WithTag(System.String)">
+        <member name="M:Apps72.Dev.Data.IDatabaseCommand.TagWith(System.String)">
             <summary>
             Annotate the SQL query with a tag (using SQL comments)
             </summary>
