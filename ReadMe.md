@@ -1,5 +1,9 @@
 # DatabaseCommand - Simple Object Mapping
 
+---
+# **Go to the new [documentation web site](http://apps72.com) to learn how to use DatabaseCommand.**
+---
+
 ## Introduction
 
 This C# library simplify SQL Queries to external databases, using the standard class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
