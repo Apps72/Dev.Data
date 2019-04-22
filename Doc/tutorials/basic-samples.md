@@ -1,5 +1,7 @@
 ## Basic samples
 
+[test](#ExecuteTable)
+
 All these examples use an **EMP** employees table:
 
 |EMPNO |ENAME  |JOB      |MGR  |
@@ -21,7 +23,8 @@ class Employee
 }
 ```
 
-### 1. ExecuteTable - Get **all data**.
+<a name="ExecuteTable"></a>
+### 1. ExecuteTable - Get **all data**
 
 Call the [ExecuteTable](../api/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteTable__1) method to map all data rows to a `IEnumerable<T>`.
 
@@ -34,6 +37,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+<a name="ExecuteRow"></a>
 ### 2. ExecuteRow - Get the **first row**.
 
 Call the [ExecuteRow](../api/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteRow__1) method to map a row to an object.
@@ -47,6 +51,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+<a name="AddParameter"></a>
 ### 3. AddParameter - Get a row using a **SQL Parameter**.
 
 Call the [AddParameter](../api/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_AddParameter_System_String_System_Object_) method to define a SQL parameter.
@@ -61,6 +66,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+<a name="Dynamic"></a>
 ### 4. Dynamic - Get the first row **without creating the class**.
 
 Call the [ExecuteRow](../api/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteRow__1) method, using the `dynamic` keyword, to map the result dynamically (properties are created dynamically, based on name/type of SQL results).
@@ -74,6 +80,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+<a name="ExecuteScalar"></a>
 ### 5. ExecuteScalar - Get a **single value**.
 
 Call the [ExecuteScalar](../api/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteScalar) method to map a value (first column, first row) to an simple type.
@@ -87,6 +94,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+<a name="Fluent"></a>
 ### 6. Using a **Fluent** syntax.
 
 All methods are available using the [Fluent](https://en.wikipedia.org/wiki/Fluent_interface) syntax. To do this, call the `Query()` method.

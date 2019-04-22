@@ -1,4 +1,4 @@
-- name: Tutorial
+- name: Database Command
   href: tutorials/
   homepage: tutorials/quickstart.md
 - name: Api Documentation

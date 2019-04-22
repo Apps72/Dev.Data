@@ -44,6 +44,7 @@ namespace Data.Core.Tests
         {
             using (var cmd = new DatabaseCommand(_connection))
             {
+                // Query() Onsolete method
                 cmd.Log = Console.WriteLine;
                 int count = cmd.Query()
                                .ForSql("SELECT COUNT(*) FROM EMP")
@@ -70,6 +71,7 @@ namespace Data.Core.Tests
         [Obsolete]
         public void CompactFluent_WithParameters_Test()
         {
+            // Query(string, T) is a obsolete method
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
@@ -116,7 +118,7 @@ namespace Data.Core.Tests
             {
                 cmd.Log = Console.WriteLine;
                 int count = cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID")
-                               .AddParameter(new { ID = 10 })
+                               .AddParameter(new { ID = 10 })                               
                                .ExecuteScalar<int>();
 
                 Assert.AreEqual(14, count);
