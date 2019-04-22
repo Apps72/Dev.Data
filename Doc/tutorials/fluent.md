@@ -1,3 +1,3 @@
-# Tag
+# Fluent queries
 
-TODO - See the method `TagWith()`.
+TODO - See the method `Query()`.
