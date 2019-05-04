@@ -844,26 +844,8 @@ namespace Apps72.Dev.Data
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-
-            }
-
-            if (this.Command != null)
-                this.Command.Dispose();
+            this.Command?.Dispose();
         }
-
-#if !SQL_CLR
-
-        /// <summary>
-        /// Dispose the object and free ressources
-        /// </summary>
-        ~DatabaseCommand()
-        {
-            Dispose(false);
-        }
-
-#endif
 
         #endregion
 

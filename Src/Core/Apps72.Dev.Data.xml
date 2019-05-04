@@ -628,11 +628,6 @@
             </summary>
             <param name="disposing"></param>
         </member>
-        <member name="M:Apps72.Dev.Data.DatabaseCommand.Finalize">
-            <summary>
-            Dispose the object and free ressources
-            </summary>
-        </member>
         <member name="M:Apps72.Dev.Data.DatabaseCommand.ExecuteInternalDataSet(System.Boolean)">
             <summary>
             Execute the query and return an internal DataTable with all data.
