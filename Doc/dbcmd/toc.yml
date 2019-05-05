@@ -2,6 +2,9 @@
   href: quickstart.md
 - name: Basic samples
   href: basic-samples.md
+  items:
+  - name: Scott database
+    href: db-scott.md
 - name: CommandText
   href: commandtext.md
 - name: Fluent queries

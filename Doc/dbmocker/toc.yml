@@ -1,2 +1,19 @@
 - name: Quickstart
   href: quickstart.md
+- name: Basic sample
+  href: basic-sample.md
+- name: Conditions
+  href: conditions.md
+- name: Returns
+  href: returns.md
+  items:
+  - name: ReturnsTable
+    href: returns-table.md
+  - name: ReturnsTable from a CSV
+    href: returns-table-csv.md
+  - name: ReturnsRow
+    href: returns-row.md
+  - name: ReturnsScalar
+    href: returns-scalar.md
+- name: Check SQL syntax
+  href: check-sql-syntax.md

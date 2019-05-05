@@ -1,0 +1,27 @@
+## Scott database
+
+All examples use an **EMP** employees table.
+
+|EMPNO |ENAME  |JOB      |MGR  |
+|---   |---    |---      |---  |
+|7369  |SMITH  |CLERK    |7566 |
+|7499  |ALLEN  |SALESMAN |7566 |
+|7521  |WARD   |SALESMAN |7566 |
+|7566  |JONES  |MANAGER  |NULL |
+
+The SQL script to execute:
+
+```SQL
+CREATE TABLE EMP
+(
+    EMPNO INT         CONSTRAINT PK_EMP PRIMARY KEY,
+    ENAME VARCHAR(10) NOT NULL,
+    JOB   VARCHAR(9)  NOT NULL,
+    MGR   INT
+)
+
+INSERT INTO EMP VALUES (7369, 'SMITH', 'CLERK',    7902)
+INSERT INTO EMP VALUES (7499, 'ALLEN', 'SALESMAN', 7698)
+INSERT INTO EMP VALUES (7521, 'WARD',  'SALESMAN', 7698)
+INSERT INTO EMP VALUES (7566, 'JONES', 'MANAGER',  7839)
+```

@@ -14,3 +14,5 @@ Main classes are:
 ## DbMocker
 
 [See you soon]
+
+In the meantime, go to https://github.com/Apps72/DbMocker

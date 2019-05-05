@@ -1,8 +1,6 @@
 ## Basic samples
 
-[test](#ExecuteTable)
-
-All these examples use an **EMP** employees table:
+All these examples use an **EMP** [employees table](db-scott.md):
 
 |EMPNO |ENAME  |JOB      |MGR  |
 |---   |---    |---      |---  |
