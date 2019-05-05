@@ -1,6 +1,6 @@
 ## CommandText
 
-The `CommandText` property is of the [SqlString](../api/Apps72.Dev.Data.SqlString.yml) type.
+The `CommandText` property is of the [SqlString](../api/dbcmd/Apps72.Dev.Data.SqlString.yml) type.
 `SQLString` is convertible with `string` and `StringBuilder` types.
 
 ```CSharp

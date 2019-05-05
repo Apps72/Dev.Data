@@ -1,6 +1,9 @@
 - name: Database Command
-  href: tutorials/
-  homepage: tutorials/quickstart.md
+  href: dbcmd/
+  homepage: dbcmd/quickstart.md
+- name: DbMocker
+  href: dbmocker/
+  homepage: dbmocker/quickstart.md
 - name: Api Documentation
   href: api/
   homepage: api/index.md

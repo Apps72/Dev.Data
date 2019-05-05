@@ -9,7 +9,7 @@
           "src": "../src/Core/bin/Release/netstandard2.0"
         }
       ],
-      "dest": "api",
+      "dest": "api/dbcmd",
       "disableGitFeatures": false,
       "disableDefaultFilter": false
     }
@@ -18,15 +18,25 @@
     "content": [
       {
         "files": [
-          "api/**.yml",
+          "api/dbcmd/**.yml",
           "toc.yml",
-          "api/index.md"
+          "api/toc.yml",
+          "api/index.md",
+          "api/dbcmd/index.md"
         ]
       },
       {
         "files": [
-          "tutorials/**.md",
-          "tutorials/**/toc.yml",
+          "dbcmd/**.md",
+          "dbcmd/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      },
+      {
+        "files": [
+          "dbmocker/**.md",
+          "dbmocker/**/toc.yml",
           "toc.yml",
           "*.md"
         ]
@@ -50,6 +60,15 @@
         ]
       }
     ],
+    "globalMetadata": {
+      "_appTitle": "Apps72.Dev.Data",
+      "_appFooter": "Developed By Denis Voituron",
+      "_appLogoPath": "images/logo.png",
+      "_appFaviconPath": "images/favicon.ico",
+      "_disableBreadcrumb": false,
+      "_disableAffix": false,
+      "_disableContribution": false
+    },
     "dest": "_site",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],

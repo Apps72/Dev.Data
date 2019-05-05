@@ -38,7 +38,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
-## How to dectect a Deadlock
+## How to dectect a Deadlock?
 
 For **SQL Server**, we check if the exception message contains "deadlock".
 
