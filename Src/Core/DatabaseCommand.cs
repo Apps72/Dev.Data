@@ -12,7 +12,7 @@ namespace Apps72.Dev.Data
     ///  Base class with common methods to retrieve or manage data.
     /// </summary>
 
-    [DebuggerDisplay("{Command.CommandText}")]
+    [DebuggerDisplay("{CommandText}")]
     public partial class DatabaseCommand : IDatabaseCommand
     {
         private DatabaseRetry _retry = null;
