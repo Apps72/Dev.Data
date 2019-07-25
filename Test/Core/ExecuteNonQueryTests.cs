@@ -56,31 +56,6 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
-        public void ExecuteNonQuery_GetInternalTransaction_Test()
-        {
-            using (var cmd = new DatabaseCommand(_connection))
-            {
-                cmd.Log = Console.WriteLine;
-                cmd.CommandText.AppendLine(" DELETE FROM EMP ");
-
-                var trans1 = DataExtensions.GetTransaction(_connection);
-
-                var trans2A = cmd.TransactionBegin();
-                var trans2B = DataExtensions.GetTransaction(_connection);
-
-                cmd.ExecuteNonQuery();
-                cmd.TransactionRollback();
-
-                var trans3 = DataExtensions.GetTransaction(_connection);
-
-                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);
-                Assert.AreEqual(null, trans1);
-                Assert.AreEqual(trans2A, trans2B);
-                Assert.AreEqual(null, trans3);
-            }
-        }
-
-        [TestMethod]
         public void ExecuteNonQuery_DefineTransactionBefore_Test()
         {
             using (var transaction = _connection.BeginTransaction())
