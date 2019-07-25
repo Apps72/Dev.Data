@@ -13,6 +13,8 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+> Use the `[Column(name)]` attribute to specify different a column name that the property name. 
+
 ### ExecuteTable with a converter
 
 Execute the query and return an array of new instances of typed results 
@@ -28,7 +30,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
         {
             Id = row.Field<int>("EMPNO"),
             Name = row.Field<string>("ENAME"),
-            HireDate = row.Field<DateTime>("HIREDATE").Year,
+            HireYear = row.Field<DateTime>("HIREDATE").Year,
         };
     });
     // emps is a IEnumerable of a new object { Id, Name, HireYear }
