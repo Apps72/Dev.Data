@@ -9,6 +9,12 @@
   href: commandtext.md
 - name: ExecuteTable
   href: execute-table.md
+- name: ExecuteRow
+  href: execute-row.md
+- name: ExecuteScalar
+  href: execute-scalar.md
+- name: ExecuteNonQuery
+  href: execute-nonquery.md
 - name: Fluent queries
   href: fluent.md
 - name: Tracing and Logging
