@@ -7,16 +7,6 @@ namespace Apps72.Dev.Data.Generator.Tools
     {
         static void Main(string[] args)
         {
-#if DEBUG
-            args = new string[]
-            {
-                @"Merge",
-                @"--source=C:\VSO\Bimvest\PublicTenders\Source\Database\Bimvest.PublicTenders.Database\Scripts",
-                @"--Separator=GO",
-                //@"--output=allScripts.sql"
-            };
-#endif
-
             Console.WriteLine($"SqlDatabase Command Line Tools (v{GetAssemblyVersion().ToString(3)})");
             Console.WriteLine($"Project on https://github.com/Apps72/Dev.Data");
 
@@ -43,7 +33,14 @@ namespace Apps72.Dev.Data.Generator.Tools
                     case ArgumentCommand.Merge:
                         Console.WriteLine($"  Merge files...");
                         var merger = new Merger(arguments).Start();
-                        //Console.WriteLine($"  {generator.EntitiesGenerated.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        Console.WriteLine($"  {merger.Files.Count()} files merged. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        break;
+
+
+                    case ArgumentCommand.Run:
+                        Console.WriteLine($"  Execute SQL scripts...");
+                        var runner = new Runner(arguments).Start();
+                        Console.WriteLine($"  {runner.Files.Count()} files executed. {watch.Elapsed.TotalSeconds:0.00} seconds.");
                         break;
 
                     default:

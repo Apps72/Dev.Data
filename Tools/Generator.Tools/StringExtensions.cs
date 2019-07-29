@@ -2,7 +2,7 @@
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Reports the zero-based index of the first occurrence in this instance of any
@@ -47,6 +47,20 @@ namespace Apps72.Dev.Data.Generator.Tools
         public static bool IsNotEqualTo(this string text, string value)
         {
             return !IsEqualTo(text, value);
+        }
+
+        /// <summary>
+        /// Returns the first <paramref name="length"/> first characters.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string Left(this string text, int length)
+        {
+            if (text.Length > length)
+                return text.Substring(0, length);
+            else
+                return text;
         }
     }
 }
