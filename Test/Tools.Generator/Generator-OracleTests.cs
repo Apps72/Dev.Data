@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Apps72.Dev.Data.Generator.Tools;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace Tools.Generator.Tests
@@ -10,7 +11,7 @@ namespace Tools.Generator.Tests
         [Ignore]
         public void Oracle_DefaultParameters_Test()
         {
-            var args = new[] 
+            var args = new[]
             {
                 $"GenerateEntities",
                 $"cs=\"{Configuration.ORACLE_CONNECTION_STRING}\"",
@@ -21,7 +22,7 @@ namespace Tools.Generator.Tests
                 $"os=IBIS",
                 $"a=\"System.ComponentModel.DataAnnotations.Schema.Column\"",   // Include Column Attribute
             };
-            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(args);
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
             var code = generator.Code;
 
             Assert.IsTrue(code.Contains("public virtual long ID_JOUR_OUVRE { get; set; }"));

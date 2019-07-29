@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Apps72.Dev.Data.Generator.Tools;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace Tools.Generator.Tests
@@ -9,12 +10,12 @@ namespace Tools.Generator.Tests
         [TestMethod]
         public void SqlServer_DefaultParameters_Test()
         {
-            var args = new[] 
+            var args = new[]
             {
                 $"GenerateEntities",
                 $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\""
             };
-            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(args);
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
             var code = generator.Code;
 
             Assert.IsTrue(code.Contains("public virtual int EMPNO { get; set; }"));
@@ -28,7 +29,7 @@ namespace Tools.Generator.Tests
                 $"GenerateEntities",
                 $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\""
             };
-            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(args);
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
             var code = generator.Code;
 
             Assert.IsTrue(code.Contains("public virtual decimal? SAL { get; set; }"));

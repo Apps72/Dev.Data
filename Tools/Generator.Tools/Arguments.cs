@@ -16,18 +16,28 @@ namespace Apps72.Dev.Data.Generator.Tools
             {
                 this.Command = ArgumentCommand.GenerateEntities;
             }
+            else if (cmdLine.ContainsKey("Merge", "mg"))
+            {
+                this.Command = ArgumentCommand.Merge;
+            }
 
             // Read arguments
             this.ConnectionString = cmdLine.GetValue("ConnectionString", "cs");
             this.Provider = cmdLine.GetValue("Provider", "p") ?? "SqlServer";
-            this.Output = cmdLine.GetValue("Output", "o") ?? "Entities.cs";
+            this.Output = cmdLine.GetValue("Output", "o");
             this.Language = cmdLine.GetValue("Language", "l") ?? "CSharp";
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
             this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
             this.OnlySchema = cmdLine.GetValue("OnlySchema", "os");
             this.CodeAnalysis = cmdLine.GetValue("CodeAnalysis", "ca");
-            
+            this.Source = cmdLine.GetValue("Source", "s");
+            this.Separator = cmdLine.GetValue("Separator", "sp");
+
+            // Default
+            if (String.IsNullOrEmpty(this.Output) && this.Command == ArgumentCommand.GenerateEntities)
+                this.Output = "Entities.cs";
+
             // Validation
             this.Validate();
         }
@@ -59,7 +69,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             }
         }
 
-        public ArgumentCommand Command { get; private set; } 
+        public ArgumentCommand Command { get; private set; }
         public string ConnectionString { get; private set; }
         public string Provider { get; private set; }
         public string Output { get; private set; }
@@ -69,12 +79,14 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string ColumnAttribute { get; private set; }
         public string OnlySchema { get; private set; }
         public string CodeAnalysis { get; private set; }
-        //public IEnumerable<string> CodeAnalysisCodes => this.CodeAnalysis?.Split(';', StringSplitOptions.RemoveEmptyEntries)?.Select(i => i.Trim());
+        public string Source { get; private set; }
+        public string Separator { get; private set; }
     }
 
     public enum ArgumentCommand
     {
         None,
-        GenerateEntities
+        GenerateEntities,
+        Merge
     }
 }

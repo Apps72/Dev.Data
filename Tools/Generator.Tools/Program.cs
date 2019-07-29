@@ -7,6 +7,16 @@ namespace Apps72.Dev.Data.Generator.Tools
     {
         static void Main(string[] args)
         {
+#if DEBUG
+            args = new string[]
+            {
+                @"Merge",
+                @"--source=C:\VSO\Bimvest\PublicTenders\Source\Database\Bimvest.PublicTenders.Database\Scripts",
+                @"--Separator=GO",
+                //@"--output=allScripts.sql"
+            };
+#endif
+
             Console.WriteLine($"SqlDatabase Command Line Tools (v{GetAssemblyVersion().ToString(3)})");
             Console.WriteLine($"Project on https://github.com/Apps72/Dev.Data");
 
@@ -19,10 +29,27 @@ namespace Apps72.Dev.Data.Generator.Tools
             try
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                Console.WriteLine($"  Entities generating...");
-                var generator = new Generator(args);
-                System.IO.File.WriteAllText(generator.Arguments.Output, generator.Code);
-                Console.WriteLine($"  {generator.EntitiesGenerated.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                var arguments = new Arguments(args);
+
+                switch (arguments.Command)
+                {
+                    case ArgumentCommand.GenerateEntities:
+                        Console.WriteLine($"  Entities generating...");
+                        var generator = new Generator(arguments);
+                        System.IO.File.WriteAllText(generator.Arguments.Output, generator.Code);
+                        Console.WriteLine($"  {generator.EntitiesGenerated.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        break;
+
+                    case ArgumentCommand.Merge:
+                        Console.WriteLine($"  Merge files...");
+                        var merger = new Merger(arguments).Start();
+                        //Console.WriteLine($"  {generator.EntitiesGenerated.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        break;
+
+                    default:
+                        Help.DisplayGeneralHelp();
+                        return;
+                }
             }
             catch (Exception ex)
             {
@@ -32,7 +59,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                 Console.WriteLine("Write DbCmd --help for more information.");
                 Console.ResetColor();
             }
-            
+
         }
 
         private static Version GetAssemblyVersion()

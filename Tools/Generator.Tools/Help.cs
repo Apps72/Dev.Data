@@ -11,8 +11,10 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine(" Commands:");
             Console.WriteLine("   GenerateEntities   | ge     Generate a file (see --Output) with all entities");
             Console.WriteLine("                               extracted from tables and view of specified database.");
+            Console.WriteLine("   Merge              | mg     ");
+            Console.WriteLine("                               ");
             Console.WriteLine();
-            Console.WriteLine(" Options:");
+            Console.WriteLine(" GenerateEntities options:");
             Console.WriteLine("   --ConnectionString | -cs    Required. Connection string to the database server.");
             Console.WriteLine("                               See https://www.connectionstrings.com");
             Console.WriteLine("   --Attribute        | -a     Include the Column attribute if necessary.");
@@ -32,8 +34,17 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine("     By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp");
             Console.WriteLine("                 Namespace=[Empty], ClassFormat=NameOnly");
             Console.WriteLine();
+            Console.WriteLine(" Merge options:");
+            Console.WriteLine("   --Source           | -s     Source directory pattern containing all files to merged.");
+            Console.WriteLine("                               Default is \"*.sql\" in current directory.");
+            Console.WriteLine("   --Output           | -o     File name where all files will be merged.");
+            Console.WriteLine("                               If not set, the merged file will be written to the console.");
+            Console.WriteLine("   --Separator        | -sp    adds this separator between each merged files.");
+            Console.WriteLine("                               Ex: -sp=GO");
+            Console.WriteLine();
             Console.WriteLine("Example:");
-            Console.WriteLine("  DbCmd ge -cs=\"Server=localhost;Database=Scott;\" -p=SqlServer -a ");
+            Console.WriteLine("  DbCmd GenerateEntities -cs=\"Server=localhost;Database=Scott;\" -p=SqlServer -a ");
+            Console.WriteLine("  DbCmd Merge --source=\"C:\\Temp\\*.sql\" --output=allScripts.sql");
         }
     }
 }
