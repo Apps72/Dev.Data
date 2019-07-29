@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Apps72.Dev.Data.Generator.Tools
@@ -16,18 +17,42 @@ namespace Apps72.Dev.Data.Generator.Tools
             {
                 this.Command = ArgumentCommand.GenerateEntities;
             }
+            else if (cmdLine.ContainsKey("Merge", "mg"))
+            {
+                this.Command = ArgumentCommand.Merge;
+            }
+            else if (cmdLine.ContainsKey("Run", "rn"))
+            {
+                this.Command = ArgumentCommand.Run;
+            }
 
             // Read arguments
             this.ConnectionString = cmdLine.GetValue("ConnectionString", "cs");
             this.Provider = cmdLine.GetValue("Provider", "p") ?? "SqlServer";
-            this.Output = cmdLine.GetValue("Output", "o") ?? "Entities.cs";
+            this.Output = cmdLine.GetValue("Output", "o");
             this.Language = cmdLine.GetValue("Language", "l") ?? "CSharp";
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
             this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
             this.OnlySchema = cmdLine.GetValue("OnlySchema", "os");
             this.CodeAnalysis = cmdLine.GetValue("CodeAnalysis", "ca");
-            
+            this.Source = cmdLine.GetValue("Source", "s");
+            this.Separator = cmdLine.GetValue("Separator", "sp");
+
+            // Default
+            if (String.IsNullOrEmpty(this.Output) && this.Command == ArgumentCommand.GenerateEntities)
+                this.Output = "Entities.cs";
+
+            // Source
+            if (this.Command == ArgumentCommand.Merge ||
+                this.Command == ArgumentCommand.Run)
+            {
+                if (String.IsNullOrEmpty(this.Source))
+                    this.Source = Path.Join(Environment.CurrentDirectory, "*.sql");
+                else if (!Wildcard.HasWildcard(this.Source))
+                    this.Source = Path.Join(Source, "*.sql");
+            }
+
             // Validation
             this.Validate();
         }
@@ -59,7 +84,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             }
         }
 
-        public ArgumentCommand Command { get; private set; } 
+        public ArgumentCommand Command { get; private set; }
         public string ConnectionString { get; private set; }
         public string Provider { get; private set; }
         public string Output { get; private set; }
@@ -69,12 +94,37 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string ColumnAttribute { get; private set; }
         public string OnlySchema { get; private set; }
         public string CodeAnalysis { get; private set; }
-        //public IEnumerable<string> CodeAnalysisCodes => this.CodeAnalysis?.Split(';', StringSplitOptions.RemoveEmptyEntries)?.Select(i => i.Trim());
+        public string Source { get; private set; }
+        public string Separator { get; private set; }
+
+        /// <summary>
+        /// Gets files from the Source argument, using wildcard.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<FileInfo> GetFilesForSource()
+        {
+            // Directory of Source
+            var sourceWithPattern = new FileInfo(this.Source);
+            var sourceDirectory = sourceWithPattern.Directory;
+            var sourcePattern = sourceWithPattern.Name;
+
+            var files = new List<FileInfo>();
+            var wildcard = new Wildcard(this.Source, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            foreach (var file in sourceDirectory.EnumerateFiles(sourcePattern, SearchOption.AllDirectories))
+            {
+                if (wildcard.IsMatch(file.FullName))
+                    files.Add(file);
+            }
+
+            return files;
+        }
     }
 
     public enum ArgumentCommand
     {
         None,
-        GenerateEntities
+        GenerateEntities,
+        Merge,
+        Run
     }
 }

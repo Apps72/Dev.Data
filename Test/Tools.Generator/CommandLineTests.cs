@@ -52,5 +52,14 @@ namespace Tools.Generator.Tests
             Assert.AreEqual("1", cmdLine.GetValue("B", "a"));
             Assert.AreEqual(null, cmdLine.GetValue("c"));
         }
+
+        [TestMethod]
+        public void String_Left_Test()
+        {
+            Assert.AreEqual("ABC", "ABCDEF".Left(3));
+            Assert.AreEqual("ABC", "ABC".Left(3));
+            Assert.AreEqual("ABC", "ABC".Left(5));
+            Assert.AreEqual("", "".Left(3));
+        }
     }
 }

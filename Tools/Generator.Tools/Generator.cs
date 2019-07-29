@@ -6,9 +6,9 @@ namespace Apps72.Dev.Data.Generator.Tools
 {
     public class Generator
     {
-        public Generator(string[] args)
+        public Generator(Arguments args)
         {
-            this.Arguments = new Arguments(args);
+            this.Arguments = args;
 
             using (DbConnection conn = GetConnection())
             {

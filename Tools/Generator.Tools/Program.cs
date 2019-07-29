@@ -19,10 +19,34 @@ namespace Apps72.Dev.Data.Generator.Tools
             try
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                Console.WriteLine($"  Entities generating...");
-                var generator = new Generator(args);
-                System.IO.File.WriteAllText(generator.Arguments.Output, generator.Code);
-                Console.WriteLine($"  {generator.EntitiesGenerated.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                var arguments = new Arguments(args);
+
+                switch (arguments.Command)
+                {
+                    case ArgumentCommand.GenerateEntities:
+                        Console.WriteLine($"  Entities generating...");
+                        var generator = new Generator(arguments);
+                        System.IO.File.WriteAllText(generator.Arguments.Output, generator.Code);
+                        Console.WriteLine($"  {generator.EntitiesGenerated.Count()} entities generated in {generator.Arguments.Output}. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        break;
+
+                    case ArgumentCommand.Merge:
+                        Console.WriteLine($"  Merge files...");
+                        var merger = new Merger(arguments).Start();
+                        Console.WriteLine($"  {merger.Files.Count()} files merged. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        break;
+
+
+                    case ArgumentCommand.Run:
+                        Console.WriteLine($"  Execute SQL scripts...");
+                        var runner = new Runner(arguments).Start();
+                        Console.WriteLine($"  {runner.Files.Count()} files executed. {watch.Elapsed.TotalSeconds:0.00} seconds.");
+                        break;
+
+                    default:
+                        Help.DisplayGeneralHelp();
+                        return;
+                }
             }
             catch (Exception ex)
             {
@@ -32,7 +56,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                 Console.WriteLine("Write DbCmd --help for more information.");
                 Console.ResetColor();
             }
-            
+
         }
 
         private static Version GetAssemblyVersion()
