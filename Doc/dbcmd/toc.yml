@@ -15,6 +15,8 @@
   href: execute-scalar.md
 - name: ExecuteNonQuery
   href: execute-nonquery.md
+- name: Parameters
+  href: parameters.md
 - name: Fluent queries
   href: fluent.md
 - name: Tracing and Logging
@@ -25,5 +27,3 @@
   href: action-before-after.md
 - name: Retry queries
   href: retry.md
-- name: The Generator tool
-  href: tool-generator.md

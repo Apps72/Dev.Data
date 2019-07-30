@@ -1,9 +1,9 @@
 - name: Database Command
   href: dbcmd/
   homepage: dbcmd/quickstart.md
+- name: Tools
+  href: dbcmd-tools/
+  homepage: dbcmd-tools/generate-entities.md
 - name: DbMocker
   href: dbmocker/
   homepage: dbmocker/quickstart.md
-- name: Api Documentation
-  href: api/
-  homepage: api/index.md

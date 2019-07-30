@@ -24,7 +24,7 @@ class Employee
 <a name="ExecuteTable"></a>
 ### 1. ExecuteTable - Get **all data**
 
-Call the [ExecuteTable](../api/dbcmd/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteTable__1) method to map all data rows to a `IEnumerable<T>`.
+Call the [ExecuteTable](execute-table.md) method to map all data rows to a `IEnumerable<T>`.
 
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
@@ -38,7 +38,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 <a name="ExecuteRow"></a>
 ### 2. ExecuteRow - Get the **first row**.
 
-Call the [ExecuteRow](../api/dbcmd/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteRow__1) method to map a row to an object.
+Call the [ExecuteRow](execute-row.md) method to map a row to an object.
 
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
@@ -52,7 +52,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 <a name="AddParameter"></a>
 ### 3. AddParameter - Get a row using a **SQL Parameter**.
 
-Call the [AddParameter](../api/dbcmd/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_AddParameter_System_String_System_Object_) method to define a SQL parameter.
+Call the [AddParameter](parameters.md) method to define a SQL parameter.
 
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
@@ -67,7 +67,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 <a name="Dynamic"></a>
 ### 4. Dynamic - Get the first row **without creating the class**.
 
-Call the [ExecuteRow](../api/dbcmd/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteRow__1) method, using the `dynamic` keyword, to map the result dynamically (properties are created dynamically, based on name/type of SQL results).
+Call the [ExecuteRow](execute-row.md) method, using the `dynamic` keyword, to map the result dynamically (properties are created dynamically, based on name/type of SQL results).
 
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
@@ -81,7 +81,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 <a name="ExecuteScalar"></a>
 ### 5. ExecuteScalar - Get a **single value**.
 
-Call the [ExecuteScalar](../api/dbcmd/Apps72.Dev.Data.DatabaseCommand.yml#Apps72_Dev_Data_DatabaseCommand_ExecuteScalar) method to map a value (first column, first row) to an simple type.
+Call the [ExecuteScalar](execute-scalar.md) method to map a value (first column, first row) to an simple type.
 
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))

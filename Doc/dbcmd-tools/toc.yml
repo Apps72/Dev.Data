@@ -1,0 +1,6 @@
+- name: DbCmd GenerateEntities
+  href: generate-entities.md
+- name: DbCmd Merge
+  href: merge.md
+- name: DbCmd Run
+  href: run.md

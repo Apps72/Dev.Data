@@ -1,30 +1,6 @@
 {
-  "metadata": [
-    {
-      "src": [
-        {
-          "files": [
-            "Apps72.Dev.Data.dll"
-          ],
-          "src": "../src/Core/bin/Release/netstandard2.0"
-        }
-      ],
-      "dest": "api/dbcmd",
-      "disableGitFeatures": false,
-      "disableDefaultFilter": false
-    }
-  ],
   "build": {
-    "content": [
-      {
-        "files": [
-          "api/dbcmd/**.yml",
-          "toc.yml",
-          "api/toc.yml",
-          "api/index.md",
-          "api/dbcmd/index.md"
-        ]
-      },
+    "content": [      
       {
         "files": [
           "dbcmd/**.md",
@@ -37,6 +13,14 @@
         "files": [
           "dbmocker/**.md",
           "dbmocker/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      },
+      {
+        "files": [
+          "dbcmd-tools/**.md",
+          "dbcmd-tools/**/toc.yml",
           "toc.yml",
           "*.md"
         ]
