@@ -38,6 +38,8 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.CodeAnalysis = cmdLine.GetValue("CodeAnalysis", "ca");
             this.Source = cmdLine.GetValue("Source", "s");
             this.Separator = cmdLine.GetValue("Separator", "sp");
+            this.DbConfigAfter = cmdLine.GetValue("DbConfigAfter", "ca");
+            this.DbConfigUpdate = cmdLine.GetValue("DbConfigUpdate", "cu");
 
             // Default
             if (String.IsNullOrEmpty(this.Output) && this.Command == ArgumentCommand.GenerateEntities)
@@ -96,6 +98,8 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string CodeAnalysis { get; private set; }
         public string Source { get; private set; }
         public string Separator { get; private set; }
+        public string DbConfigAfter { get; private set; }
+        public string DbConfigUpdate { get; private set; }
 
         /// <summary>
         /// Gets files from the Source argument, using wildcard.

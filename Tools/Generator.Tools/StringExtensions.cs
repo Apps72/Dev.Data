@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Apps72.Dev.Data.Generator.Tools
 {
@@ -61,6 +62,16 @@ namespace Apps72.Dev.Data.Generator.Tools
                 return text.Substring(0, length);
             else
                 return text;
+        }
+
+        /// <summary>
+        /// Returns the file name only, without extension.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static string NameWithoutExtension(this FileInfo file)
+        {
+            return file.Name.Substring(0, file.Name.Length - file.Extension.Length);
         }
     }
 }

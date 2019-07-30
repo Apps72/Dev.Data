@@ -51,6 +51,12 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine("   --Separator        | -sp    Split script using this separator, to execute part of script");
             Console.WriteLine("                               and not a global script. Set -sp=GO for SQL Server.");
             Console.WriteLine("   --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.");
+            Console.WriteLine("   --DbConfigAfter    | -ca    Query to get the last file executed (without extension); ");
+            Console.WriteLine("                               And run only files with name greater than this value.");
+            Console.WriteLine("                               Ex: -ca=\"SELECT [Value] FROM [Configuration] WHERE [Key] = 'DbVer'\" ");
+            Console.WriteLine("   --DbConfigUpdate   | -cu    Query to update the last file executed.");
+            Console.WriteLine("                               The variable @Filename will be replace with the SQL file name (without extension).");
+            Console.WriteLine("                               Ex: -cu=\"UPDATE [Configuration] SET [Value] = @Filename WHERE [Key] = 'DbVer'\" ");
             Console.WriteLine();
             Console.WriteLine("Example:");
             Console.WriteLine("  DbCmd GenerateEntities -cs=\"Server=localhost;Database=Scott;\" -p=SqlServer -a ");
