@@ -37,7 +37,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.OnlySchema = cmdLine.GetValue("OnlySchema", "os");
             this.CodeAnalysis = cmdLine.GetValue("CodeAnalysis", "ca");
             this.Source = cmdLine.GetValue("Source", "s");
-            this.Separator = cmdLine.GetValue("Separator", "sp");
+            this.Separator = cmdLine.GetValue("Separator", "sp") ?? "GO";
             this.DbConfigAfter = cmdLine.GetValue("DbConfigAfter", "ca");
             this.DbConfigUpdate = cmdLine.GetValue("DbConfigUpdate", "cu");
 
