@@ -22,11 +22,13 @@ namespace Apps72.Dev.Data.Generator.Tools
         public Runner Start()
         {
             string lastScriptName = string.Empty;
+            DbTransaction transactionGlobal;
 
             using (var connection = GetConnection())
             {
                 connection.ConnectionString = this.ConnectionString;
                 connection.Open();
+                transactionGlobal = connection.BeginTransaction();
 
                 string[] separatorWithCR = new[]
                 {
@@ -36,7 +38,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                 // Filter files list
                 if (!string.IsNullOrEmpty(this.DbConfigAfter))
                 {
-                    this.Files = FilterFiles(connection, this.DbConfigAfter);
+                    this.Files = FilterFiles(transactionGlobal, this.DbConfigAfter);
                 }
 
                 // Read and execute all files
@@ -62,8 +64,10 @@ namespace Apps72.Dev.Data.Generator.Tools
                         Console.WriteLine($" ... Execution of script \"{file.Name}\"");
                         Console.WriteLine($"       {script.Replace(Environment.NewLine, " ").Left(80)}");
                         Console.WriteLine($"       ...");
+
                         using (var cmd = connection.CreateCommand())
                         {
+                            cmd.Transaction = transactionGlobal;
                             cmd.CommandText = script;
                             cmd.ExecuteNonQuery();
                         }
@@ -73,9 +77,10 @@ namespace Apps72.Dev.Data.Generator.Tools
                 // Update the database version
                 if (!string.IsNullOrEmpty(this.DbConfigUpdate) && !string.IsNullOrEmpty(lastScriptName))
                 {
-                    UpdateConfigDb(connection, this.DbConfigUpdate, lastScriptName);
+                    UpdateConfigDb(transactionGlobal, this.DbConfigUpdate, lastScriptName);
                 }
 
+                transactionGlobal.Commit();
                 connection.Close();
             }
             return this;
@@ -107,12 +112,13 @@ namespace Apps72.Dev.Data.Generator.Tools
             return new System.Data.SqlClient.SqlConnection();
         }
 
-        private IEnumerable<FileInfo> FilterFiles(DbConnection connection, string queryConfigAfter)
+        private IEnumerable<FileInfo> FilterFiles(DbTransaction transaction, string queryConfigAfter)
         {
             string lastConfigValue;
 
-            using (var cmd = connection.CreateCommand())
+            using (var cmd = transaction.Connection.CreateCommand())
             {
+                cmd.Transaction = transaction;
                 cmd.CommandText = queryConfigAfter;
                 lastConfigValue = Convert.ToString(cmd.ExecuteScalar());
 
@@ -124,13 +130,14 @@ namespace Apps72.Dev.Data.Generator.Tools
             return this.Files.Where(i => String.Compare(i.NameWithoutExtension(), lastConfigValue, ignoreCase: true) > 0);
         }
 
-        private void UpdateConfigDb(DbConnection connection, string queryUpdateConfig, string lastScriptName)
+        private void UpdateConfigDb(DbTransaction transaction, string queryUpdateConfig, string lastScriptName)
         {
             Console.WriteLine($" ... Update the database via \"DbConfigUpdate\" script, with \"{lastScriptName}\".");
             Console.WriteLine($"       {queryUpdateConfig.Replace(Environment.NewLine, " ").Left(80)}");
             Console.WriteLine($"       ...");
-            using (var cmd = connection.CreateCommand())
+            using (var cmd = transaction.Connection.CreateCommand())
             {
+                cmd.Transaction = transaction;
                 cmd.CommandText = queryUpdateConfig.Replace("@Filename",        // For SQL Server
                                                             $"'{lastScriptName.Replace("'", "''")}'",
                                                             StringComparison.InvariantCultureIgnoreCase)

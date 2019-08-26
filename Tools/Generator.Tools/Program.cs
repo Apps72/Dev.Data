@@ -55,8 +55,8 @@ namespace Apps72.Dev.Data.Generator.Tools
                 if (ex.InnerException != null) Console.WriteLine(ex.InnerException.Message);
                 Console.WriteLine("Write DbCmd --help for more information.");
                 Console.ResetColor();
+                Environment.Exit(-1);
             }
-
         }
 
         private static Version GetAssemblyVersion()

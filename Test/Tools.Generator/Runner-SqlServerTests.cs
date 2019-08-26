@@ -16,6 +16,28 @@ namespace Tools.Generator.Tests
         private readonly string FILENAME2 = Path.Join(Environment.CurrentDirectory, "script2.sql");
 
         [TestMethod]
+        public void RunnerRunner_SqlServer_EmptyScript_Test()
+        {
+            // Sample script
+            File.WriteAllText(FILENAME1, "-- Hello");
+            File.WriteAllText(FILENAME2, "");
+
+            var args = new[]
+            {
+                $"Run",
+                $"-cs={Configuration.SQLSERVER_CONNECTION_STRING}",
+            };
+            var runner = new Runner(new Arguments(args)).Start();
+
+            Assert.AreEqual(2, runner.Files.Count());
+
+            // Remove sample files
+            File.Delete(FILENAME1);
+            File.Delete(FILENAME2);
+
+        }
+
+        [TestMethod]
         public void RunnerRunner_SqlServer_DefaultParameters_Test()
         {
             // Sample script
@@ -87,6 +109,43 @@ namespace Tools.Generator.Tests
 
             Assert.AreEqual(0, runner.Files.Count());
             Assert.AreEqual("script2", ExecuteSqlQuery("SELECT Job FROM Bonus WHERE ename = 'DbVer'"));
+
+            // Remove sample files
+            File.Delete(FILENAME1);
+            File.Delete(FILENAME2);
+            ExecuteSqlQuery("DELETE FROM Bonus");
+        }
+
+        [TestMethod]
+        public void RunnerRunner_SqlServer_Transaction_Test()
+        {
+            Runner runner = null;
+
+            // Using BONUS table to simulate the Configuration Table
+            ExecuteSqlQuery("DELETE FROM Bonus;");
+
+            // Sample script
+            File.WriteAllText(FILENAME1, "INSERT INTO Bonus (ename, job) VALUES('Data1', 'Value1');");
+            File.WriteAllText(FILENAME2, "BOUM");
+
+            var args = new[]
+            {
+                $"Run",
+                $"-cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"-ca=\"{DB_SELECT_CONFIG}\"",
+                $"-cu=\"{DB_UPDATE_CONFIG}\"",
+            };
+
+            try
+            {
+                runner = new Runner(new Arguments(args)).Start();
+            }
+            catch (SqlException ex)
+            {
+                Assert.IsTrue(ex.Message.Contains("BOUM"));
+            }
+
+            Assert.AreEqual(0, ExecuteSqlQuery("SELECT COUNT(*) FROM Bonus"));
 
             // Remove sample files
             File.Delete(FILENAME1);

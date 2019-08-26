@@ -1143,7 +1143,39 @@
             <param name="propertyName">Name of the new property</param>
             <param name="propertyType">Type of the new property</param>
         </member>
-        <member name="M:Apps72.Dev.Data.Convertor.Dtype is null or
+        <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.KeepOnlyLettersOrDigits(System.String)">
+            <summary>
+            Returns a similar string with only digits (0 .. 9) or letter (a .. z; A .. Z).
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsAnonymousType(System.Type)">
+            <summary>
+            Returns True if the specified type is an AnonymousType.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsPrimitive(System.Type)">
+            <summary>
+            Returns True if this object is a simple type.
+            See https://msdn.microsoft.com/en-us/library/system.type.isprimitive.aspx
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsNullable(System.Type)">
+            <summary>
+            Returns True if the specified type is nullable
+            See http://stackoverflow.com/questions/8939939/correct-way-to-check-if-a-type-is-nullable
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.GetNullableSubType(System.Type)">
+            <summary>
+            Returns the sub-type if specified type is null or
             returns the specified type.
             </summary>
             <param name="type"></param>
@@ -1199,39 +1231,6 @@
             <summary>
             Activate the retry process, defining ExceptionsToRetry criterias.
             Ex. ExceptionsToRetry = (ex) => { return ex.Message.Contains("deadlock"); };
-            </summary>
-            <param name="options"></param>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseRetry.IsExceptionToRetry(System.Data.Common.DbException)">
-            <summary>
-            Returns True if the specified DbException is known by the ErrorCodesToRetry list
-            </summary>
-            <param name="ex"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseRetry.IsNotAnExceptionToRetry(System.Data.Common.DbException)">
-            <summary>
-            Returns True if the specified DbException is unknown by the ErrorCodesToRetry list
-            </summary>
-            <param name="ex"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseRetry.WaitBeforeRetry">
-            <summary>
-            Increment the Retry Counter,
-            And wait some milliseconds before to continue.
-            Returns False if the counter is greater than NumberOfRetriesBeforeFailed value.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseRetry.ResetRetryCounter">
-            <summary>
-            Reset the Retry Counter to zero.
-            </summary>
-        </member>
-        <member name="M:Apps72.Dev.Data.DatabaseRetry.ExecuteCommandOrRetryIfErrorOccured``1(System.Func{``0})">
-            <summary>
-   onsToRetry = (ex) => { return ex.Message.Contains("deadlock"); };
             </summary>
             <param name="options"></param>
         </member>
@@ -1592,7 +1591,44 @@
         <member name="P:Apps72.Dev.Data.Generator.TableAndColumn.NumericPrecision">
             <summary />
         </member>
-        <member nam of the column
+        <member name="P:Apps72.Dev.Data.Generator.TableAndColumn.NumericScale">
+            <summary />
+        </member>
+        <member name="P:Apps72.Dev.Data.Generator.TableAndColumn.IsColumnNullable">
+            <summary />
+        </member>
+        <member name="P:Apps72.Dev.Data.Generator.TableAndColumn.IsView">
+            <summary />
+        </member>
+        <member name="T:Apps72.Dev.Data.Schema.DataColumn">
+            <summary>
+            Represents the schema of a column in a Table.
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.Schema.DataColumn.#ctor(Apps72.Dev.Data.Schema.DataTable)">
+            <summary>
+            Initializes a new instance of a Column
+            </summary>
+            <param name="table"></param>
+        </member>
+        <member name="P:Apps72.Dev.Data.Schema.DataColumn.Table">
+            <summary>
+            Gets the System.Data.DataTable to which the column belongs to.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.Schema.DataColumn.Ordinal">
+            <summary>
+            Gets the (zero-based) position of the column in the Columns collection.
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.Schema.DataColumn.ColumnName">
+            <summary>
+            Gets the name of the column
+            </summary>
+        </member>
+        <member name="P:Apps72.Dev.Data.Schema.DataColumn.DotNetColumnName">
+            <summary>
+            Gets the name of the column
             </summary>
         </member>
         <member name="P:Apps72.Dev.Data.Schema.DataColumn.SqlType">
@@ -1925,38 +1961,6 @@
             </summary>
             <param name="oldValue">The string to replace.</param>
             <param name="newValue">The string that replaces oldValue, or null.</param>
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.op_Implicit(System.String)~Apps72.Dev.Data.SqlString">
-            <summary>
-            Implicit conversion of a string to a SqlString.
-            So, you can use `SqlString sql = "SELECT * FROM MyTable"`.
-            </summary>
-            <param name="value"></param>
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.op_Implicit(System.Text.StringBuilder)~Apps72.Dev.Data.SqlString">
-            <summary>
-            Implicit conversion of a string to a SqlString.
-            So, you can use `SqlString sql = "SELECT * FROM MyTable"`.
-            </summary>
-            <param name="value"></param>
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.ToString">
-            <summary>
-            Returns the SQL String content.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.op_Equality(Apps72.Dev.Data.SqlString,Apps72.Dev.Data.SqlString)">
-            <summary />
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.op_Inequality(Apps72.Dev.Data.SqlString,Apps72.Dev.Data.SqlString)">
-            <summary />
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.Equals(System.Object)">
-            <summary />
-        </member>
-        <member name="M:Apps72.Dev.Data.SqlString.GetHashCode">
-            <summarparam name="newValue">The string that replaces oldValue, or null.</param>
         </member>
         <member name="M:Apps72.Dev.Data.SqlString.op_Implicit(System.String)~Apps72.Dev.Data.SqlString">
             <summary>
