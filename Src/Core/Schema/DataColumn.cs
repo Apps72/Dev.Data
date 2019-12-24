@@ -10,6 +10,42 @@ namespace Apps72.Dev.Data.Schema
     [DebuggerDisplay("{ColumnName} {SqlType}")]
     public partial class DataColumn
     {
+        // TODO: To remove, to use only ctor
+        internal DataColumn()
+        {
+
+        }
+
+        /// <summary>
+        /// Initialize a new instance of <see cref="DataColumn"/>.
+        /// </summary>
+        /// <param name="ordinal"></param>
+        /// <param name="columnName"></param>
+        /// <param name="sqlType"></param>
+        /// <param name="dataType"></param>
+        /// <param name="isNullable"></param>
+        internal DataColumn(int ordinal, string columnName, string sqlType, Type dataType, bool isNullable)
+        {
+            Ordinal = ordinal;
+            ColumnName = columnName;
+            SqlType = sqlType;
+            DataType = dataType;
+            IsNullable = isNullable;
+        }
+
+        /// <summary>
+        /// Initialize a new instance of <see cref="DataColumn"/>.
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <param name="dataType"></param>
+        /// <param name="isNullable"></param>
+        internal DataColumn(string columnName, Type dataType, bool isNullable)
+        {
+            ColumnName = columnName;
+            DataType = dataType;
+            IsNullable = isNullable;
+        }
+
         /// <summary>
         /// Gets the (zero-based) position of the column in the Columns collection.
         /// </summary>

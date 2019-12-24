@@ -11,116 +11,81 @@ namespace Apps72.Dev.Data.Schema
 {
     public class DataTable<T>
     {
+        private IEnumerable<ColumnProperty> _columnProperties;
+
         public DataTable(DbDataReader reader)
         {
-            //this.Columns = Enumerable.Range(0, reader.FieldCount)
-            //                         .Select(i => new DataColumn()
-            //                         {
-            //                             ColumnName = reader.GetName(i),
-            //                             DataType = reader.GetFieldType(i),
-            //                             Ordinal = i,
-            //                             IsNullable = reader.IsDBNull(i)
-            //                         });
+            reader.Read();
+            _columnProperties = ColumnsIntersectProperties(reader);
 
+            this.Columns = _columnProperties.Select(i => i.Column);
             this.Rows = GetRows(reader);
         }
 
-        public IEnumerable<DataColumn> Columns { get; set; }
+        private IEnumerable<ColumnProperty> ColumnsIntersectProperties(IDataRecord record)
+        {
+            // Class Properties
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        public IEnumerable<T> Rows { get; set; }
+            // DataTable Columns 
+            var names = Enumerable.Range(0, record.FieldCount)
+                                  .Select(i => record.GetName(i))
+                                  .ToArray();
+
+            // Columns existing in properties
+            var columns = new List<ColumnProperty>();
+            for (int i = 0; i < names.Length; i++)
+            {
+                var property = properties.FirstOrDefault(x => String.Compare(x.Name, names[i], StringComparison.InvariantCultureIgnoreCase) == 0);
+                if (property != null)
+                {
+                    columns.Add(new ColumnProperty()
+                    {
+                        ColumnIndex = i,
+                        Column = new DataColumn
+                                     (
+                                        ordinal: i,
+                                        columnName: names[i],
+                                        sqlType: record.GetDataTypeName(i),
+                                        dataType: record.GetFieldType(i),
+                                        isNullable: record.IsDBNull(i)
+                                     ),
+                        Property = property,
+                    });
+                }
+            }
+
+            return columns;
+        }
+
+        public IEnumerable<DataColumn> Columns { get; private set; }
+
+        public IEnumerable<T> Rows { get; private set; }
 
         private IEnumerable<T> GetRows(DbDataReader reader)
         {
             var result = new List<T>();
 
-            // Properties to fill
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var names = Enumerable.Range(0, reader.FieldCount).Select(i => reader.GetName(i)).ToArray();
-            var propToFill = new List<PropertyInfo>();
-            foreach (var name in names)
-            {
-                propToFill.Add(properties.FirstOrDefault(x => String.Compare(x.Name, name, StringComparison.InvariantCultureIgnoreCase) == 0));
-            }
-
-            while (reader.Read())
+            do
             {
                 var newItem = Activator.CreateInstance<T>();
-                int i = 0;
-                foreach (var prop in propToFill)
+                foreach (var item in _columnProperties)
                 {
-                    object value = reader.GetValue(i);
-                    prop.SetValue(newItem, value == DBNull.Value ? null : value, null);
-                    i++;
+                    object value = reader.GetValue(item.ColumnIndex);
+                    item.Property.SetValue(newItem, value == DBNull.Value ? null : value, null);
                 }
-            }
+                //yield return newItem;
+                result.Add(newItem);
+            } while (reader.Read());
 
             return result;
         }
 
-        private T GetConvertedRow<T>(IDataRecord record)
+        class ColumnProperty
         {
-            var newItem = Activator.CreateInstance<T>();
-            var allProperties = newItem.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            for (int i = 0; i < record.FieldCount; i++)
-            {
-                string fieldName = record.GetName(i);
-                var property = allProperties.FirstOrDefault(x => String.Compare(x.Name, fieldName, StringComparison.InvariantCultureIgnoreCase) == 0);
-                if (property != null)
-                {
-                    object value = record.GetValue(i);
-                    property.SetValue(newItem, value == DBNull.Value ? null : value, null);
-                }
-            }
-
-            return newItem;
+            public int ColumnIndex { get; set; }
+            public DataColumn Column { get; set; }
+            public PropertyInfo Property { get; set; }
         }
-
-        //private T GetValue(IDataRecord record, int index)
-        //{
-        //    TypeCode typeCode = Type.GetTypeCode(typeof(T));
-
-        //    switch (typeCode)
-        //    {
-        //        case TypeCode.Empty:
-        //            break;
-        //        case TypeCode.Object:
-        //            break;
-        //        case TypeCode.DBNull:
-        //            break;
-        //        case TypeCode.Boolean:
-        //            break;
-        //        case TypeCode.Char:
-        //            break;
-        //        case TypeCode.SByte:
-        //            break;
-        //        case TypeCode.Byte:
-        //            break;
-        //        case TypeCode.Int16:
-        //            break;
-        //        case TypeCode.UInt16:
-        //            break;
-        //        case TypeCode.Int32:
-        //            break;
-        //        case TypeCode.UInt32:
-        //            break;
-        //        case TypeCode.Int64:
-        //            break;
-        //        case TypeCode.UInt64:
-        //            break;
-        //        case TypeCode.Single:
-        //            break;
-        //        case TypeCode.Double:
-        //            break;
-        //        case TypeCode.Decimal:
-        //            break;
-        //        case TypeCode.DateTime:
-        //            break;
-        //        case TypeCode.String:
-        //            return record.GetString(index);
-        //        default:
-        //            break;
-        //    }
-        //}
     }
 }

@@ -11,9 +11,10 @@ namespace Performances
     {
         private DbConnection _connection;
 
-        public BasicSamples(DbConnection connection)
+        public BasicSamples()
         {
-            _connection = connection;
+            var scott = new ScottInMemory();
+            _connection = scott.Connection;
         }
 
         [Benchmark]
@@ -25,8 +26,7 @@ namespace Performances
         [Benchmark]
         public void Dapper_ExecuteTable_5Cols_14Rows()
         {
-            var count = _connection.Query<EMP>("SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP", buffered: false)
-                                   .ToArray();
+            var data = _connection.Query<EMP>("SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP", buffered: false).ToArray();
         }
 
         [Benchmark]
@@ -45,19 +45,18 @@ namespace Performances
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.CommandText = "SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP";
-                var count = cmd.ExecuteTable<EMP>()
-                               .ToArray();
+                var data = cmd.ExecuteTable<EMP>().ToArray();
             }
         }
 
 
         class EMP
         {
-            public long empno { get; set; }
-            public string ename { get; set; }
-            public string hiredate { get; set; }
-            public long? comm { get; set; }
-            public long? mgr { get; set; }
+            public long EMPNO { get; set; }
+            public string ENAME { get; set; }
+            public string HIREDATE { get; set; }
+            public long? COMM { get; set; }
+            public long? MGR { get; set; }
         }
     }
 }

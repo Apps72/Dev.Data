@@ -145,14 +145,14 @@ namespace Apps72.Dev.Data.Generator
                 var table = tables[i];
                 table.Columns = descriptions.Where(c => c.SchemaName == table.Schema &&
                                                         c.TableName == table.Name)
-                                               .Select(c => new Schema.DataColumn()
-                                               {
-                                                   ColumnName = c.ColumnName,
-                                                   SqlType = c.ColumnType,
-                                                   DataType = c.GetDataType(),
-                                                   IsNullable = c.IsColumnNullable,
-                                                   Ordinal = c.SequenceNumber
-                                               })
+                                               .Select(c => new Schema.DataColumn
+                                               (
+                                                   ordinal: c.SequenceNumber,
+                                                   columnName: c.ColumnName,
+                                                   sqlType: c.ColumnType,
+                                                   dataType: c.GetDataType(),
+                                                   isNullable: c.IsColumnNullable
+                                               ))
                                                .ToArray();
             }
 

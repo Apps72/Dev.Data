@@ -33,12 +33,12 @@ namespace Apps72.Dev.Data.Schema
         internal DataTable(string tableName, string columnName, object firstColRowValue)
         {
             this.Name = tableName;
-            this.Columns = new DataColumn[] { new DataColumn()
-            {
-                ColumnName = columnName,
-                IsNullable = true,
-                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)
-            } };
+            this.Columns = new DataColumn[] { new DataColumn
+                (
+                    columnName: columnName,
+                    dataType: firstColRowValue != null ? firstColRowValue.GetType() : typeof(object),
+                    isNullable: true
+                )};
 
             this.Rows = new DataRow[] { new DataRow(this, new object[] { firstColRowValue }) };
         }
@@ -223,7 +223,7 @@ namespace Apps72.Dev.Data.Schema
             int fieldCount = reader.FieldCount;
 
             this.Columns = Enumerable.Range(0, fieldCount)
-                                     .Select(i => new DataColumn()
+                                     .Select(i => new DataColumn
                                      {
                                          ColumnName = reader.GetName(i),
                                          DataType = reader.GetFieldType(i),
