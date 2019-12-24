@@ -33,11 +33,11 @@ namespace Apps72.Dev.Data.Schema
         internal DataTable(string tableName, string columnName, object firstColRowValue)
         {
             this.Name = tableName;
-            this.Columns = new DataColumn[] { new DataColumn(this)
+            this.Columns = new DataColumn[] { new DataColumn()
             {
                 ColumnName = columnName,
                 IsNullable = true,
-                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)                
+                DataType = firstColRowValue != null ? firstColRowValue.GetType() : typeof(object)
             } };
 
             this.Rows = new DataRow[] { new DataRow(this, new object[] { firstColRowValue }) };
@@ -222,20 +222,15 @@ namespace Apps72.Dev.Data.Schema
         {
             int fieldCount = reader.FieldCount;
 
-            var columns = new DataColumn[fieldCount];
-
-            for (int i = 0; i < fieldCount; i++)
-            {
-                columns[i] = new DataColumn(this)
-                {
-                    ColumnName = reader.GetName(i),
-                    DataType = reader.GetFieldType(i),
-                    Ordinal = i,
-                    IsNullable = reader.IsDBNull(i)
-                };
-            }
-
-            this.Columns = columns;
+            this.Columns = Enumerable.Range(0, fieldCount)
+                                     .Select(i => new DataColumn()
+                                     {
+                                         ColumnName = reader.GetName(i),
+                                         DataType = reader.GetFieldType(i),
+                                         Ordinal = i,
+                                         IsNullable = reader.IsDBNull(i)
+                                     })
+                                     .ToArray();
 
             return fieldCount;
         }
@@ -253,7 +248,7 @@ namespace Apps72.Dev.Data.Schema
                 if (Convertor.TypeExtension.IsPrimitive(data.GetType()))
                 {
                     Type columnType = data.GetType();
-                    var column = new DataColumn(this)
+                    var column = new DataColumn()
                     {
                         Ordinal = 0,
                         ColumnName = "NoName",
@@ -273,7 +268,7 @@ namespace Apps72.Dev.Data.Schema
                     for (int i = 0; i < properties.Length; i++)
                     {
                         Type columnType = properties[i].PropertyType;
-                        columns[i] = new DataColumn(this)
+                        columns[i] = new DataColumn()
                         {
                             Ordinal = i,
                             ColumnName = properties[i].Name,

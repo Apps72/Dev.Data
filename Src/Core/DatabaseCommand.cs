@@ -513,8 +513,11 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>()
         {
-            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            return table?.ConvertTo<T>();
+            //Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
+            //return table?.ConvertTo<T>();
+
+            var tables = this.ExecuteInternalDataSet<T>(firstRowOnly: false);
+            return tables.First().Rows;
         }
 
         /// <summary>
@@ -850,6 +853,20 @@ namespace Apps72.Dev.Data
         #endregion
 
         #region PRIVATE
+
+        internal virtual IEnumerable<Schema.DataTable<T>> ExecuteInternalDataSet<T>(bool firstRowOnly)
+        {
+            Update_CommandDotCommandText_If_CommandText_IsNew();
+
+            using (DbDataReader dr = this.Command.ExecuteReader())
+            {
+                do
+                {
+                    return new[] { new Schema.DataTable<T>(dr) };
+                }
+                while (dr.NextResult());
+            }
+        }
 
         /// <summary>
         /// Execute the query and return an internal DataTable with all data.

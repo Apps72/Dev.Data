@@ -1114,40 +1114,17 @@
         </member>
         <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.IsDynamic(System.Type)">
             <summary>
-            Returns True if the <paramref name="type"/> is dynamic.
+            Returns always False.
             </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.GetDynamicObject(System.String,System.Collections.Generic.IDictionary{System.String,System.Type})">
-            <summary>
-            Returns a new object created and instanciated dynamically, and containing specified properties.
-            </summary>
-            <param name="className">Name of the class to create.</param>
-            <param name="properties">List of properties to add to this class.</param>
+            <param name="type">NA</param>
             <returns></returns>
         </member>
         <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.GetDynamicType(System.String,System.Collections.Generic.IDictionary{System.String,System.Type})">
             <summary>
-            Returns a new type created dynamically and containing specified properties.
+            Returns always null.
             </summary>
-            <param name="className">Name of the type to create.</param>
-            <param name="properties">List of properties to add to this type.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.AddProperty(System.Reflection.Emit.TypeBuilder,System.String,System.Type)">
-            <summary>
-            Add a new property dynamically to the <paramref name="typeBuilder"/>.
-            </summary>
-            <param name="typeBuilder">Builder of this type.</param>
-            <param name="propertyName">Name of the new property</param>
-            <param name="propertyType">Type of the new property</param>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.KeepOnlyLettersOrDigits(System.String)">
-            <summary>
-            Returns a similar string with only digits (0 .. 9) or letter (a .. z; A .. Z).
-            </summary>
-            <param name="text"></param>
+            <param name="className">NA</param>
+            <param name="properties">NA</param>
             <returns></returns>
         </member>
         <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsAnonymousType(System.Type)">
@@ -1605,17 +1582,6 @@
             Represents the schema of a column in a Table.
             </summary>
         </member>
-        <member name="M:Apps72.Dev.Data.Schema.DataColumn.#ctor(Apps72.Dev.Data.Schema.DataTable)">
-            <summary>
-            Initializes a new instance of a Column
-            </summary>
-            <param name="table"></param>
-        </member>
-        <member name="P:Apps72.Dev.Data.Schema.DataColumn.Table">
-            <summary>
-            Gets the System.Data.DataTable to which the column belongs to.
-            </summary>
-        </member>
         <member name="P:Apps72.Dev.Data.Schema.DataColumn.Ordinal">
             <summary>
             Gets the (zero-based) position of the column in the Columns collection.
@@ -1785,6 +1751,43 @@
             <summary>
             If item is null, creates a new instance of T type and sets all row values to the new T properties.
             If item is not null, sets all row values to item object properties
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Apps72.Dev.Data.Schema.DataTable">
+            <summary>
+            Represents one table of in-memory data.
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.Schema.DataTable.#ctor">
+            <summary>
+            Initialize a new instance of DataTable
+            </summary>
+        </member>
+        <member name="M:Apps72.Dev.Data.Schema.DataTable.#ctor(System.String,System.String,System.Object)">
+            <summary>
+            Initialize a new instance of DataTable,
+            based on a single Row/Col value.
+            </summary>
+            <param name="tableName"></param>
+            <param name="columnName"></param>
+            <param name="firstColRowValue"></param>
+        </member>
+        <member name="M:Apps72.Dev.Data.Schema.DataTable.#ctor(System.Data.Common.DbDataReader,System.Boolean)">
+            <summary>
+            Initialize a new instance of DataTable, 
+            load and fill all data (Rows and Columns) from the DbDataReader.
+            </summary>
+            <param name="reader"></param>
+            <param name="firstRowOnly"></param>
+        </member>
+        <member name="P:Apps72.Dev.Data.Schema.DataTable.Name">
+            <summary>
+            Gets the name of this Table
+            </summary>
+      o item object properties
             </summary>
             <typeparam name="T"></typeparam>
             <param name="item"></param>

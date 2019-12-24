@@ -11,20 +11,6 @@ namespace Apps72.Dev.Data.Schema
     public partial class DataColumn
     {
         /// <summary>
-        /// Initializes a new instance of a Column
-        /// </summary>
-        /// <param name="table"></param>
-        internal DataColumn(DataTable table)
-        {
-            this.Table = table;
-        }
-
-        /// <summary>
-        /// Gets the System.Data.DataTable to which the column belongs to.
-        /// </summary>
-        public DataTable Table { get; internal set; }
-
-        /// <summary>
         /// Gets the (zero-based) position of the column in the Columns collection.
         /// </summary>
         public int Ordinal { get; internal set; }

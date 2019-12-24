@@ -143,9 +143,9 @@ namespace Apps72.Dev.Data.Generator
             for (int i = 0; i < tables.Length; i++)
             {
                 var table = tables[i];
-                table.Columns = descriptions.Where(c => c.SchemaName == table.Schema && 
+                table.Columns = descriptions.Where(c => c.SchemaName == table.Schema &&
                                                         c.TableName == table.Name)
-                                               .Select(c => new Schema.DataColumn(table)
+                                               .Select(c => new Schema.DataColumn()
                                                {
                                                    ColumnName = c.ColumnName,
                                                    SqlType = c.ColumnType,
@@ -169,14 +169,14 @@ namespace Apps72.Dev.Data.Generator
         private string ExtractTypeNameOnly(string columnType)
         {
             if (columnType.Contains('(') && columnType.Contains(')'))
-            {                
+            {
                 return ReplaceBetween(columnType, '(', ')', String.Empty);
             }
             else
                 return columnType;
         }
 
-        private int? ConvertToNullableInt32(object value) 
+        private int? ConvertToNullableInt32(object value)
         {
             if (value == DBNull.Value)
                 return null;
@@ -188,9 +188,9 @@ namespace Apps72.Dev.Data.Generator
         {
             int indexFrom = text.IndexOf(from);
             int indexTo = text.IndexOf(to);
-            
+
             if (indexTo > indexFrom)
-            {                
+            {
                 return String.Format("{0}{1}{2}", text.Substring(0, indexFrom), newValue, text.Substring(indexTo + 1));
             }
             else
