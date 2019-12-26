@@ -513,11 +513,13 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>()
         {
-            //Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            //return table?.ConvertTo<T>();
-
+#if false
+            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
+            return table?.ConvertTo<T>();
+#else
             var tables = this.ExecuteInternalDataSet<T>(firstRowOnly: false);
             return tables.First().Rows;
+#endif
         }
 
         /// <summary>
@@ -862,7 +864,10 @@ namespace Apps72.Dev.Data
             {
                 do
                 {
-                    return new[] { new Schema.DataTable<T>(dr) };
+                    return new[]
+                    {
+                        new Schema.DataTable<T>(dr, Schema.DataTable<T>.ConvertReaderToType<T>)
+                    };
                 }
                 while (dr.NextResult());
             }

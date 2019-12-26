@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 using System;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace Performances
@@ -11,8 +12,11 @@ namespace Performances
             //var summary = BenchmarkRunner.Run<BasicSamples>();
             //return;
 
-            const int COUNT = 10000;
-            var sample = new BasicSamples();
+            //DbConnection connection = new ScottInMemory().Connection;
+            DbConnection connection = new ScottFromSqlServer().Connection;
+
+            const int COUNT = 300;
+            var sample = new BasicSamples(connection);
             var watcher = System.Diagnostics.Stopwatch.StartNew();
 
             watcher.Restart();

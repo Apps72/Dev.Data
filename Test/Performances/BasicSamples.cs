@@ -11,10 +11,9 @@ namespace Performances
     {
         private DbConnection _connection;
 
-        public BasicSamples()
+        public BasicSamples(DbConnection connection)
         {
-            var scott = new ScottInMemory();
-            _connection = scott.Connection;
+            _connection = connection;
         }
 
         [Benchmark]
@@ -52,11 +51,11 @@ namespace Performances
 
         class EMP
         {
-            public long EMPNO { get; set; }
+            public int EMPNO { get; set; }
             public string ENAME { get; set; }
-            public string HIREDATE { get; set; }
-            public long? COMM { get; set; }
-            public long? MGR { get; set; }
+            public DateTime HIREDATE { get; set; }
+            public int? COMM { get; set; }
+            public int? MGR { get; set; }
         }
     }
 }

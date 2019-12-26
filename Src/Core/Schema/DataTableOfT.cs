@@ -5,87 +5,86 @@ using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Apps72.Dev.Data.Schema
 {
     public class DataTable<T>
     {
-        private IEnumerable<ColumnProperty> _columnProperties;
-
-        public DataTable(DbDataReader reader)
+        internal DataTable(DbDataReader reader,
+                           Func<DbDataReader, ColumnsAndRows<T>> actionToGetRows)
         {
-            reader.Read();
-            _columnProperties = ColumnsIntersectProperties(reader);
+            var colProps = actionToGetRows.Invoke(reader);
 
-            this.Columns = _columnProperties.Select(i => i.Column);
-            this.Rows = GetRows(reader);
-        }
-
-        private IEnumerable<ColumnProperty> ColumnsIntersectProperties(IDataRecord record)
-        {
-            // Class Properties
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            // DataTable Columns 
-            var names = Enumerable.Range(0, record.FieldCount)
-                                  .Select(i => record.GetName(i))
-                                  .ToArray();
-
-            // Columns existing in properties
-            var columns = new List<ColumnProperty>();
-            for (int i = 0; i < names.Length; i++)
-            {
-                var property = properties.FirstOrDefault(x => String.Compare(x.Name, names[i], StringComparison.InvariantCultureIgnoreCase) == 0);
-                if (property != null)
-                {
-                    columns.Add(new ColumnProperty()
-                    {
-                        ColumnIndex = i,
-                        Column = new DataColumn
-                                     (
-                                        ordinal: i,
-                                        columnName: names[i],
-                                        sqlType: record.GetDataTypeName(i),
-                                        dataType: record.GetFieldType(i),
-                                        isNullable: record.IsDBNull(i)
-                                     ),
-                        Property = property,
-                    });
-                }
-            }
-
-            return columns;
+            this.Columns = colProps.Columns;
+            this.Rows = colProps.Rows;
         }
 
         public IEnumerable<DataColumn> Columns { get; private set; }
 
         public IEnumerable<T> Rows { get; private set; }
 
-        private IEnumerable<T> GetRows(DbDataReader reader)
-        {
-            var result = new List<T>();
+        internal Func<DbDataReader, ColumnsAndRows<T>> GetRows { get; set; }
 
+        internal static ColumnsAndRows<T> ConvertReaderToType<T>(DbDataReader reader)
+        {
+            reader.Read();
+
+            // Class Properties
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            // DataTable Columns 
+            var names = Enumerable.Range(0, reader.FieldCount)
+                                  .Select(i => reader.GetName(i))
+                                  .ToArray();
+
+            // Columns existing in properties
+            var columns = new Dictionary<DataColumn, PropertyInfo>();
+            for (int i = 0; i < names.Length; i++)
+            {
+                var property = properties.FirstOrDefault(x => String.Compare(x.Name, names[i], StringComparison.InvariantCultureIgnoreCase) == 0);
+                if (property != null)
+                {
+                    var column = new DataColumn
+                                     (
+                                        ordinal: i,
+                                        columnName: names[i],
+                                        sqlType: reader.GetDataTypeName(i),
+                                        dataType: reader.GetFieldType(i),
+                                        isNullable: reader.IsDBNull(i)
+                                     );
+
+                    columns.Add(column, property);
+                }
+            }
+
+            // Convert all rows
+            var rows = new List<T>();
             do
             {
                 var newItem = Activator.CreateInstance<T>();
-                foreach (var item in _columnProperties)
+                foreach (var item in columns)
                 {
-                    object value = reader.GetValue(item.ColumnIndex);
-                    item.Property.SetValue(newItem, value == DBNull.Value ? null : value, null);
+                    DataColumn column = item.Key;
+                    PropertyInfo property = item.Value;
+
+                    object value = reader.GetValue(column.Ordinal);
+                    property.SetValue(newItem, value == DBNull.Value ? null : value, null);
                 }
-                //yield return newItem;
-                result.Add(newItem);
+                rows.Add(newItem);
             } while (reader.Read());
 
-            return result;
+            // Return
+            return new ColumnsAndRows<T>()
+            {
+                Columns = columns.Keys,
+                Rows = rows
+            };
         }
+    }
 
-        class ColumnProperty
-        {
-            public int ColumnIndex { get; set; }
-            public DataColumn Column { get; set; }
-            public PropertyInfo Property { get; set; }
-        }
+    internal class ColumnsAndRows<T>
+    {
+        public IEnumerable<DataColumn> Columns { get; set; }
+        public IEnumerable<T> Rows { get; set; }
     }
 }
