@@ -12,11 +12,8 @@ namespace Performances
             //var summary = BenchmarkRunner.Run<BasicSamples>();
             //return;
 
-            //DbConnection connection = new ScottInMemory().Connection;
-            DbConnection connection = new ScottFromSqlServer().Connection;
-
             const int COUNT = 300;
-            var sample = new BasicSamples(connection);
+            var sample = new BasicSamples();
             var watcher = System.Diagnostics.Stopwatch.StartNew();
 
             watcher.Restart();

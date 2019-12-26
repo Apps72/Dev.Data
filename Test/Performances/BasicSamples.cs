@@ -11,9 +11,10 @@ namespace Performances
     {
         private DbConnection _connection;
 
-        public BasicSamples(DbConnection connection)
+        public BasicSamples()
         {
-            _connection = connection;
+            //_connection = new ScottInMemory().Connection;
+            _connection = new ScottFromSqlServer().Connection;
         }
 
         [Benchmark]

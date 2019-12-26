@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Text;
+using Apps72.Dev.Data.Convertor;
+using Apps72.Dev.Data.Schema;
 
 namespace Apps72.Dev.Data
 {
@@ -517,8 +519,13 @@ namespace Apps72.Dev.Data
             Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
             return table?.ConvertTo<T>();
 #else
-            var tables = this.ExecuteInternalDataSet<T>(firstRowOnly: false);
-            return tables.First().Rows;
+            return ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToType<T>(dr).Rows;
+                }
+            });
 #endif
         }
 
@@ -856,20 +863,39 @@ namespace Apps72.Dev.Data
 
         #region PRIVATE
 
-        internal virtual IEnumerable<Schema.DataTable<T>> ExecuteInternalDataSet<T>(bool firstRowOnly)
+        private T ExecuteInternalCommand<T>(Func<T> action)
         {
-            Update_CommandDotCommandText_If_CommandText_IsNew();
+            ResetException();
 
-            using (DbDataReader dr = this.Command.ExecuteReader())
+            try
             {
-                do
+                Update_CommandDotCommandText_If_CommandText_IsNew();
+
+                // Action Before Execution
+                if (this.ActionBeforeExecution != null)
                 {
-                    return new[]
-                    {
-                        new Schema.DataTable<T>(dr, Schema.DataTable<T>.ConvertReaderToType<T>)
-                    };
+                    this.ActionBeforeExecution.Invoke(this);
+                    Update_CommandDotCommandText_If_CommandText_IsNew();
                 }
-                while (dr.NextResult());
+
+                // Log
+                if (this.Log != null)
+                    this.Log.Invoke(this.Command.CommandText);
+
+                // Send the request to the Database server
+                T result = action.Invoke();
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null)
+                {
+                    //this.ActionAfterExecution.Invoke(this, tables);
+                }
+
+                return result;
+            }
+            catch (DbException ex)
+            {
+                return ThrowSqlExceptionOrDefaultValue<T>(ex);
             }
         }
 
