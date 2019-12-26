@@ -1,6 +1,7 @@
 ﻿using Apps72.Dev.Data.Convertor;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Apps72.Dev.Data.Schema
 {
@@ -14,8 +15,8 @@ namespace Apps72.Dev.Data.Schema
             this.Rows = colProps.Rows;
         }
 
-        public IEnumerable<DataColumn> Columns { get; private set; }
+        public IEnumerable<DataColumn> Columns { get; }
 
-        public IEnumerable<T> Rows { get; private set; }
+        public IEnumerable<T> Rows { get; }
     }
 }

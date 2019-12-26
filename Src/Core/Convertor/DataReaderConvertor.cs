@@ -64,6 +64,40 @@ namespace Apps72.Dev.Data.Convertor
                 Rows = rows
             };
         }
+
+        internal static DataTable ToDataTable(DbDataReader reader)
+        {
+            int fieldCount = reader.FieldCount;
+            var table = new DataTable();
+
+            reader.Read();
+
+            // DataTable Columns 
+            table.Columns = Enumerable.Range(0, fieldCount)
+                                       .Select(i => new DataColumn
+                                          (
+                                             ordinal: i,
+                                             columnName: reader.GetName(i),
+                                             sqlType: reader.GetDataTypeName(i),
+                                             dataType: reader.GetFieldType(i),
+                                             isNullable: reader.IsDBNull(i)
+                                          ))
+                                       .ToArray();
+            // DataTable Rows
+            var data = new object[fieldCount];
+            var rows = new List<DataRow>();
+            do
+            {
+                reader.GetValues(data);
+                rows.Add(new DataRow(table, data));
+
+            } while (reader.Read());
+            table.Rows = rows.ToArray();
+
+            // Return
+            return table;
+        }
+
     }
 
     internal class ColumnsAndRows<T>

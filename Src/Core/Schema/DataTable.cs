@@ -132,7 +132,7 @@ namespace Apps72.Dev.Data.Schema
                 int i = 0;
                 foreach (var row in this.Rows)
                 {
-                    results[i] = row.ConvertTo<T>();
+                    results[i] = default(T); //TODO: To change row.ConvertTo<T>();
                     i++;
                 }
             }
@@ -188,29 +188,6 @@ namespace Apps72.Dev.Data.Schema
             }
 
             this.Rows = data.ToArray();
-        }
-
-        /// <summary>
-        /// Load and fill all data (Rows and Columns) from the array of object[].
-        /// </summary>
-        /// <param name="arrayOfvalues"></param>
-        /// <param name="firstRowOnly"></param>
-        internal void Load(IEnumerable<object[]> arrayOfvalues, bool firstRowOnly)
-        {
-            this.FillColumnsProperties(arrayOfvalues.First());
-            this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();
-        }
-
-        /// <summary>
-        /// Load and fill all data (Rows and Columns) from the array of typed object.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arrayOfvalues"></param>
-        /// <param name="firstRowOnly"></param>
-        internal void Load<T>(IEnumerable<T> arrayOfvalues, bool firstRowOnly)
-        {
-            this.FillColumnsProperties(arrayOfvalues.First());
-            this.Rows = arrayOfvalues.Select(v => new DataRow(this, v)).ToArray();
         }
 
         /// <summary>

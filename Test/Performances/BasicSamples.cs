@@ -49,6 +49,22 @@ namespace Performances
             }
         }
 
+        [Benchmark]
+        public void DbCmd_ExecuteTable_WithFunction()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP";
+                var data = cmd.ExecuteTable(row =>
+                {
+                    return new
+                    {
+                        Id = row[0],
+                        Name = row["ENAME"],
+                    };
+                }).ToArray();
+            }
+        }
 
         class EMP
         {

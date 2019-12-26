@@ -27,6 +27,14 @@ namespace Performances
             watcher.Restart();
             for (int i = 0; i < COUNT; i++)
             {
+                sample.DbCmd_ExecuteTable_WithFunction();
+            }
+            double avg_dbcmd_func = (double)watcher.ElapsedMilliseconds / COUNT;
+            Console.WriteLine($"DbCmd_ExecuteTable_WithFunction  {avg_dbcmd_func}");
+
+            watcher.Restart();
+            for (int i = 0; i < COUNT; i++)
+            {
                 sample.Dapper_ExecuteTable_5Cols_14Rows();
             }
             double avg_Dapper = (double)watcher.ElapsedMilliseconds / COUNT;

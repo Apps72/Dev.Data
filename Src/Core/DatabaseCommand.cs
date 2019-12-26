@@ -3,7 +3,6 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data;
 using System.Text;
 using Apps72.Dev.Data.Convertor;
 using Apps72.Dev.Data.Schema;
@@ -106,7 +105,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the command type
         /// </summary>
-        public virtual CommandType CommandType
+        public virtual System.Data.CommandType CommandType
         {
             get
             {
@@ -537,16 +536,29 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
         {
-            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            int rowCount = table.Rows.Length;
+            //Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
+            //int rowCount = table.Rows.Length;
 
-            var results = new T[rowCount];
-            for (int i = 0; i < rowCount; i++)
+            //var results = new T[rowCount];
+            //for (int i = 0; i < rowCount; i++)
+            //{
+            //    results[i] = converter.Invoke(table.Rows[i]);
+            //}
+
+            //return results;
+
+            var table = ExecuteInternalCommand(() =>
             {
-                results[i] = converter.Invoke(table.Rows[i]);
-            }
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToDataTable(dr);
+                }
+            });
 
-            return results;
+            foreach (var row in table.Rows)
+            {
+                yield return converter.Invoke(row);
+            }
         }
 
         /// <summary>
@@ -618,7 +630,7 @@ namespace Apps72.Dev.Data
             {
                 Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
                 if (table != null && table.Rows.Length > 0)
-                    return table.Rows[0].ConvertTo<T>(itemOftype);
+                    return default(T); // TODO: to change table.Rows[0].ConvertTo<T>(itemOftype);
                 else
                     return default(T);
             }
@@ -780,7 +792,7 @@ namespace Apps72.Dev.Data
         /// <param name="type">Type of parameter.</param>
         /// <param name="size">Size of parameter</param>
         /// <returns></returns>
-        public virtual DatabaseCommand AddParameter(string name, object value, DbType? type, int? size)
+        public virtual DatabaseCommand AddParameter(string name, object value, System.Data.DbType? type, int? size)
         {
             var dbCommand = this.Command;
             var param = dbCommand.CreateParameter();
@@ -814,7 +826,7 @@ namespace Apps72.Dev.Data
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <param name="type">Type of parameter.</param>
         /// <returns></returns>
-        public virtual DatabaseCommand AddParameter(string name, object value, DbType type)
+        public virtual DatabaseCommand AddParameter(string name, object value, System.Data.DbType type)
         {
             return AddParameter(name, value, type, null);
         }
@@ -1104,14 +1116,14 @@ namespace Apps72.Dev.Data
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, DbType type)
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, System.Data.DbType type)
         {
             return AddParameter(name, value, type);
         }
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, DbType? type, int? size)
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, System.Data.DbType? type, int? size)
         {
             return AddParameter(name, value, type, size);
         }
