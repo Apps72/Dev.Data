@@ -50,6 +50,16 @@ namespace Performances
         }
 
         [Benchmark]
+        public void DbCmd_ExecuteTable_Anonymous()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT EMPNO, ENAME FROM EMP";
+                var data = cmd.ExecuteTable(new { EMPNO = 0, ENAME = "" }).ToArray();
+            }
+        }
+
+        [Benchmark]
         public void DbCmd_ExecuteTable_WithFunction()
         {
             using (var cmd = new DatabaseCommand(_connection))

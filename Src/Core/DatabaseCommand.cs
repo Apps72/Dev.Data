@@ -514,10 +514,6 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>()
         {
-#if false
-            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            return table?.ConvertTo<T>();
-#else
             return ExecuteInternalCommand(() =>
             {
                 using (DbDataReader dr = this.Command.ExecuteReader())
@@ -525,7 +521,6 @@ namespace Apps72.Dev.Data
                     return DataReaderConvertor.ToType<T>(dr).Rows;
                 }
             });
-#endif
         }
 
         /// <summary>
@@ -536,17 +531,6 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
         {
-            //Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            //int rowCount = table.Rows.Length;
-
-            //var results = new T[rowCount];
-            //for (int i = 0; i < rowCount; i++)
-            //{
-            //    results[i] = converter.Invoke(table.Rows[i]);
-            //}
-
-            //return results;
-
             var table = ExecuteInternalCommand(() =>
             {
                 using (DbDataReader dr = this.Command.ExecuteReader())
@@ -580,7 +564,13 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>(T itemOftype)
         {
-            return ExecuteTable<T>();
+            return ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToAnonymous<T>(dr);
+                }
+            });
         }
 
         /// <summary>

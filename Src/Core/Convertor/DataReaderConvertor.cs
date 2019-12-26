@@ -65,6 +65,32 @@ namespace Apps72.Dev.Data.Convertor
             };
         }
 
+        internal static IEnumerable<T> ToAnonymous<T>(DbDataReader reader)
+        {
+            reader.Read();
+
+            // Read and convert all rows
+            var data = new object[reader.FieldCount];
+            var rows = new List<T>();
+
+            try
+            {
+                do
+                {
+                    reader.GetValues(data);
+                    var row = (T)Activator.CreateInstance(typeof(T), data);
+                    rows.Add(row);
+                } while (reader.Read());
+            }
+            catch (MissingMethodException ex)
+            {
+                throw new MissingMethodException("Properties of your anonymous class must be in the same type and same order of your SQL Query.", ex);
+            }
+
+            // Return
+            return rows;
+        }
+
         internal static DataTable ToDataTable(DbDataReader reader)
         {
             int fieldCount = reader.FieldCount;

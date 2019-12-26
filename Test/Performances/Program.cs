@@ -16,6 +16,11 @@ namespace Performances
             var sample = new BasicSamples();
             var watcher = System.Diagnostics.Stopwatch.StartNew();
 
+            sample.DbCmd_ExecuteTable_WithFunction();
+            sample.DbCmd_ExecuteTable_Anonymous();
+
+
+
             watcher.Restart();
             for (int i = 0; i < COUNT; i++)
             {
@@ -23,14 +28,6 @@ namespace Performances
             }
             double avg_dbcmd = (double)watcher.ElapsedMilliseconds / COUNT;
             Console.WriteLine($"DbCmd_ExecuteTable_5Cols_14Rows  {avg_dbcmd}");
-
-            watcher.Restart();
-            for (int i = 0; i < COUNT; i++)
-            {
-                sample.DbCmd_ExecuteTable_WithFunction();
-            }
-            double avg_dbcmd_func = (double)watcher.ElapsedMilliseconds / COUNT;
-            Console.WriteLine($"DbCmd_ExecuteTable_WithFunction  {avg_dbcmd_func}");
 
             watcher.Restart();
             for (int i = 0; i < COUNT; i++)
