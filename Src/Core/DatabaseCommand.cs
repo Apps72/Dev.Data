@@ -589,7 +589,24 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual T ExecuteRow<T>()
         {
-            return this.ExecuteRow<T>(default(T));
+            if (TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return this.ExecuteScalar<T>();
+            }
+            else
+            {
+                // Get DataTable
+                var rows = ExecuteInternalCommand(() =>
+                {
+                    using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToType<T>(dr).Rows;
+                    }
+                });
+
+                // Return
+                return rows?.Any() == true ? rows.First() : default(T);
+            }
         }
 
         /// <summary>
@@ -612,17 +629,23 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual T ExecuteRow<T>(T itemOftype)
         {
-            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            if (TypeExtension.IsPrimitive(typeof(T)))
             {
                 return this.ExecuteScalar<T>();
             }
             else
             {
-                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
-                if (table != null && table.Rows.Length > 0)
-                    return default(T); // TODO: to change table.Rows[0].ConvertTo<T>(itemOftype);
-                else
-                    return default(T);
+                // Get DataTable
+                var rows = ExecuteInternalCommand(() =>
+                {
+                    using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                    }
+                });
+
+                // Return
+                return rows?.Any() == true ? rows.First() : default(T);
             }
         }
 
@@ -634,17 +657,24 @@ namespace Apps72.Dev.Data
         /// <returns>First row of results</returns>
         public virtual T ExecuteRow<T>(Func<Schema.DataRow, T> converter)
         {
-            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            if (TypeExtension.IsPrimitive(typeof(T)))
             {
                 return this.ExecuteScalar<T>();
             }
             else
             {
-                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
-                if (table != null && table.Rows.Length > 0)
-                    return converter.Invoke(table.Rows[0]);
-                else
-                    return default(T);
+                // Get DataRow
+                var table = ExecuteInternalCommand(() =>
+                {
+                    using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToDataTable(dr);
+                    }
+                });
+                var row = table?.Rows?.FirstOrDefault();
+
+                // Return
+                return row != null ? converter.Invoke(row) : default(T);
             }
         }
 

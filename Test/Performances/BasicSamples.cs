@@ -50,18 +50,9 @@ namespace Performances
         }
 
         [Benchmark]
-        public void DbCmd_ExecuteTable_Anonymous()
+        public void DbCmd_Samples()
         {
-            using (var cmd = new DatabaseCommand(_connection))
-            {
-                cmd.CommandText = "SELECT EMPNO, ENAME FROM EMP";
-                var data = cmd.ExecuteTable(new { EMPNO = 0, ENAME = "" }).ToArray();
-            }
-        }
-
-        [Benchmark]
-        public void DbCmd_ExecuteTable_WithFunction()
-        {
+            // Functions
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.CommandText = "SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP";
@@ -71,8 +62,45 @@ namespace Performances
                     {
                         Id = row[0],
                         Name = row["ENAME"],
+                        HireDate = row.Field<DateTime>("HireDate")
                     };
                 }).ToArray();
+            }
+
+            // Anonymous
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT EMPNO, ENAME FROM EMP";
+                var data = cmd.ExecuteTable(new { EMPNO = 0, ENAME = "" }).ToArray();
+            }
+
+            // Row Typed
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP";
+                var data = cmd.ExecuteRow<EMP>();
+            }
+
+            // Row Anonymous
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT EMPNO, ENAME MGR FROM EMP";
+                var data = cmd.ExecuteRow(new { EMPNO = 0, ENAME = "" });
+            }
+
+            // Row Function
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = "SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP";
+                var data = cmd.ExecuteRow(row =>
+                {
+                    return new
+                    {
+                        Id = row[0],
+                        Name = row["ENAME"],
+                        HireDate = row.Field<DateTime>("HireDate")
+                    };
+                });
             }
         }
 

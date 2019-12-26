@@ -54,7 +54,11 @@ namespace Apps72.Dev.Data.Schema
         {
             get
             {
-                int? index = this.Table.Columns.FirstOrDefault(c => c.ColumnName == columnName)?.Ordinal;
+                int? index = this.Table
+                                 .Columns
+                                 .FirstOrDefault(c => String.Compare(c.ColumnName, columnName, StringComparison.InvariantCultureIgnoreCase) == 0)
+                                ?.Ordinal;
+
                 if (index != null)
                     return this.ItemArray[index.Value];
                 else

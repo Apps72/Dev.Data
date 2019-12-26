@@ -16,9 +16,7 @@ namespace Performances
             var sample = new BasicSamples();
             var watcher = System.Diagnostics.Stopwatch.StartNew();
 
-            sample.DbCmd_ExecuteTable_WithFunction();
-            sample.DbCmd_ExecuteTable_Anonymous();
-
+            sample.DbCmd_Samples();
 
 
             watcher.Restart();
