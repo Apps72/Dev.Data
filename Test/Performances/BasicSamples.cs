@@ -50,7 +50,7 @@ namespace Performances
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.CommandText = "SELECT EMPNO, ENAME, HIREDATE, COMM, MGR FROM EMP";
-                var data = cmd.ExecuteTable<EMP>().ToArray();
+                var data = cmd.ExecuteTable<EMP>();
             }
         }
 

@@ -7,7 +7,7 @@ namespace Performances
 {
     public class Program
     {
-        const int RUN_MODE = 0;         // 0=Benchmark, 1=Light samples, 2=ManualPerformances
+        const int RUN_MODE = 2;         // 0=Benchmark, 1=Light samples, 2=ManualPerformances
 
         static void Main(string[] args)
         {
@@ -32,9 +32,11 @@ namespace Performances
                 // Check Performances Manually
                 // *******************************
                 case 2:
-                    const int COUNT = 300;
+                    const int COUNT = 1000;
                     var sample = new BasicSamples();
                     var watcher = System.Diagnostics.Stopwatch.StartNew();
+
+                    Console.WriteLine($"Average to return a Type Tables (sample of {COUNT} data).");
 
                     watcher.Restart();
                     for (int i = 0; i < COUNT; i++)
@@ -42,7 +44,7 @@ namespace Performances
                         sample.DbCmd_ExecuteTable_5Cols_14Rows();
                     }
                     double avg_dbcmd = (double)watcher.ElapsedMilliseconds / COUNT;
-                    Console.WriteLine($"DbCmd_ExecuteTable_5Cols_14Rows  {avg_dbcmd}");
+                    Console.WriteLine($"  DatabaseCommand  {avg_dbcmd:0.00} ms");
 
                     watcher.Restart();
                     for (int i = 0; i < COUNT; i++)
@@ -50,7 +52,7 @@ namespace Performances
                         sample.Dapper_ExecuteTable_5Cols_14Rows();
                     }
                     double avg_Dapper = (double)watcher.ElapsedMilliseconds / COUNT;
-                    Console.WriteLine($"Dapper_ExecuteTable_5Cols_14Rows  {avg_Dapper}");
+                    Console.WriteLine($"  Dapper           {avg_Dapper:0.00} ms");
 
                     watcher.Restart();
                     for (int i = 0; i < COUNT; i++)
@@ -58,9 +60,9 @@ namespace Performances
                         sample.EF_ExecuteTable_5Cols_14Rows();
                     }
                     double avg_efcore = (double)watcher.ElapsedMilliseconds / COUNT;
-                    Console.WriteLine($"EF_ExecuteTable_5Cols_14Rows  {avg_efcore}");
+                    Console.WriteLine($"  EFCore           {avg_efcore:0.00} ms");
 
-                    Console.WriteLine($"{(avg_dbcmd / avg_Dapper - 1) * 100}%");
+                    //Console.WriteLine($"{(avg_dbcmd / avg_Dapper - 1) * 100}%");
                     break;
             }
         }
