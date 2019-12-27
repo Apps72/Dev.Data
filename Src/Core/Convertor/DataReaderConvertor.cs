@@ -129,6 +129,14 @@ namespace Apps72.Dev.Data.Convertor
             return rows.Cast<T>();
         }
 
+        internal static IEnumerable<T> ToTypeOrDynamic<T>(DbDataReader reader)
+        {
+            if (DynamicConvertor.IsDynamic(typeof(T)))
+                return DataReaderConvertor.ToDynamic<T>(reader);
+            else
+                return DataReaderConvertor.ToType<T>(reader).Rows;
+        }
+
         internal static DataTable ToDataTable(DbDataReader reader)
         {
             int fieldCount = reader.FieldCount;

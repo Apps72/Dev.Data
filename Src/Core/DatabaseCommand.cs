@@ -322,14 +322,19 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return ExecuteInternalDatasets<T, U, NoType, NoType, NoType>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2
+            );
         }
 
         /// <summary>
@@ -348,15 +353,20 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>> ExecuteDataSet<T, U, V>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return ExecuteInternalDatasets<T, U, V, NoType, NoType>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null,
-                dataset.Length >= 2 ? dataset[2].ConvertTo<V>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3
+            );
         }
 
         /// <summary>
@@ -376,16 +386,21 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>> ExecuteDataSet<T, U, V, W>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return ExecuteInternalDatasets<T, U, V, W, NoType>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null,
-                dataset.Length >= 2 ? dataset[2].ConvertTo<V>() : null,
-                dataset.Length >= 3 ? dataset[3].ConvertTo<W>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4
+            );
         }
 
         /// <summary>
@@ -406,17 +421,22 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ExecuteDataSet<T, U, V, W, X>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return ExecuteInternalDatasets<T, U, V, W, X>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null,
-                dataset.Length >= 2 ? dataset[2].ConvertTo<V>() : null,
-                dataset.Length >= 3 ? dataset[3].ConvertTo<W>() : null,
-                dataset.Length >= 4 ? dataset[4].ConvertTo<X>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4,
+                datasets.Item5
+            );
         }
 
         /// <summary>
@@ -518,10 +538,7 @@ namespace Apps72.Dev.Data
             {
                 using (DbDataReader dr = this.Command.ExecuteReader())
                 {
-                    if (DynamicConvertor.IsDynamic(typeof(T)))
-                        return DataReaderConvertor.ToDynamic<T>(dr);
-                    else
-                        return DataReaderConvertor.ToType<T>(dr).Rows;
+                    return DataReaderConvertor.ToTypeOrDynamic<T>(dr);
                 }
             });
         }
@@ -603,10 +620,7 @@ namespace Apps72.Dev.Data
                 {
                     using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
                     {
-                        if (DynamicConvertor.IsDynamic(typeof(T)))
-                            return DataReaderConvertor.ToDynamic<T>(dr);
-                        else
-                            return DataReaderConvertor.ToType<T>(dr).Rows;
+                        return DataReaderConvertor.ToTypeOrDynamic<T>(dr);
                     }
                 });
 
@@ -926,7 +940,8 @@ namespace Apps72.Dev.Data
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
                 {
-                    //this.ActionAfterExecution.Invoke(this, tables);
+                    // TODO: to activate
+                    // this.ActionAfterExecution.Invoke(this, tables);
                 }
 
                 return result;
@@ -937,66 +952,38 @@ namespace Apps72.Dev.Data
             }
         }
 
-        /// <summary>
-        /// Execute the query and return an internal DataTable with all data.
-        /// </summary>
-        /// <param name="firstRowOnly"></param>
-        /// <returns></returns>
-        internal virtual IEnumerable<Schema.DataTable> ExecuteInternalDataSet(bool firstRowOnly)
+        private Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ExecuteInternalDatasets<T, U, V, W, X>(DbDataReader dr)
         {
-            ResetException();
+            // Dataset #0 for type T
+            var dataset0 = DataReaderConvertor.ToTypeOrDynamic<T>(dr);
+            var hasNextResult0 = dr.NextResult();
 
-            try
-            {
-                Update_CommandDotCommandText_If_CommandText_IsNew();
+            // Dataset #1 for type U
+            var dataset1 = hasNextResult0 ? DataReaderConvertor.ToTypeOrDynamic<U>(dr) : null;
+            var hasNextResult1 = hasNextResult0 ? dr.NextResult() : false;
 
-                // Action Before Execution
-                if (this.ActionBeforeExecution != null)
-                {
-                    this.ActionBeforeExecution.Invoke(this);
-                    Update_CommandDotCommandText_If_CommandText_IsNew();
-                }
+            // Dataset #2 for type V
+            var dataset2 = hasNextResult1 ? DataReaderConvertor.ToTypeOrDynamic<V>(dr) : null;
+            var hasNextResult2 = hasNextResult1 ? dr.NextResult() : false;
 
-                // Log
-                if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
+            // Dataset #3 for type W
+            var dataset3 = hasNextResult2 ? DataReaderConvertor.ToTypeOrDynamic<W>(dr) : null;
+            var hasNextResult3 = hasNextResult2 ? dr.NextResult() : false;
 
-                var tables = new List<Schema.DataTable>();
+            // Dataset #4 for type X
+            var dataset4 = hasNextResult3 ? DataReaderConvertor.ToTypeOrDynamic<X>(dr) : null;
+            var hasNextResult4 = hasNextResult3 ? dr.NextResult() : false;
 
-                // Send the request to the Database server
-                if (this.Command.CommandText.Length > 0)
-                {
-                    Retry.ExecuteCommandOrRetryIfErrorOccured<bool>(() =>
-                    {
-                        using (DbDataReader dr = this.Command.ExecuteReader())
-                        {
-                            do
-                            {
-                                tables.Add(new Schema.DataTable(dr, firstRowOnly));
-                            }
-                            while (!firstRowOnly && dr.NextResult());
-                        }
-                        return true;
-                    });
-                }
-                else
-                {
-                    tables.Add(new Schema.DataTable());
-                }
-
-                // Action After Execution
-                if (this.ActionAfterExecution != null)
-                {
-                    this.ActionAfterExecution.Invoke(this, tables);
-                }
-
-                return tables.ToArray();
-            }
-            catch (DbException ex)
-            {
-                return ThrowSqlExceptionOrDefaultValue<IEnumerable<Schema.DataTable>>(ex);
-            }
-
+            // Return
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
+                (
+                    dataset0,
+                    dataset1,
+                    dataset2,
+                    dataset3,
+                    dataset4
+                );
+            ;
         }
 
         /// <summary>
@@ -1004,10 +991,62 @@ namespace Apps72.Dev.Data
         /// </summary>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        internal virtual Schema.DataTable ExecuteInternalDataTable(bool firstRowOnly)
-        {
-            return this.ExecuteInternalDataSet(firstRowOnly)?.FirstOrDefault();
-        }
+        //internal virtual IEnumerable<Schema.DataTable> ExecuteInternalDataSet(bool firstRowOnly)
+        //{
+        //    ResetException();
+
+        //    try
+        //    {
+        //        Update_CommandDotCommandText_If_CommandText_IsNew();
+
+        //        // Action Before Execution
+        //        if (this.ActionBeforeExecution != null)
+        //        {
+        //            this.ActionBeforeExecution.Invoke(this);
+        //            Update_CommandDotCommandText_If_CommandText_IsNew();
+        //        }
+
+        //        // Log
+        //        if (this.Log != null)
+        //            this.Log.Invoke(this.Command.CommandText);
+
+        //        var tables = new List<Schema.DataTable>();
+
+        //        // Send the request to the Database server
+        //        if (this.Command.CommandText.Length > 0)
+        //        {
+        //            Retry.ExecuteCommandOrRetryIfErrorOccured<bool>(() =>
+        //            {
+        //                using (DbDataReader dr = this.Command.ExecuteReader())
+        //                {
+        //                    do
+        //                    {
+        //                        tables.Add(new Schema.DataTable(dr, firstRowOnly));
+        //                    }
+        //                    while (!firstRowOnly && dr.NextResult());
+        //                }
+        //                return true;
+        //            });
+        //        }
+        //        else
+        //        {
+        //            tables.Add(new Schema.DataTable());
+        //        }
+
+        //        // Action After Execution
+        //        if (this.ActionAfterExecution != null)
+        //        {
+        //            this.ActionAfterExecution.Invoke(this, tables);
+        //        }
+
+        //        return tables.ToArray();
+        //    }
+        //    catch (DbException ex)
+        //    {
+        //        return ThrowSqlExceptionOrDefaultValue<IEnumerable<Schema.DataTable>>(ex);
+        //    }
+
+        //}
 
         /// <summary>
         /// Set the last raised exception to null
