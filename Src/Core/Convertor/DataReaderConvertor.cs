@@ -25,7 +25,8 @@ namespace Apps72.Dev.Data.Convertor
             var columns = new Dictionary<DataColumn, PropertyInfo>();
             for (int i = 0; i < names.Length; i++)
             {
-                var property = properties.FirstOrDefault(x => String.Compare(x.Name, names[i], StringComparison.InvariantCultureIgnoreCase) == 0);
+                var property = properties.GetFirstOrDefaultWithAttributeOrName(names[i]);
+
                 if (property != null)
                 {
                     var column = new DataColumn
@@ -167,6 +168,13 @@ namespace Apps72.Dev.Data.Convertor
             {
                 if (data[i] == DBNull.Value) data[i] = null;
             }
+        }
+
+        private static PropertyInfo GetFirstOrDefaultWithAttributeOrName(this PropertyInfo[] properties, string columnName)
+        {
+            return properties.FirstOrDefault(prop => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(prop), columnName, StringComparison.InvariantCultureIgnoreCase) == 0 && prop.CanWrite)
+                   ??
+                   properties.FirstOrDefault(prop => String.Compare(prop.Name, columnName, StringComparison.InvariantCultureIgnoreCase) == 0);
         }
     }
 
