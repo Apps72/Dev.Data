@@ -91,6 +91,45 @@ namespace Apps72.Dev.Data.Convertor
             return rows;
         }
 
+        internal static IEnumerable<dynamic> ToDynamic(DbDataReader reader)
+        {
+            reader.Read();
+
+            //  var columns = this.Table.Columns.ToDictionary(c => c.ColumnName, 
+            // c => c.IsNullable ? typeof(Nullable<>).MakeGenericType(c.DataType) : c.DataType);
+
+
+            // DataTable Columns 
+            var columns = Enumerable.Range(0, reader.FieldCount)
+                                     .ToDictionary(i => reader.GetName(i),
+                                                   i => reader.IsDBNull(i)
+                                                           ? typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i))
+                                                           : reader.GetFieldType(i));
+
+            // Get Type
+            var type = DynamicConvertor.GetDynamicType(DynamicConvertor.DYNAMIC_CLASS_NAME, columns);
+
+            // Class Properties
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            // Convert all rows
+            var rows = new List<object>();
+            do
+            {
+                var newItem = Activator.CreateInstance(type);
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    PropertyInfo property = properties[i];
+                    object value = reader.GetValue(i);
+                    property.SetValue(newItem, value == DBNull.Value ? null : value, null);
+                }
+                rows.Add(newItem);
+            } while (reader.Read());
+
+            // Return
+            return rows;
+        }
+
         internal static DataTable ToDataTable(DbDataReader reader)
         {
             int fieldCount = reader.FieldCount;

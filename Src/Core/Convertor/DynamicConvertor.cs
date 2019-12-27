@@ -17,6 +17,7 @@ namespace Apps72.Dev.Data.Convertor
         internal const string DYNAMIC_CLASS_NAME = "AnonymousClass";
 
 #if NETCOREAPP2_0 || NET40
+
         /// <summary>
         /// Returns True if the <paramref name="type"/> is dynamic.
         /// </summary>

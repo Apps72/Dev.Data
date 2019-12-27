@@ -518,7 +518,10 @@ namespace Apps72.Dev.Data
             {
                 using (DbDataReader dr = this.Command.ExecuteReader())
                 {
-                    return DataReaderConvertor.ToType<T>(dr).Rows;
+                    if (DynamicConvertor.IsDynamic(typeof(T)))
+                        return DataReaderConvertor.ToDynamic(dr).Cast<T>();
+                    else
+                        return DataReaderConvertor.ToType<T>(dr).Rows;
                 }
             });
         }
