@@ -70,7 +70,8 @@ namespace Apps72.Dev.Data.Convertor
             reader.Read();
 
             // Read and convert all rows
-            var data = new object[reader.FieldCount];
+            var fieldCount = reader.FieldCount;
+            var data = new object[fieldCount];
             var rows = new List<T>();
 
             try
@@ -78,6 +79,7 @@ namespace Apps72.Dev.Data.Convertor
                 do
                 {
                     reader.GetValues(data);
+                    RemoveDBNullValues(data, fieldCount);
                     var row = (T)Activator.CreateInstance(typeof(T), data);
                     rows.Add(row);
                 } while (reader.Read());
@@ -94,10 +96,6 @@ namespace Apps72.Dev.Data.Convertor
         internal static IEnumerable<dynamic> ToDynamic(DbDataReader reader)
         {
             reader.Read();
-
-            //  var columns = this.Table.Columns.ToDictionary(c => c.ColumnName, 
-            // c => c.IsNullable ? typeof(Nullable<>).MakeGenericType(c.DataType) : c.DataType);
-
 
             // DataTable Columns 
             var columns = Enumerable.Range(0, reader.FieldCount)
@@ -163,6 +161,13 @@ namespace Apps72.Dev.Data.Convertor
             return table;
         }
 
+        private static void RemoveDBNullValues(object[] data, int fieldCount)
+        {
+            for (int i = 0; i < fieldCount; i++)
+            {
+                if (data[i] == DBNull.Value) data[i] = null;
+            }
+        }
     }
 
     internal class ColumnsAndRows<T>
