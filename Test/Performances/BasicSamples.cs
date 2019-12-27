@@ -1,20 +1,25 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Linq;
 using Apps72.Dev.Data;
 using BenchmarkDotNet.Attributes;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Performances
 {
     public class BasicSamples
     {
         private DbConnection _connection;
+        private ScottContext _context;
 
         public BasicSamples()
         {
             //_connection = new ScottInMemory().Connection;
             _connection = new ScottFromSqlServer().Connection;
+            _context = new ScottContext(_connection);
         }
 
         [Benchmark]
@@ -50,6 +55,17 @@ namespace Performances
         }
 
         [Benchmark]
+        public void EF_ExecuteScalar_Int()
+        {
+            var empno = _context.Employees.First().EMPNO;
+        }
+
+        [Benchmark]
+        public void EF_ExecuteTable_5Cols_14Rows()
+        {
+            var data = _context.Employees.ToArray();
+        }
+
         public void DbCmd_Samples()
         {
             // Functions
@@ -104,13 +120,32 @@ namespace Performances
             }
         }
 
+        [Table("EMP")]
         class EMP
         {
+            [Key]
             public int EMPNO { get; set; }
             public string ENAME { get; set; }
             public DateTime HIREDATE { get; set; }
             public int? COMM { get; set; }
             public int? MGR { get; set; }
+        }
+
+        class ScottContext : DbContext
+        {
+            private DbConnection _connection;
+
+            public ScottContext(DbConnection connection)
+            {
+                _connection = connection;
+            }
+
+            public DbSet<EMP> Employees { get; set; }
+
+            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            {
+                optionsBuilder.UseSqlServer(_connection);
+            }
         }
     }
 }
