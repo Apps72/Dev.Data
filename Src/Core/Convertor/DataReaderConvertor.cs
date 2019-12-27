@@ -94,7 +94,7 @@ namespace Apps72.Dev.Data.Convertor
             return rows;
         }
 
-        internal static IEnumerable<dynamic> ToDynamic(DbDataReader reader)
+        internal static IEnumerable<T> ToDynamic<T>(DbDataReader reader)
         {
             reader.Read();
 
@@ -126,7 +126,7 @@ namespace Apps72.Dev.Data.Convertor
             } while (reader.Read());
 
             // Return
-            return rows;
+            return rows.Cast<T>();
         }
 
         internal static DataTable ToDataTable(DbDataReader reader)

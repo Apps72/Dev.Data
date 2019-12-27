@@ -519,7 +519,7 @@ namespace Apps72.Dev.Data
                 using (DbDataReader dr = this.Command.ExecuteReader())
                 {
                     if (DynamicConvertor.IsDynamic(typeof(T)))
-                        return DataReaderConvertor.ToDynamic(dr).Cast<T>();
+                        return DataReaderConvertor.ToDynamic<T>(dr);
                     else
                         return DataReaderConvertor.ToType<T>(dr).Rows;
                 }
@@ -603,7 +603,10 @@ namespace Apps72.Dev.Data
                 {
                     using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
                     {
-                        return DataReaderConvertor.ToType<T>(dr).Rows;
+                        if (DynamicConvertor.IsDynamic(typeof(T)))
+                            return DataReaderConvertor.ToDynamic<T>(dr);
+                        else
+                            return DataReaderConvertor.ToType<T>(dr).Rows;
                     }
                 });
 
