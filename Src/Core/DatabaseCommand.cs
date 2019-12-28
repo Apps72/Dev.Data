@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Apps72.Dev.Data.Convertor;
-using Apps72.Dev.Data.Schema;
 
 namespace Apps72.Dev.Data
 {
@@ -261,7 +260,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         public virtual DatabaseCommand Prepare()
         {
-            this.Command.CommandText = GetCommandTextWithTags();
+            this.Command.CommandText = this.GetCommandTextWithTags();
             this.Command.Prepare();
             return this;
         }
@@ -1027,68 +1026,6 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
-        /// Execute the query and return an internal DataTable with all data.
-        /// </summary>
-        /// <param name="firstRowOnly"></param>
-        /// <returns></returns>
-        //internal virtual IEnumerable<Schema.DataTable> ExecuteInternalDataSet(bool firstRowOnly)
-        //{
-        //    ResetException();
-
-        //    try
-        //    {
-        //        Update_CommandDotCommandText_If_CommandText_IsNew();
-
-        //        // Action Before Execution
-        //        if (this.ActionBeforeExecution != null)
-        //        {
-        //            this.ActionBeforeExecution.Invoke(this);
-        //            Update_CommandDotCommandText_If_CommandText_IsNew();
-        //        }
-
-        //        // Log
-        //        if (this.Log != null)
-        //            this.Log.Invoke(this.Command.CommandText);
-
-        //        var tables = new List<Schema.DataTable>();
-
-        //        // Send the request to the Database server
-        //        if (this.Command.CommandText.Length > 0)
-        //        {
-        //            Retry.ExecuteCommandOrRetryIfErrorOccured<bool>(() =>
-        //            {
-        //                using (DbDataReader dr = this.Command.ExecuteReader())
-        //                {
-        //                    do
-        //                    {
-        //                        tables.Add(new Schema.DataTable(dr, firstRowOnly));
-        //                    }
-        //                    while (!firstRowOnly && dr.NextResult());
-        //                }
-        //                return true;
-        //            });
-        //        }
-        //        else
-        //        {
-        //            tables.Add(new Schema.DataTable());
-        //        }
-
-        //        // Action After Execution
-        //        if (this.ActionAfterExecution != null)
-        //        {
-        //            this.ActionAfterExecution.Invoke(this, tables);
-        //        }
-
-        //        return tables.ToArray();
-        //    }
-        //    catch (DbException ex)
-        //    {
-        //        return ThrowSqlExceptionOrDefaultValue<IEnumerable<Schema.DataTable>>(ex);
-        //    }
-
-        //}
-
-        /// <summary>
         /// Set the last raised exception to null
         /// </summary>
         protected virtual void ResetException()
@@ -1168,7 +1105,7 @@ namespace Apps72.Dev.Data
 
         #endregion
 
-        #region Interface
+        #region Interface 
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
