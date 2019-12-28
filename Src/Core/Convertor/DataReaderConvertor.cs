@@ -94,6 +94,24 @@ namespace Apps72.Dev.Data.Convertor
             return rows;
         }
 
+        internal static IEnumerable<T> ToPrimitives<T>(DbDataReader reader)
+        {
+            reader.Read();
+
+            // Read and convert all rows
+            var rows = new List<T>();
+
+            do
+            {
+                var data = reader.GetValue(0);
+                data = data == DBNull.Value ? null : data;
+                rows.Add((T)data);
+            } while (reader.Read());
+
+            // Return
+            return rows;
+        }
+
         internal static IEnumerable<T> ToDynamic<T>(DbDataReader reader)
         {
             reader.Read();
