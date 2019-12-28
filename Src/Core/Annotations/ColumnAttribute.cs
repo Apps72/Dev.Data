@@ -26,19 +26,6 @@ namespace Apps72.Dev.Data.Annotations
         /// </summary>
         public string Name => _name;
 
-
-        /// <summary>
-        /// Returns the Column attribute for the specified property.
-        /// </summary>
-        /// <param name="property">Property</param>
-        /// <returns>Column attribute or null if not found</returns>
-        internal static ColumnAttribute GetColumnAttribute(PropertyInfo property)
-        {
-            var customAttributes = property.GetCustomAttributes(typeof(ColumnAttribute), true);
-
-            return customAttributes?.FirstOrDefault(a => a is ColumnAttribute) as ColumnAttribute;
-        }
-
         /// <summary>
         /// Returns the Column.Name attribute for the specified property.
         /// </summary>

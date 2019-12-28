@@ -10,12 +10,6 @@ namespace Apps72.Dev.Data.Schema
     [DebuggerDisplay("{ColumnName} {SqlType}")]
     public partial class DataColumn
     {
-        // TODO: To remove, to use only ctor
-        internal DataColumn()
-        {
-
-        }
-
         /// <summary>
         /// Initialize a new instance of <see cref="DataColumn"/>.
         /// </summary>
