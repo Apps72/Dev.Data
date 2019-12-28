@@ -69,6 +69,20 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteTablePrimitiveAnonymous_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT ENAME FROM EMP ";
+                string[] data = cmd.ExecuteTable(string.Empty).ToArray();
+                string smith = data.FirstOrDefault();
+
+                Assert.AreEqual(EMP.Smith.EName, smith);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteTableNullableProperties_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))

@@ -591,7 +591,10 @@ namespace Apps72.Dev.Data
             {
                 using (DbDataReader dr = this.Command.ExecuteReader())
                 {
-                    return DataReaderConvertor.ToAnonymous<T>(dr);
+                    if (TypeExtension.IsPrimitive(typeof(T)))
+                        return DataReaderConvertor.ToPrimitives<T>(dr);
+                    else
+                        return DataReaderConvertor.ToAnonymous<T>(dr);
                 }
             });
         }
