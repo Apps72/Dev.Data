@@ -147,14 +147,6 @@ namespace Apps72.Dev.Data.Convertor
             return rows.Cast<T>();
         }
 
-        internal static IEnumerable<T> ToTypeOrDynamic<T>(DbDataReader reader)
-        {
-            if (DynamicConvertor.IsDynamic(typeof(T)))
-                return DataReaderConvertor.ToDynamic<T>(reader);
-            else
-                return DataReaderConvertor.ToType<T>(reader).Rows;
-        }
-
         internal static DataTable ToDataTable(DbDataReader reader)
         {
             int fieldCount = reader.FieldCount;
@@ -186,6 +178,59 @@ namespace Apps72.Dev.Data.Convertor
 
             // Return
             return table;
+        }
+
+        internal static Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ToMultipleTypes<T, U, V, W, X>(DbDataReader dr, bool forAnonymousTypes = false)
+        {
+            // Dataset #0 for type T
+            var dataset0 = ToPrimitiveOrTypeOrDynamic<T>(dr);
+            var hasNextResult0 = dr.NextResult();
+
+            // Dataset #1 for type U
+            var dataset1 = hasNextResult0 ? ToPrimitiveOrTypeOrDynamic<U>(dr) : null;
+            var hasNextResult1 = hasNextResult0 ? dr.NextResult() : false;
+
+            // Dataset #2 for type V
+            var dataset2 = hasNextResult1 ? ToPrimitiveOrTypeOrDynamic<V>(dr) : null;
+            var hasNextResult2 = hasNextResult1 ? dr.NextResult() : false;
+
+            // Dataset #3 for type W
+            var dataset3 = hasNextResult2 ? ToPrimitiveOrTypeOrDynamic<W>(dr) : null;
+            var hasNextResult3 = hasNextResult2 ? dr.NextResult() : false;
+
+            // Dataset #4 for type X
+            var dataset4 = hasNextResult3 ? ToPrimitiveOrTypeOrDynamic<X>(dr) : null;
+            var hasNextResult4 = hasNextResult3 ? dr.NextResult() : false;
+
+            // Return
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
+                (
+                    dataset0,
+                    dataset1,
+                    dataset2,
+                    dataset3,
+                    dataset4
+                );
+
+            // Depending of type of T, gets the Primitive, Dynamic or Typed data.
+            IEnumerable<MyType> ToPrimitiveOrTypeOrDynamic<MyType>(DbDataReader datareader)
+            {
+                // Primitive type: Executable<string>()
+                if (TypeExtension.IsPrimitive(typeof(MyType)))
+                    return DataReaderConvertor.ToPrimitives<MyType>(datareader);
+
+                // Dynamic type: Executable<dynamic>()
+                else if (DynamicConvertor.IsDynamic(typeof(MyType)))
+                    return DataReaderConvertor.ToDynamic<MyType>(datareader);
+
+                // Anonymous type: Executable(new { Name = "" })
+                else if (forAnonymousTypes == true)
+                    return DataReaderConvertor.ToAnonymous<MyType>(datareader);
+
+                // Object type: Executable<Employee>()
+                else
+                    return DataReaderConvertor.ToType<MyType>(datareader).Rows;
+            }
         }
 
         private static void RemoveDBNullValues(object[] data, int fieldCount)

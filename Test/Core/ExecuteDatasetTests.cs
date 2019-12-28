@@ -67,10 +67,10 @@ namespace Data.Core.Tests
                 cmd.CommandText.AppendLine(" SELECT DEPTNO, DNAME FROM DEPT ");
 
                 var data = cmd.ExecuteDataSet
-                    (
+                (
                     new { EmpNo = 0, EName = "" },
                     new { DeptNo = 0, DName = "" }
-                    );
+                );
                 var smith = data.Item1.FirstOrDefault(i => i.EmpNo == 7369);
                 var accounting = data.Item2.FirstOrDefault(i => i.DeptNo == 10);
 
