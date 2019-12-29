@@ -7,7 +7,7 @@ namespace Performances
 {
     public class Program
     {
-        const int RUN_MODE = 2;         // 0=Benchmark, 1=Light samples, 2=ManualPerformances
+        const int RUN_MODE = 0;         // 0=Benchmark, 1=Light samples, 2=ManualPerformances
 
         static void Main(string[] args)
         {
