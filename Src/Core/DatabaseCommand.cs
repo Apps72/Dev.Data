@@ -866,7 +866,7 @@ namespace Apps72.Dev.Data
                 {
                     var tables = new Schema.DataTable[]
                     {
-                        new Schema.DataTable("ExecuteNonQuery", "Result", result)
+                        new Schema.DataTable("ExecuteScalar", "Result", result)
                     };
                     this.ActionAfterExecution.Invoke(this, tables);
                     result = tables[0].Rows[0][0];
@@ -1013,8 +1013,8 @@ namespace Apps72.Dev.Data
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
                 {
-                    // TODO: to activate
-                    // this.ActionAfterExecution.Invoke(this, tables);
+                    var tables = DataTableConvertor.ToDataTable(result);
+                    this.ActionAfterExecution.Invoke(this, tables);
                 }
 
                 return result;

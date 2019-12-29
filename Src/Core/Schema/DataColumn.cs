@@ -28,19 +28,6 @@ namespace Apps72.Dev.Data.Schema
         }
 
         /// <summary>
-        /// Initialize a new instance of <see cref="DataColumn"/>.
-        /// </summary>
-        /// <param name="columnName"></param>
-        /// <param name="dataType"></param>
-        /// <param name="isNullable"></param>
-        internal DataColumn(string columnName, Type dataType, bool isNullable)
-        {
-            ColumnName = columnName;
-            DataType = dataType;
-            IsNullable = isNullable;
-        }
-
-        /// <summary>
         /// Gets the (zero-based) position of the column in the Columns collection.
         /// </summary>
         public int Ordinal { get; internal set; }

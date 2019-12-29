@@ -35,8 +35,10 @@ namespace Apps72.Dev.Data.Schema
             this.Name = tableName;
             this.Columns = new DataColumn[] { new DataColumn
                 (
+                    ordinal: 0,
                     columnName: columnName,
                     dataType: firstColRowValue != null ? firstColRowValue.GetType() : typeof(object),
+                    sqlType: null,
                     isNullable: true
                 )};
 

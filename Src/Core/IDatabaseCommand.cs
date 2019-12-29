@@ -34,7 +34,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets a list of tags, used to annotate the SQL query (using SQL comments)
         /// </summary>
-        IEnumerable<string> Tags { get; }       
+        IEnumerable<string> Tags { get; }
 
         /// <summary>
         /// Gets or sets the current transaction

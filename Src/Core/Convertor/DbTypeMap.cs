@@ -51,23 +51,23 @@ namespace Apps72.Dev.Data.Convertor
         /// <returns></returns>
         public static string DotNetToCSharpType(Type type)
         {
-            if (type == typeof(System.Boolean)) return "bool";
-            if (type == typeof(System.Byte)) return "byte";
-            if (type == typeof(System.SByte)) return "sbyte";
-            if (type == typeof(System.Char)) return "char";
-            if (type == typeof(System.Decimal)) return "decimal";
-            if (type == typeof(System.Double)) return "double";
-            if (type == typeof(System.Single)) return "float";
-            if (type == typeof(System.Int32)) return "int";
-            if (type == typeof(System.UInt32)) return "uint";
-            if (type == typeof(System.Int64)) return "long";
-            if (type == typeof(System.UInt64)) return "ulong";
-            if (type == typeof(System.Object)) return "object";
-            if (type == typeof(System.Int16)) return "short";
-            if (type == typeof(System.UInt16)) return "ushort";
-            if (type == typeof(System.String)) return "string";
-            if (type == typeof(System.DateTime)) return "DateTime";
-            if (type == typeof(System.Guid)) return "Guid";
+            if (type == typeof(Boolean) || type == typeof(Boolean?)) return "bool";
+            if (type == typeof(Byte) || type == typeof(Byte?)) return "byte";
+            if (type == typeof(SByte) || type == typeof(SByte?)) return "sbyte";
+            if (type == typeof(Char) || type == typeof(Char?)) return "char";
+            if (type == typeof(Decimal) || type == typeof(Decimal?)) return "decimal";
+            if (type == typeof(Double) || type == typeof(Double?)) return "double";
+            if (type == typeof(Single) || type == typeof(Single?)) return "float";
+            if (type == typeof(Int32) || type == typeof(Int32?)) return "int";
+            if (type == typeof(UInt32) || type == typeof(UInt32?)) return "uint";
+            if (type == typeof(Int64) || type == typeof(Int64?)) return "long";
+            if (type == typeof(UInt64) || type == typeof(UInt64?)) return "ulong";
+            if (type == typeof(Object)) return "object";
+            if (type == typeof(Int16) || type == typeof(Int16?)) return "short";
+            if (type == typeof(UInt16) || type == typeof(UInt16?)) return "ushort";
+            if (type == typeof(String)) return "string";
+            if (type == typeof(DateTime) || type == typeof(DateTime?)) return "DateTime";
+            if (type == typeof(Guid) || type == typeof(Guid?)) return "Guid";
             if (type.ToString() == "System.Byte[]") return "byte[]";
             return "object";
         }
