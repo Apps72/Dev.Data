@@ -10,14 +10,14 @@
     <Company>Denis Voituron</Company>
     <Product>DatabaseCommand</Product>
     <Title>DatabaseCommand to execute SQL Queries</Title>
-    <PackageId>Apps72.Dev.Data.Core</PackageId>
+    <PackageId>Apps72.Dev.Data</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>
     <PackageReleaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</PackageReleaseNotes>
     <PackageTags>Data Database SQL DatabaseCommand DotNetCore Oracle SQLite SqlServer Dapper</PackageTags>
-    <Copyright>Copyright 2019 Denis Voituron</Copyright>
+    <Copyright>Copyright 2020 Denis Voituron</Copyright>
     <Description>This DatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQL Server, Oracle, SQLite, ... It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</Description>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <FileVersion>4.0.0.0</FileVersion>

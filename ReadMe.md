@@ -1,7 +1,7 @@
 # DatabaseCommand - Simple Object Mapping
 
 ---
-# **Go to the new [documentation web site](http://apps72.com) to learn how to use DatabaseCommand.**
+# **Go to [https://apps72.com](https://apps72.com) to learn how to use DatabaseCommand.**
 ---
 
 ## Introduction
