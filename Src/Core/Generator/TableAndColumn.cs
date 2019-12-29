@@ -25,8 +25,6 @@ namespace Apps72.Dev.Data.Generator
         public int? NumericScale { get; internal set; }
         /// <summary />
         public bool IsColumnNullable { get; internal set; }
-        /// <summary />
-        public bool IsView { get; internal set; }
 
         internal Type GetDataType()
         {

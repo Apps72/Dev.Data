@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
@@ -18,14 +19,14 @@ namespace Apps72.Dev.Data.Schema
         /// <param name="values"></param>
         internal DataRow(DataTable table, object[] values)
         {
-            this.ItemArray = values.Select(i => i == DBNull.Value ? null : i).ToArray();
+            this.ItemArray = Array.AsReadOnly(values.Select(i => i == DBNull.Value ? null : i).ToArray());
             this.Table = table;
         }
 
         /// <summary>
         /// Gets all values as an Array of objects
         /// </summary>
-        public object[] ItemArray { get; }
+        public ReadOnlyCollection<object> ItemArray { get; }
 
         /// <summary>
         /// Gets the System.Data.DataTable to which the column belongs to.

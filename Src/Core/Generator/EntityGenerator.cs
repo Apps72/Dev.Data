@@ -113,7 +113,6 @@ namespace Apps72.Dev.Data.Generator
                     NumericPrecision = ConvertToNullableInt32(row[fields.NumericPrecision]),
                     NumericScale = ConvertToNullableInt32(row[fields.NumericScale]),
                     IsColumnNullable = Convert.ToString(row[fields.IsColumnNullable]).ToBoolean(),
-                    IsView = false  // TODO
                 });
             }
 
@@ -128,12 +127,12 @@ namespace Apps72.Dev.Data.Generator
         protected virtual IEnumerable<Schema.DataTable> ConvertDescriptionsToTables(IEnumerable<TableAndColumn> descriptions)
         {
             // Select all tables
-            var tables = descriptions.GroupBy(i => new { i.TableName, i.SchemaName, i.IsView })
+            var tables = descriptions.GroupBy(i => new { i.TableName, i.SchemaName })
                                         .Select(i => new Schema.DataTable()
                                         {
                                             Schema = i.Key.SchemaName,
                                             Name = i.Key.TableName,
-                                            IsView = i.Key.IsView
+                                            IsView = false
                                         })
                                         .ToArray();
 
