@@ -113,7 +113,6 @@ namespace Apps72.Dev.Data.Generator
                     NumericPrecision = ConvertToNullableInt32(row[fields.NumericPrecision]),
                     NumericScale = ConvertToNullableInt32(row[fields.NumericScale]),
                     IsColumnNullable = Convert.ToString(row[fields.IsColumnNullable]).ToBoolean(),
-                    IsView = false  // TODO
                 });
             }
 
@@ -128,12 +127,12 @@ namespace Apps72.Dev.Data.Generator
         protected virtual IEnumerable<Schema.DataTable> ConvertDescriptionsToTables(IEnumerable<TableAndColumn> descriptions)
         {
             // Select all tables
-            var tables = descriptions.GroupBy(i => new { i.TableName, i.SchemaName, i.IsView })
+            var tables = descriptions.GroupBy(i => new { i.TableName, i.SchemaName })
                                         .Select(i => new Schema.DataTable()
                                         {
                                             Schema = i.Key.SchemaName,
                                             Name = i.Key.TableName,
-                                            IsView = i.Key.IsView
+                                            IsView = false
                                         })
                                         .ToArray();
 
@@ -143,16 +142,16 @@ namespace Apps72.Dev.Data.Generator
             for (int i = 0; i < tables.Length; i++)
             {
                 var table = tables[i];
-                table.Columns = descriptions.Where(c => c.SchemaName == table.Schema && 
+                table.Columns = descriptions.Where(c => c.SchemaName == table.Schema &&
                                                         c.TableName == table.Name)
-                                               .Select(c => new Schema.DataColumn(table)
-                                               {
-                                                   ColumnName = c.ColumnName,
-                                                   SqlType = c.ColumnType,
-                                                   DataType = c.GetDataType(),
-                                                   IsNullable = c.IsColumnNullable,
-                                                   Ordinal = c.SequenceNumber
-                                               })
+                                               .Select(c => new Schema.DataColumn
+                                               (
+                                                   ordinal: c.SequenceNumber,
+                                                   columnName: c.ColumnName,
+                                                   sqlType: c.ColumnType,
+                                                   dataType: c.GetDataType(),
+                                                   isNullable: c.IsColumnNullable
+                                               ))
                                                .ToArray();
             }
 
@@ -169,14 +168,14 @@ namespace Apps72.Dev.Data.Generator
         private string ExtractTypeNameOnly(string columnType)
         {
             if (columnType.Contains('(') && columnType.Contains(')'))
-            {                
+            {
                 return ReplaceBetween(columnType, '(', ')', String.Empty);
             }
             else
                 return columnType;
         }
 
-        private int? ConvertToNullableInt32(object value) 
+        private int? ConvertToNullableInt32(object value)
         {
             if (value == DBNull.Value)
                 return null;
@@ -188,9 +187,9 @@ namespace Apps72.Dev.Data.Generator
         {
             int indexFrom = text.IndexOf(from);
             int indexTo = text.IndexOf(to);
-            
+
             if (indexTo > indexFrom)
-            {                
+            {
                 return String.Format("{0}{1}{2}", text.Substring(0, indexFrom), newValue, text.Substring(indexTo + 1));
             }
             else

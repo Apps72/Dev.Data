@@ -55,6 +55,34 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteTablePrimitive_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT ENAME FROM EMP ";
+                string[] data = cmd.ExecuteTable<string>().ToArray();
+                string smith = data.FirstOrDefault();
+
+                Assert.AreEqual(EMP.Smith.EName, smith);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTablePrimitiveAnonymous_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT ENAME FROM EMP ";
+                string[] data = cmd.ExecuteTable(string.Empty).ToArray();
+                string smith = data.FirstOrDefault();
+
+                Assert.AreEqual(EMP.Smith.EName, smith);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteTableNullableProperties_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
@@ -149,6 +177,21 @@ namespace Data.Core.Tests
                 Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
                 Assert.AreEqual(EMP.Smith.Manager, smith.Manager);
 
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTablePrimitiveWithAnonymousConverter_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT ENAME FROM EMP";
+                var employees = cmd.ExecuteTable((row) => row.Field<string>("ENAME"));
+                var smith = employees.First();
+
+                Assert.AreEqual(14, employees.Count());
+                Assert.AreEqual(EMP.Smith.EName, smith);
             }
         }
 

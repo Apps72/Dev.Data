@@ -108,6 +108,32 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteRowPrimitiveTyped_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT ENAME FROM EMP ";
+                var emp = cmd.ExecuteRow<string>();
+
+                Assert.AreEqual("SMITH", emp);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteRowPrimitiveAnonymousTyped_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT ENAME FROM EMP ";
+                var smith = cmd.ExecuteRow(string.Empty);
+
+                Assert.AreEqual("SMITH", smith);
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(MissingMethodException), "Properties of your anonymous class must be in the same type and same order of your SQL Query.")]
         public void ExecuteRowAnonymousTypedWithExtraProperty_Test()
         {

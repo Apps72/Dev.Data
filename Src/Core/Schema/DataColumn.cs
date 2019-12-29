@@ -11,18 +11,21 @@ namespace Apps72.Dev.Data.Schema
     public partial class DataColumn
     {
         /// <summary>
-        /// Initializes a new instance of a Column
+        /// Initialize a new instance of <see cref="DataColumn"/>.
         /// </summary>
-        /// <param name="table"></param>
-        internal DataColumn(DataTable table)
+        /// <param name="ordinal"></param>
+        /// <param name="columnName"></param>
+        /// <param name="sqlType"></param>
+        /// <param name="dataType"></param>
+        /// <param name="isNullable"></param>
+        internal DataColumn(int ordinal, string columnName, string sqlType, Type dataType, bool isNullable)
         {
-            this.Table = table;
+            Ordinal = ordinal;
+            ColumnName = columnName;
+            SqlType = sqlType;
+            DataType = dataType;
+            IsNullable = isNullable;
         }
-
-        /// <summary>
-        /// Gets the System.Data.DataTable to which the column belongs to.
-        /// </summary>
-        public DataTable Table { get; internal set; }
 
         /// <summary>
         /// Gets the (zero-based) position of the column in the Columns collection.

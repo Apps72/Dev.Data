@@ -1,7 +1,7 @@
 # DatabaseCommand - Simple Object Mapping
 
 ---
-# **Go to the new [documentation web site](http://apps72.com) to learn how to use DatabaseCommand.**
+# **Go to [https://apps72.com](https://apps72.com) to learn how to use DatabaseCommand.**
 ---
 
 ## Introduction
@@ -31,6 +31,31 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 ## Basic Samples (video)
 
 [![Samples](http://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](http://www.youtube.com/watch?v=DRfM15Paw8k)
+
+## Performances
+
+Performance is very important during development. 
+You can check these values by starting the *Performance* project in the source code. 
+Comparing to the famous projects **Dapper** and **Entity Framework**, you can see 
+that: 
+- **DatabaseCommand** has identical performance when executing Scalar queries. 
+- **DatabaseCommand** is slightly less efficient than Dapper (35%) but significantly more efficient than EFCore. 
+
+This slight reduction of performance is due to all additional features included in **DatabaseCommand**:
+management of exceptions, Tags, Logs, ActionBeforeExecution and ActionAfterExecution events. 
+
+```
+BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
+Intel Core i7-7700HQ CPU 2.80GHz (Kaby Lake), 1 CPU, 8 logical and 4 physical cores
+
+------------------------------------------------------------------------------
+           Execute Scalar             |           Execute Table
+------------------------------------------------------------------------------
+Dapper            |  80.18 탎         | Dapper           | 103.88 탎	
+DatabaseCommand   |  81.86 탎  +2%    | DatabaseCommand  | 141.68 탎  +36%
+EF Core           | 342.05 탎  +327%  | EF Core          | 315.30 탎  +204%
+------------------------------------------------------------------------------
+```
 
 ## Commands
 

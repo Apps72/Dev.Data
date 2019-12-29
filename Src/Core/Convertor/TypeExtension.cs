@@ -5,7 +5,6 @@ namespace Apps72.Dev.Data.Convertor
 {
     internal static class TypeExtension
     {
-
         /// <summary>
         /// Returns True if the specified type is an AnonymousType.
         /// </summary>
@@ -146,5 +145,10 @@ namespace Apps72.Dev.Data.Convertor
                     return false;
             }
         }
+    }
+
+    internal class NoType
+    {
+
     }
 }

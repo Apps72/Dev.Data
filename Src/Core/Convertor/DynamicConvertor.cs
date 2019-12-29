@@ -17,6 +17,7 @@ namespace Apps72.Dev.Data.Convertor
         internal const string DYNAMIC_CLASS_NAME = "AnonymousClass";
 
 #if NETCOREAPP2_0 || NET40
+
         /// <summary>
         /// Returns True if the <paramref name="type"/> is dynamic.
         /// </summary>
@@ -24,7 +25,7 @@ namespace Apps72.Dev.Data.Convertor
         /// <returns></returns>
         public static bool IsDynamic(Type type)
         {
-            // TODO: To find a best method !
+            // To find a best method !
             if (type.Namespace == "System" && type.Name == "Object")
                 return true;
             else
@@ -63,11 +64,11 @@ namespace Apps72.Dev.Data.Convertor
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assembly.Name);
 #endif
             // Create the class
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(className, 
-                                                               TypeAttributes.Public | 
-                                                               TypeAttributes.AutoClass | 
-                                                               TypeAttributes.AnsiClass | 
-                                                               TypeAttributes.BeforeFieldInit, 
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(className,
+                                                               TypeAttributes.Public |
+                                                               TypeAttributes.AutoClass |
+                                                               TypeAttributes.AnsiClass |
+                                                               TypeAttributes.BeforeFieldInit,
                                                                typeof(System.Object));
 
             // Add properties

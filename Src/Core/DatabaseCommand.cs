@@ -3,8 +3,8 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data;
 using System.Text;
+using Apps72.Dev.Data.Convertor;
 
 namespace Apps72.Dev.Data
 {
@@ -104,7 +104,7 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Gets or sets the command type
         /// </summary>
-        public virtual CommandType CommandType
+        public virtual System.Data.CommandType CommandType
         {
             get
             {
@@ -260,7 +260,7 @@ namespace Apps72.Dev.Data
         /// </summary>
         public virtual DatabaseCommand Prepare()
         {
-            this.Command.CommandText = GetCommandTextWithTags();
+            this.Command.CommandText = this.GetCommandTextWithTags();
             this.Command.Prepare();
             return this;
         }
@@ -321,14 +321,49 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, NoType, NoType, NoType>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2
+            );
+        }
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        /// <example>
+        /// <code>
+        ///   var data = cmd.ExecuteDataSet&lt;Employee, Department&gt;();
+        ///   var employees = data.Item1;
+        ///   var departments = data.Item2;
+        /// </code>
+        /// </example>
+        public virtual Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>(T typeOfItem1, U typeOfItem2)
+        {
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, NoType, NoType, NoType>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>>
+            (
+                datasets.Item1,
+                datasets.Item2
+            );
         }
 
         /// <summary>
@@ -347,15 +382,52 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>> ExecuteDataSet<T, U, V>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, V, NoType, NoType>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null,
-                dataset.Length >= 2 ? dataset[2].ConvertTo<V>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3
+            );
+        }
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        /// <example>
+        /// <code>
+        ///   var data = cmd.ExecuteDataSet&lt;Employee, Department&gt;();
+        ///   var employees = data.Item1;
+        ///   var departments = data.Item2;
+        /// </code>
+        /// </example>
+        public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>> ExecuteDataSet<T, U, V>(T typeOfItem1, U typeOfItem2, V typeOfItem3)
+        {
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, V, NoType, NoType>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3
+            );
         }
 
         /// <summary>
@@ -375,16 +447,55 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>> ExecuteDataSet<T, U, V, W>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, V, W, NoType>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null,
-                dataset.Length >= 2 ? dataset[2].ConvertTo<V>() : null,
-                dataset.Length >= 3 ? dataset[3].ConvertTo<W>() : null
-                );
-            ;
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4
+            );
+        }
+
+        /// <summary>
+        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
+        /// </summary>
+        /// <typeparam name="T">Object type for first table</typeparam>
+        /// <typeparam name="U">Object type for second table</typeparam>
+        /// <typeparam name="V">Object type for third table</typeparam>
+        /// <typeparam name="W">Object type for fourth table</typeparam>
+        /// <returns>List of array of typed results</returns>
+        /// <example>
+        /// <code>
+        ///   var data = cmd.ExecuteDataSet&lt;Employee, Department&gt;();
+        ///   var employees = data.Item1;
+        ///   var departments = data.Item2;
+        /// </code>
+        /// </example>
+        public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>> ExecuteDataSet<T, U, V, W>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4)
+        {
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, V, W, NoType>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4
+            );
         }
 
         /// <summary>
@@ -405,74 +516,22 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ExecuteDataSet<T, U, V, W, X>()
         {
-            var dataset = this.ExecuteInternalDataSet(firstRowOnly: false).ToArray();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, V, W, X>(dr);
+                }
+            });
 
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
-                (
-                dataset.Length >= 0 ? dataset[0].ConvertTo<T>() : null,
-                dataset.Length >= 1 ? dataset[1].ConvertTo<U>() : null,
-                dataset.Length >= 2 ? dataset[2].ConvertTo<V>() : null,
-                dataset.Length >= 3 ? dataset[3].ConvertTo<W>() : null,
-                dataset.Length >= 4 ? dataset[4].ConvertTo<X>() : null
-                );
-            ;
-        }
-
-        /// <summary>
-        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
-        /// </summary>
-        /// <typeparam name="T">Object type for first table</typeparam>
-        /// <typeparam name="U">Object type for second table</typeparam>
-        /// <returns>List of array of typed results</returns>
-        /// <example>
-        /// <code>
-        ///   var data = cmd.ExecuteDataSet&lt;Employee, Department&gt;();
-        ///   var employees = data.Item1;
-        ///   var departments = data.Item2;
-        /// </code>
-        /// </example>
-        public virtual Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>(T typeOfItem1, U typeOfItem2)
-        {
-            return ExecuteDataSet<T, U>();
-        }
-
-        /// <summary>
-        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
-        /// </summary>
-        /// <typeparam name="T">Object type for first table</typeparam>
-        /// <typeparam name="U">Object type for second table</typeparam>
-        /// <typeparam name="V">Object type for third table</typeparam>
-        /// <returns>List of array of typed results</returns>
-        /// <example>
-        /// <code>
-        ///   var data = cmd.ExecuteDataSet&lt;Employee, Department&gt;();
-        ///   var employees = data.Item1;
-        ///   var departments = data.Item2;
-        /// </code>
-        /// </example>
-        public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>> ExecuteDataSet<T, U, V>(T typeOfItem1, U typeOfItem2, V typeOfItem3)
-        {
-            return ExecuteDataSet<T, U, V>();
-        }
-
-        /// <summary>
-        /// Execute the query and return a list or array of new instances of typed results filled with data table results.
-        /// </summary>
-        /// <typeparam name="T">Object type for first table</typeparam>
-        /// <typeparam name="U">Object type for second table</typeparam>
-        /// <typeparam name="V">Object type for third table</typeparam>
-        /// <typeparam name="W">Object type for fourth table</typeparam>
-        /// <returns>List of array of typed results</returns>
-        /// <example>
-        /// <code>
-        ///   var data = cmd.ExecuteDataSet&lt;Employee, Department&gt;();
-        ///   var employees = data.Item1;
-        ///   var departments = data.Item2;
-        /// </code>
-        /// </example>
-        public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>> ExecuteDataSet<T, U, V, W>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4)
-        {
-            return ExecuteDataSet<T, U, V, W>();
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4,
+                datasets.Item5
+            );
         }
 
         /// <summary>
@@ -493,7 +552,22 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ExecuteDataSet<T, U, V, W, X>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4, X typeOfItem5)
         {
-            return ExecuteDataSet<T, U, V, W, X>();
+            var datasets = ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToMultipleTypes<T, U, V, W, X>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4,
+                datasets.Item5
+            );
         }
 
         /// <summary>
@@ -513,8 +587,23 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>()
         {
-            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            return table?.ConvertTo<T>();
+            return ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    // Primitive type: Executable<string>()
+                    if (TypeExtension.IsPrimitive(typeof(T)))
+                        return DataReaderConvertor.ToPrimitives<T>(dr);
+
+                    // Dynamic type: Executable<dynamic>()
+                    else if (DynamicConvertor.IsDynamic(typeof(T)))
+                        return DataReaderConvertor.ToDynamic<T>(dr);
+
+                    // Object type: Executable<Employee>()
+                    else
+                        return DataReaderConvertor.ToType<T>(dr).Rows;
+                }
+            });
         }
 
         /// <summary>
@@ -525,16 +614,18 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
         {
-            Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: false);
-            int rowCount = table.Rows.Length;
-
-            var results = new T[rowCount];
-            for (int i = 0; i < rowCount; i++)
+            var table = ExecuteInternalCommand(() =>
             {
-                results[i] = converter.Invoke(table.Rows[i]);
-            }
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    return DataReaderConvertor.ToDataTable(dr);
+                }
+            });
 
-            return results;
+            foreach (var row in table.Rows)
+            {
+                yield return converter.Invoke(row);
+            }
         }
 
         /// <summary>
@@ -556,7 +647,16 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual IEnumerable<T> ExecuteTable<T>(T itemOftype)
         {
-            return ExecuteTable<T>();
+            return ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader())
+                {
+                    if (TypeExtension.IsPrimitive(typeof(T)))
+                        return DataReaderConvertor.ToPrimitives<T>(dr);
+                    else
+                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                }
+            });
         }
 
         /// <summary>
@@ -575,7 +675,31 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual T ExecuteRow<T>()
         {
-            return this.ExecuteRow<T>(default(T));
+            // Primitive type: Executable<string>()
+            if (TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return this.ExecuteScalar<T>();
+            }
+            else
+            {
+                // Get DataTable
+                var rows = ExecuteInternalCommand(() =>
+                {
+                    using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
+                    {
+                        // Dynamic type: Executable<dynamic>()
+                        if (DynamicConvertor.IsDynamic(typeof(T)))
+                            return DataReaderConvertor.ToDynamic<T>(dr);
+
+                        // Object type: Executable<Employee>()
+                        else
+                            return DataReaderConvertor.ToType<T>(dr).Rows;
+                    }
+                });
+
+                // Return
+                return rows?.Any() == true ? rows.First() : default(T);
+            }
         }
 
         /// <summary>
@@ -598,17 +722,23 @@ namespace Apps72.Dev.Data
         /// </example>
         public virtual T ExecuteRow<T>(T itemOftype)
         {
-            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            if (TypeExtension.IsPrimitive(typeof(T)))
             {
                 return this.ExecuteScalar<T>();
             }
             else
             {
-                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
-                if (table != null && table.Rows.Length > 0)
-                    return table.Rows[0].ConvertTo<T>(itemOftype);
-                else
-                    return default(T);
+                // Get DataTable
+                var rows = ExecuteInternalCommand(() =>
+                {
+                    using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                    }
+                });
+
+                // Return
+                return rows?.Any() == true ? rows.First() : default(T);
             }
         }
 
@@ -620,17 +750,24 @@ namespace Apps72.Dev.Data
         /// <returns>First row of results</returns>
         public virtual T ExecuteRow<T>(Func<Schema.DataRow, T> converter)
         {
-            if (Convertor.TypeExtension.IsPrimitive(typeof(T)))
+            if (TypeExtension.IsPrimitive(typeof(T)))
             {
                 return this.ExecuteScalar<T>();
             }
             else
             {
-                Schema.DataTable table = this.ExecuteInternalDataTable(firstRowOnly: true);
-                if (table != null && table.Rows.Length > 0)
-                    return converter.Invoke(table.Rows[0]);
-                else
-                    return default(T);
+                // Get DataRow
+                var table = ExecuteInternalCommand(() =>
+                {
+                    using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToDataTable(dr);
+                    }
+                });
+                var row = table?.Rows?.FirstOrDefault();
+
+                // Return
+                return row != null ? converter.Invoke(row) : default(T);
             }
         }
 
@@ -729,7 +866,7 @@ namespace Apps72.Dev.Data
                 {
                     var tables = new Schema.DataTable[]
                     {
-                        new Schema.DataTable("ExecuteNonQuery", "Result", result)
+                        new Schema.DataTable("ExecuteScalar", "Result", result)
                     };
                     this.ActionAfterExecution.Invoke(this, tables);
                     result = tables[0].Rows[0][0];
@@ -768,7 +905,7 @@ namespace Apps72.Dev.Data
         /// <param name="type">Type of parameter.</param>
         /// <param name="size">Size of parameter</param>
         /// <returns></returns>
-        public virtual DatabaseCommand AddParameter(string name, object value, DbType? type, int? size)
+        public virtual DatabaseCommand AddParameter(string name, object value, System.Data.DbType? type, int? size)
         {
             var dbCommand = this.Command;
             var param = dbCommand.CreateParameter();
@@ -802,7 +939,7 @@ namespace Apps72.Dev.Data
         /// <param name="value">The value to be added. Null value will be replaced by System.DBNull.Value.</param>
         /// <param name="type">Type of parameter.</param>
         /// <returns></returns>
-        public virtual DatabaseCommand AddParameter(string name, object value, DbType type)
+        public virtual DatabaseCommand AddParameter(string name, object value, System.Data.DbType type)
         {
             return AddParameter(name, value, type, null);
         }
@@ -851,12 +988,7 @@ namespace Apps72.Dev.Data
 
         #region PRIVATE
 
-        /// <summary>
-        /// Execute the query and return an internal DataTable with all data.
-        /// </summary>
-        /// <param name="firstRowOnly"></param>
-        /// <returns></returns>
-        internal virtual IEnumerable<Schema.DataTable> ExecuteInternalDataSet(bool firstRowOnly)
+        private T ExecuteInternalCommand<T>(Func<T> action)
         {
             ResetException();
 
@@ -875,52 +1007,22 @@ namespace Apps72.Dev.Data
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
 
-                var tables = new List<Schema.DataTable>();
-
                 // Send the request to the Database server
-                if (this.Command.CommandText.Length > 0)
-                {
-                    Retry.ExecuteCommandOrRetryIfErrorOccured<bool>(() =>
-                    {
-                        using (DbDataReader dr = this.Command.ExecuteReader())
-                        {
-                            do
-                            {
-                                tables.Add(new Schema.DataTable(dr, firstRowOnly));
-                            }
-                            while (!firstRowOnly && dr.NextResult());
-                        }
-                        return true;
-                    });
-                }
-                else
-                {
-                    tables.Add(new Schema.DataTable());
-                }
+                T result = action.Invoke();
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null)
                 {
+                    var tables = DataTableConvertor.ToDataTable(result);
                     this.ActionAfterExecution.Invoke(this, tables);
                 }
 
-                return tables.ToArray();
+                return result;
             }
             catch (DbException ex)
             {
-                return ThrowSqlExceptionOrDefaultValue<IEnumerable<Schema.DataTable>>(ex);
+                return ThrowSqlExceptionOrDefaultValue<T>(ex);
             }
-
-        }
-
-        /// <summary>
-        /// Execute the query and return an internal DataTable with all data.
-        /// </summary>
-        /// <param name="firstRowOnly"></param>
-        /// <returns></returns>
-        internal virtual Schema.DataTable ExecuteInternalDataTable(bool firstRowOnly)
-        {
-            return this.ExecuteInternalDataSet(firstRowOnly)?.FirstOrDefault();
         }
 
         /// <summary>
@@ -1003,7 +1105,7 @@ namespace Apps72.Dev.Data
 
         #endregion
 
-        #region Interface
+        #region Interface 
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -1056,14 +1158,14 @@ namespace Apps72.Dev.Data
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, DbType type)
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, System.Data.DbType type)
         {
             return AddParameter(name, value, type);
         }
 
         /// <summary />
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, DbType? type, int? size)
+        IDatabaseCommand IDatabaseCommand.AddParameter(string name, object value, System.Data.DbType? type, int? size)
         {
             return AddParameter(name, value, type, size);
         }

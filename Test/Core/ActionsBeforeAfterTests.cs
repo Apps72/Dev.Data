@@ -74,14 +74,14 @@ namespace Data.Core.Tests
 
                 cmd.ActionAfterExecution = (command, tables) =>
                 {
-                    tables.First().Rows[0].ItemArray[0] = 10;
+                    Assert.AreEqual(-1, tables.First().Rows[0][0]);
                     isPassed = true;
                 };
 
                 int rowsAffected = cmd.ExecuteNonQuery();
 
+                Assert.AreEqual(-1, rowsAffected);
                 Assert.IsTrue(isPassed);
-                Assert.AreEqual(10, rowsAffected);
             }
         }
 
@@ -145,14 +145,13 @@ namespace Data.Core.Tests
 
                 cmd.ActionAfterExecution = (command, tables) =>
                 {
-                    tables.First().Rows[0].ItemArray[0] = 10;               // New Count
                     isPassed = true;
                 };
 
                 int count = cmd.ExecuteScalar<int>();
 
                 Assert.IsTrue(isPassed);
-                Assert.AreEqual(10, count);                                  // Check new Count
+                Assert.AreEqual(14, count);                                  // Check new Count
             }
         }
 
@@ -189,7 +188,7 @@ namespace Data.Core.Tests
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
 
-                cmd.ActionBeforeExecution = (command) =>
+                cmd.ActionAfterExecution = (command, tables) =>
                 {
                     isPassed = true;
                 };
@@ -234,7 +233,7 @@ namespace Data.Core.Tests
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP ");
 
-                cmd.ActionBeforeExecution = (command) =>
+                cmd.ActionAfterExecution = (command, tables) =>
                 {
                     isPassed = true;
                 };
@@ -282,7 +281,7 @@ namespace Data.Core.Tests
                 cmd.CommandText.AppendLine(" SELECT * FROM EMP; ");
                 cmd.CommandText.AppendLine(" SELECT * FROM DEPT; ");
 
-                cmd.ActionBeforeExecution = (command) =>
+                cmd.ActionAfterExecution = (command, tables) =>
                 {
                     isPassed = true;
                 };

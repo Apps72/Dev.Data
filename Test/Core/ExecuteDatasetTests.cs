@@ -67,10 +67,10 @@ namespace Data.Core.Tests
                 cmd.CommandText.AppendLine(" SELECT DEPTNO, DNAME FROM DEPT ");
 
                 var data = cmd.ExecuteDataSet
-                    (
+                (
                     new { EmpNo = 0, EName = "" },
                     new { DeptNo = 0, DName = "" }
-                    );
+                );
                 var smith = data.Item1.FirstOrDefault(i => i.EmpNo == 7369);
                 var accounting = data.Item2.FirstOrDefault(i => i.DeptNo == 10);
 
@@ -104,5 +104,176 @@ namespace Data.Core.Tests
             }
         }
 
+        [TestMethod]
+        public void ExecuteDataSet_2Types_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet<EMP, EMP>();
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_3Types_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet<EMP, EMP, EMP>();
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+                Assert.AreEqual(14, data.Item3.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_4Types_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet<EMP, EMP, EMP, EMP>();
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+                Assert.AreEqual(14, data.Item3.Count());
+                Assert.AreEqual(14, data.Item4.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_5Types_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet<EMP, EMP, EMP, EMP, EMP>();
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+                Assert.AreEqual(14, data.Item3.Count());
+                Assert.AreEqual(14, data.Item4.Count());
+                Assert.AreEqual(14, data.Item5.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_2AnonymousTypes_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+                var emp = new { Empno = 0, Ename = "" };
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet(emp, emp);
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_3AnonymousTypes_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+                var emp = new { Empno = 0, Ename = "" };
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet(emp, emp, emp);
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+                Assert.AreEqual(14, data.Item3.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_4AnonymousTypes_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+                var emp = new { Empno = 0, Ename = "" };
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet(emp, emp, emp, emp);
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+                Assert.AreEqual(14, data.Item3.Count());
+                Assert.AreEqual(14, data.Item4.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteDataSet_5AnonymousTypes_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                string sql = " SELECT EMPNO, ENAME FROM EMP; ";
+                var emp = new { Empno = 0, Ename = "" };
+
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+                cmd.CommandText.AppendLine(sql);
+
+                var data = cmd.ExecuteDataSet(emp, emp, emp, emp, emp);
+
+                Assert.AreEqual(14, data.Item1.Count());
+                Assert.AreEqual(14, data.Item2.Count());
+                Assert.AreEqual(14, data.Item3.Count());
+                Assert.AreEqual(14, data.Item4.Count());
+                Assert.AreEqual(14, data.Item5.Count());
+            }
+        }
     }
 }

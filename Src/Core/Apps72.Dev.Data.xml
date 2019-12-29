@@ -1143,39 +1143,7 @@
             <param name="propertyName">Name of the new property</param>
             <param name="propertyType">Type of the new property</param>
         </member>
-        <member name="M:Apps72.Dev.Data.Convertor.DynamicConvertor.KeepOnlyLettersOrDigits(System.String)">
-            <summary>
-            Returns a similar string with only digits (0 .. 9) or letter (a .. z; A .. Z).
-            </summary>
-            <param name="text"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsAnonymousType(System.Type)">
-            <summary>
-            Returns True if the specified type is an AnonymousType.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsPrimitive(System.Type)">
-            <summary>
-            Returns True if this object is a simple type.
-            See https://msdn.microsoft.com/en-us/library/system.type.isprimitive.aspx
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.IsNullable(System.Type)">
-            <summary>
-            Returns True if the specified type is nullable
-            See http://stackoverflow.com/questions/8939939/correct-way-to-check-if-a-type-is-nullable
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Apps72.Dev.Data.Convertor.TypeExtension.GetNullableSubType(System.Type)">
-            <summary>
-            Returns the sub-type if specified type is null or
+        <member name="M:Apps72.Dev.Data.Convertor.Dtype is null or
             returns the specified type.
             </summary>
             <param name="type"></param>
@@ -1605,16 +1573,23 @@
             Represents the schema of a column in a Table.
             </summary>
         </member>
-        <member name="M:Apps72.Dev.Data.Schema.DataColumn.#ctor(Apps72.Dev.Data.Schema.DataTable)">
+        <member name="M:Apps72.Dev.Data.Schema.DataColumn.#ctor(System.Int32,System.String,System.String,System.Type,System.Boolean)">
             <summary>
-            Initializes a new instance of a Column
+            Initialize a new instance of <see cref="T:Apps72.Dev.Data.Schema.DataColumn"/>.
             </summary>
-            <param name="table"></param>
+            <param name="ordinal"></param>
+            <param name="columnName"></param>
+            <param name="sqlType"></param>
+            <param name="dataType"></param>
+            <param name="isNullable"></param>
         </member>
-        <member name="P:Apps72.Dev.Data.Schema.DataColumn.Table">
+        <member name="M:Apps72.Dev.Data.Schema.DataColumn.#ctor(System.String,System.Type,System.Boolean)">
             <summary>
-            Gets the System.Data.DataTable to which the column belongs to.
+            Initialize a new instance of <see cref="T:Apps72.Dev.Data.Schema.DataColumn"/>.
             </summary>
+            <param name="columnName"></param>
+            <param name="dataType"></param>
+            <param name="isNullable"></param>
         </member>
         <member name="P:Apps72.Dev.Data.Schema.DataColumn.Ordinal">
             <summary>
@@ -1978,6 +1953,43 @@
         </member>
         <member name="M:Apps72.Dev.Data.SqlString.ToString">
             <summary>
+            Returns the SQL String content.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.op_Equality(Apps72.Dev.Data.SqlString,Apps72.Dev.Data.SqlString)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.op_Inequality(Apps72.Dev.Data.SqlString,Apps72.Dev.Data.SqlString)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.Equals(System.Object)">
+            <summary />
+        </member>
+        <member name="M:Apps72.Dev.Data.SqlString.GetHashCode">
+            <summary />
+        </member>
+        <member name="T:DataExtensions">
+            <summary>
+            Helper Extensions to simplify data management
+            </summary>
+        </member>
+        <member name="M:DataExtensions.ConvertToDBNull(System.Data.Common.DbParameter)">
+            <summary>
+            Convert the parameter value to a DBNull.Value if this value is null.
+            </summary>
+            <param name="parameter"></param>
+        </member>
+        <member name="M:DataExtensions.GetTransaction(System.Data.IDbConnection)">
+            <summary>
+            Returns the internal DbTransaction associated to the <paramref name="connection"/>.
+            </summary>
+            <param name="connection">Connection to retrieve internal Transaction.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
+   <summary>
             Returns the SQL String content.
             </summary>
             <returns></returns>
