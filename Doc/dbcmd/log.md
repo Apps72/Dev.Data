@@ -19,3 +19,6 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 
 The easy way is to define a method `GetCommand()` in your `DataService` object 
 to centralize all of these configurations.
+
+> If you need more details about your DatabaseCommand, you can use `ActionBeforeExecution` 
+> to trace all commands details before executions.

@@ -1,8 +1,10 @@
 # DatabaseCommand - Simple Object Mapping
 
 ---
-# **Go to [https://apps72.com](https://apps72.com) to learn how to use DatabaseCommand.**
+## **Go to [https://apps72.com](https://apps72.com) to learn how to use DatabaseCommand.**
 ---
+
+Last build status: [![Build status](https://dev.azure.com/dvoituron/Apps72.Dev.Data/_apis/build/status/Build%20Apps72.Dev.Data)](https://dev.azure.com/dvoituron/Apps72.Dev.Data/_build/latest?definitionId=20)
 
 ## Introduction
 
@@ -32,7 +34,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 
 [![Samples](http://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](http://www.youtube.com/watch?v=DRfM15Paw8k)
 
-## Performances
+## <a name="Performances"></a> Performances
 
 Performance is very important during development. 
 You can check these values by starting the *Performance* project in the source code. 
@@ -310,90 +312,97 @@ When a specific error occured (DeadLock exception), you can define an automatic 
 
 #### <a name="BestPractices"></a>Best practices
 
-In you project, create a <b>DataService</b> implementing IDisposable and add a method GetDatabaseCommand.
+In you project, create a **DataService** class implementing `IDisposable` 
+and add a methods `GetDatabaseCommand`. 
+Next, inject it by IoC, in your data management classes.
 
-##### 1. Using ConnectionString for all applications or threads (ex. Web Applications, WebAPI, Web Services, ...)
-
-```csharp
-        public class DataService : IDataService
-        {
-            public DatabaseCommand GetDatabaseCommand()
-            {
-                return new DatabaseCommand(CONNECTION_STRING);
-            }
-
-            public DatabaseCommand GetDatabaseCommand(SqlTransaction transaction)
-            {
-                return new DatabaseCommand(transaction.Connection, transaction);
-            }
-        }
-```
-
-##### 2. Using One SqlConnection for the application (ex. Desktop Apps, Universal Apps, ...)
 
 ```csharp
-        public class DataService : IDataService, IDisposable
-        {
-            private SqlConnection _connection = null;
+public class DatabaseService : IDisposable
+{
+    private readonly object _dbOpeningLock = new object();
+    private readonly string _sqlConnectionStrings = "[value read from the configuration file]";
+    private DbConnection _connection;
 
-            public DataService()
+    public virtual IDatabaseCommand GetDatabaseCommand()
+    {
+        lock (_dbOpeningLock)
+        {
+            if (_connection == null)
             {
-                _connection = new SqlConnection(CONNECTION_STRING);
+                _connection = new SqlConnection(_sqlConnectionStrings);
+            }
+
+            if (_connection.State == ConnectionState.Broken ||
+                _connection.State == ConnectionState.Closed)
+            {
                 _connection.Open();
             }
 
-            public DatabaseCommand GetDatabaseCommand()
+            return new DatabaseCommand(_connection)
             {
-                return new DatabaseCommand(_connection);
-            }
+                Log = (query) => Console.WriteLine($"SQL: {query}")
+            };
+        }
+    }
 
-            public DatabaseCommand GetDatabaseCommand(SqlTransaction transaction)
-            {
-                return new DatabaseCommand(_connection, transaction);
-            }
+    public virtual IDatabaseCommand GetDatabaseCommand(DbTransaction transaction)
+    {
+        if (transaction == null)
+            return this.GetDatabaseCommand();
 
-            protected virtual void Dispose(bool disposing)
+        lock (_dbOpeningLock)
+        {
+            return new DatabaseCommand(transaction)
             {
-                if (disposing)
+                Log = (query) => Console.WriteLine($"SQL: {query}")
+            };
+        }
+    }
+
+    private bool _disposed;
+
+    public virtual void Dispose()
+    {
+        Cleanup(fromGC: false);
+    }
+
+    protected virtual void Cleanup(bool fromGC)
+    {
+        if (_disposed) return;
+
+        try
+        {
+            if (fromGC)
+            {
+                // Dispose managed state (managed objects).
+                if (_connection != null)
                 {
                     if (_connection.State != ConnectionState.Closed)
-                    {
                         _connection.Close();
-                        _connection.Dispose();
-                        _connection = null;
-                    }
+
+                    _connection.Dispose();
                 }
             }
-
-            ~DataService()
-            {
-                Dispose(false);
-            }
-
-            public void Dispose()
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
         }
-    }   
+        finally
+        {
+            _disposed = true;
+            if (!fromGC) GC.SuppressFinalize(this);
+        }
+    }
+}
 ```
+
+
 
 #### <a name="EntitiesGenerator"></a>Entities Generator
 
-You can use a <a href="https://en.wikipedia.org/wiki/Text_Template_Transformation_Toolkit">T4 file</a> to generate all classes associated to your database tables.
-Copy this [sample .tt file](https://github.com/Apps72/Dev.Data/blob/master/Test/SqlServer/Entities/Scott.tt) in your project and set your correct **Connection String**. Check if the .tt file properties are **Build Action** = Content and **Custom Tool = TextTemplatingFileGenerator**.
-
-**NEW** Since version 2.6, you can use the <a href="https://www.nuget.org/packages/Apps72.Dev.Data.Generator.Tools/">Data.Generator.Tools</a> to quickly generate all classes associated to your database tables.
+You can use the <a href="https://www.nuget.org/packages/Apps72.Dev.Data.Generator.Tools/">Data.Generator.Tools</a> to quickly generate all classes associated to your database tables.
 Requirements: install the .NET Core 2.1 SDK.
 Example: `DbCmd GenerateEntities -cs="Server=localhost;Database=Scott;" --provider=SqlServer` will create a Output.cs file with all entities.
 
-```csharp
-    // UPDATE THIS CONNECTION STRING
-    const string CONNECTION_STRING = @"Server=(localdb)\ProjectsV12;Database=Scott;Integrated Security=true;";
-```
-
-Each time you save this .tt file, you create an equivalent .cs file with all classes.
+Each time you run this tool, you create an equivalent .cs file with all partial classes.
 
 For example:
 
@@ -516,6 +525,10 @@ For example:
 * Add `Formatted.CommandAsVariables` property to get the SQL query with parameters defined as SQL variables (to be executable in Query tool).
 * Add `Reply` property to automatically reply a query when an specified error occured (ex. for DeadLock).
 
+### Version 4.0
+
+* Code optimisation. See [Performance section](#Performances).
+ 
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

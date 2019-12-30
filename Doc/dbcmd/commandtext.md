@@ -6,9 +6,9 @@ The `CommandText` property is of the **SqlString** type.
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText= @"SELECT COUNT(*)
-                         FROM EMP
-                        WHERE EMPNO = 7369";
+    cmd.CommandText = @"SELECT COUNT(*)
+                          FROM EMP
+                         WHERE EMPNO = 7369";
     var count = cmd.ExecuteScalar<int>();
 }
 ```

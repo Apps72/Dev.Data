@@ -29,7 +29,7 @@ Call the [ExecuteTable](execute-table.md) method to map all data rows to a `IEnu
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText.Append("SELECT * FROM EMP");
+    cmd.CommandText= "SELECT * FROM EMP";
     var emps = cmd.ExecuteTable<Employee>();
     // emps is a IEnumerable<Employee>.
 }
@@ -43,7 +43,7 @@ Call the [ExecuteRow](execute-row.md) method to map a row to an object.
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText.Append("SELECT * FROM EMP WHERE EMPNO = 7369");
+    cmd.CommandText = "SELECT * FROM EMP WHERE EMPNO = 7369";
     var smith = cmd.ExecuteRow<Employee>();
     // smith is a Employee object.
 }
@@ -57,7 +57,7 @@ Call the [AddParameter](parameters.md) method to define a SQL parameter.
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText.Append("SELECT * FROM EMP WHERE EMPNO = @ID");
+    cmd.CommandText = "SELECT * FROM EMP WHERE EMPNO = @ID";
     cmd.AddParameter("@ID", 7369);
     var smith = cmd.ExecuteRow<Employee>();
     // smith is a Employee object.
@@ -72,7 +72,7 @@ Call the [ExecuteRow](execute-row.md) method, using the `dynamic` keyword, to ma
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText.Append("SELECT * FROM EMP WHERE EMPNO = 7369");
+    cmd.CommandText = "SELECT * FROM EMP WHERE EMPNO = 7369";
     var smith = cmd.ExecuteRow<dynamic>();
     // smith is a object with properties EMPNO, ENAME, JOB, MGR.
 }
@@ -86,7 +86,7 @@ Call the [ExecuteScalar](execute-scalar.md) method to map a value (first column,
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    cmd.CommandText.Append("SELECT COUNT(*) FROM EMP");
+    cmd.CommandText = "SELECT COUNT(*) FROM EMP";
     int count = cmd.ExecuteScalar<int>();
     // count = 4.
 }
