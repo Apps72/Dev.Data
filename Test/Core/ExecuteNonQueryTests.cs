@@ -121,5 +121,19 @@ namespace Data.Core.Tests
             }
         }
 
+
+        [TestMethod]
+        public void ExecuteNonQuery_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" DELETE FROM EMP WHERE EMPNO = 99999 ");
+
+                var count = cmd.ExecuteNonQuery();
+
+                Assert.AreEqual(0, count);
+            }
+        }
     }
 }

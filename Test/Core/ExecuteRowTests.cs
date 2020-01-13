@@ -249,5 +249,17 @@ namespace Data.Core.Tests
             }
         }
 
+        [TestMethod]
+        public void ExecuteRow_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT * FROM EMP WHERE EMPNO = 99999";
+                EMP emp = cmd.ExecuteRow<EMP>();
+
+                Assert.AreEqual(null, emp);
+            }
+        }
     }
 }

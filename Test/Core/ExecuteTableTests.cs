@@ -211,5 +211,31 @@ namespace Data.Core.Tests
             }
         }
 
+        [TestMethod]
+        public void ExecuteTable_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 99999 ";
+                var data = cmd.ExecuteTable<EMP>();
+
+                Assert.AreEqual(0, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTable_OneRow_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = " + EMP.Smith.EmpNo;
+                var data = cmd.ExecuteTable<EMP>();
+
+                Assert.AreEqual(1, data.Count());
+            }
+        }
+
     }
 }

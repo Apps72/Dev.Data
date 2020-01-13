@@ -528,7 +528,11 @@ For example:
 ### Version 4.0
 
 * Code optimisation. See [Performance section](#Performances).
- 
+
+### Version 4.0.1
+
+* Fix bug when the SQL query returns no data.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

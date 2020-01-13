@@ -277,5 +277,44 @@ namespace Data.Core.Tests
                 Assert.AreEqual(14, count);
             }
         }
+
+        [TestMethod]
+        public void ExecuteScalar_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT EMPNO FROM EMP WHERE EMPNO = 99999";
+                object empno = cmd.ExecuteScalar();
+
+                Assert.AreEqual(null, empno);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalar_NoDataTyped_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT EMPNO FROM EMP WHERE EMPNO = 99999";
+                int empno = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(0, empno);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalar_NoDataNullableTyped_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT EMPNO FROM EMP WHERE EMPNO = 99999";
+                int? empno = cmd.ExecuteScalar<int?>();
+
+                Assert.AreEqual(null, empno);
+            }
+        }
     }
 }

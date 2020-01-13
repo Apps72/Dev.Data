@@ -11,7 +11,17 @@ namespace Apps72.Dev.Data.Convertor
     {
         internal static ColumnsAndRows<T> ToType<T>(DbDataReader reader)
         {
-            reader.Read();
+            var hasRow = reader.Read();
+
+            // No data
+            if (!hasRow)
+            {
+                return new ColumnsAndRows<T>
+                {
+                    Columns = new DataColumn[0],
+                    Rows = new T[0]
+                };
+            }
 
             // Class Properties
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -68,7 +78,13 @@ namespace Apps72.Dev.Data.Convertor
 
         internal static IEnumerable<T> ToAnonymous<T>(DbDataReader reader)
         {
-            reader.Read();
+            bool hasRow = reader.Read();
+
+            // No data
+            if (!hasRow)
+            {
+                return new T[0];
+            }
 
             // Read and convert all rows
             var fieldCount = reader.FieldCount;
@@ -96,7 +112,13 @@ namespace Apps72.Dev.Data.Convertor
 
         internal static IEnumerable<T> ToPrimitives<T>(DbDataReader reader)
         {
-            reader.Read();
+            bool hasRow = reader.Read();
+
+            // No data
+            if (!hasRow)
+            {
+                return new T[0];
+            }
 
             // Read and convert all rows
             var rows = new List<T>();
@@ -114,7 +136,13 @@ namespace Apps72.Dev.Data.Convertor
 
         internal static IEnumerable<T> ToDynamic<T>(DbDataReader reader)
         {
-            reader.Read();
+            bool hasRow = reader.Read();
+
+            // No data
+            if (!hasRow)
+            {
+                return new T[0];
+            }
 
             // DataTable Columns 
             var columns = Enumerable.Range(0, reader.FieldCount)
@@ -152,7 +180,13 @@ namespace Apps72.Dev.Data.Convertor
             int fieldCount = reader.FieldCount;
             var table = new DataTable();
 
-            reader.Read();
+            bool hasRow = reader.Read();
+
+            // No data
+            if (!hasRow)
+            {
+                return new DataTable();
+            }
 
             // DataTable Columns 
             table.Columns = Enumerable.Range(0, fieldCount)

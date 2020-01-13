@@ -275,5 +275,21 @@ namespace Data.Core.Tests
                 Assert.AreEqual(14, data.Item5.Count());
             }
         }
+
+        [TestMethod]
+        public void ExecuteDataSet_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP  WHERE EMPNO = 99999");
+                cmd.CommandText.AppendLine(" SELECT * FROM DEPT WHERE DEPTNO = 99999");
+
+                var data = cmd.ExecuteDataSet<EMP, DEPT>();
+
+                Assert.AreEqual(0, data.Item1.Count());
+                Assert.AreEqual(0, data.Item2.Count());
+            }
+        }
     }
 }
