@@ -533,6 +533,10 @@ For example:
 
 * Fix bug when the SQL query returns no data.
 
+### Version 4.0.2
+
+* Fix bug when the SQL query (with anonymous converter) returns no data.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

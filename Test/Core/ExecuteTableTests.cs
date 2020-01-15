@@ -218,9 +218,29 @@ namespace Data.Core.Tests
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText = " SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 99999 ";
-                var data = cmd.ExecuteTable<EMP>();
+                var data = cmd.ExecuteTable<EMP>().ToArray();
 
                 Assert.AreEqual(0, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteTableWithAnonymousConverter_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 99999 ";
+                var employees = cmd.ExecuteTable((row) =>
+                {
+                    return new
+                    {
+                        Id = row.Field<int>("EMPNO"),
+                        Name = row.Field<string>("ENAME")
+                    };
+                });
+
+                Assert.AreEqual(0, employees.Count());
             }
         }
 

@@ -261,5 +261,25 @@ namespace Data.Core.Tests
                 Assert.AreEqual(null, emp);
             }
         }
+
+        [TestMethod]
+        public void ExecuteRowWithAnonymousConverter_NoData_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = " SELECT EMPNO, ENAME FROM EMP WHERE EMPNO = 99999";
+                var emp = cmd.ExecuteRow((row) =>
+                {
+                    return new
+                    {
+                        Id = Convert.ToInt32(row["EMPNO"]),
+                        Name = Convert.ToString(row["ENAME"])
+                    };
+                });
+
+                Assert.AreEqual(null, emp);
+            }
+        }
     }
 }

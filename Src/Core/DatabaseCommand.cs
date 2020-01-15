@@ -622,9 +622,12 @@ namespace Apps72.Dev.Data
                 }
             });
 
-            foreach (var row in table.Rows)
+            if (table.Rows != null)
             {
-                yield return converter.Invoke(row);
+                foreach (var row in table.Rows)
+                {
+                    yield return converter.Invoke(row);
+                }
             }
         }
 
