@@ -81,8 +81,9 @@ namespace Apps72.Dev.Data.Generator.Tools
                         }
 
                         string csharpType = _arguments.NullableRefTypes ? column.CSharp8TypeNullable : column.CSharpTypeNullable;
+                        string defaultValue = _arguments.NullableRefTypes && csharpType == "string" ? " = string.Empty;" : String.Empty;
 
-                        code.AppendLine($"        public virtual {csharpType} {column.DotNetColumnName} {{ get; set; }}");
+                        code.AppendLine($"        public virtual {csharpType} {column.DotNetColumnName} {{ get; set; }}{defaultValue}");
                     }
 
                     code.AppendLine($"    }}");
