@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Apps72.Dev.Data.Generator.Tools
@@ -46,8 +47,13 @@ namespace Apps72.Dev.Data.Generator.Tools
             code.AppendLine($"    using System;");
             code.AppendLine();
 
+            // All tables
+            var allTables = _generator.TablesAndViews;
+            if (_arguments.SortProperties)
+                allTables = allTables.OrderBy(i => i.SchemaAndName);
+
             // Entities
-            foreach (var entity in _generator.TablesAndViews)
+            foreach (var entity in allTables)
             {
                 if (String.IsNullOrEmpty(_arguments.OnlySchema) ||
                     entity.Schema.IsEqualTo(_arguments.OnlySchema))
@@ -58,7 +64,11 @@ namespace Apps72.Dev.Data.Generator.Tools
                     code.AppendLine($"    public partial class {(tableNameOnly ? entity.Name : entity.SchemaAndName)}");
                     code.AppendLine($"    {{");
 
-                    foreach (var column in entity.Columns)
+                    var allColumns = entity.Columns;
+                    if (_arguments.SortProperties)
+                        allColumns = allColumns.OrderBy(i => i.ColumnName).ToArray();
+
+                    foreach (var column in allColumns)
                     {
                         code.AppendLine($"        /// <summary />");
 
@@ -70,7 +80,9 @@ namespace Apps72.Dev.Data.Generator.Tools
                                 code.AppendLine($"        [{_arguments.ColumnAttribute}(\"{column.ColumnName}\")]");
                         }
 
-                        code.AppendLine($"        public virtual {column.CSharpTypeNullable} {column.DotNetColumnName} {{ get; set; }}");
+                        string csharpType = _arguments.NullableRefTypes ? column.CSharp8TypeNullable : column.CSharpTypeNullable;
+
+                        code.AppendLine($"        public virtual {csharpType} {column.DotNetColumnName} {{ get; set; }}");
                     }
 
                     code.AppendLine($"    }}");

@@ -28,9 +28,12 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine("                               warning. Code separator is ','. Ex: AV1706, AV1507).");
             Console.WriteLine("   --Language         | -l     Target format: CSharp (only this one at this moment).");
             Console.WriteLine("   --Namespace        | -ns    Name of the namespace to generate.");
+            Console.WriteLine("   --NullableRefTypes | -nrt   Use the C# 8.0 nullable reference types.");
+            Console.WriteLine("                               See https://docs.microsoft.com/dotnet/csharp/nullable-references");
             Console.WriteLine("   --Output           | -o     File name where class will be written.");
             Console.WriteLine("   --OnlySchema       | -os    Only for the specified schema.");
             Console.WriteLine("   --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.");
+            Console.WriteLine("   --SortProperties   | -sp    Sort generated properties alphabetically.");
             Console.WriteLine();
             Console.WriteLine("     By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp");
             Console.WriteLine("                 Namespace=[Empty], ClassFormat=NameOnly");

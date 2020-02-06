@@ -18,3 +18,4 @@ Example:
 
 **More details**:
 Use `DbCmd --Help` to display all commands and options.
+

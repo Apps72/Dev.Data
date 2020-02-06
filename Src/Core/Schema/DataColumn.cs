@@ -70,12 +70,19 @@ namespace Apps72.Dev.Data.Schema
         /// <summary>
         /// Gets the DataType formated as a string suffixed by an option "?"
         /// </summary>
-        public string DotNetTypeNullable => GetTypeNullable(false);
+        public string DotNetTypeNullable => GetTypeNullable(isCSharp: false, withNullableReferenceTypes: false);
 
         /// <summary>
         /// Gets the DataType formated as a string suffixed by an option "?"
         /// </summary>
-        public string CSharpTypeNullable => GetTypeNullable(true);
+        public string CSharpTypeNullable => GetTypeNullable(isCSharp: true, withNullableReferenceTypes: false);
+
+        /// <summary>
+        /// Gets the DataType formated as a string suffixed by an option "?"
+        /// Also for object?, string? as defined in Nullable reference types.
+        /// https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
+        /// </summary>
+        public string CSharp8TypeNullable => GetTypeNullable(isCSharp: true, withNullableReferenceTypes: true);
 
         /// <summary>
         /// Returns the C# type suffixed by ?, if allowed
@@ -83,16 +90,28 @@ namespace Apps72.Dev.Data.Schema
         ///     String -> String
         /// </summary>
         /// <returns></returns>
-        private string GetTypeNullable(bool isCSharp)
+        private string GetTypeNullable(bool isCSharp, bool withNullableReferenceTypes)
         {
             string dataType = DataType.ToString();
             string type = isCSharp ? Convertor.DbTypeMap.DotNetToCSharpType(this.DataType)
                                    : dataType;
 
-            if (this.IsNullable &&
-                dataType != "System.String" &&
-                dataType != "System.Object" &&
-                dataType != "System.Byte[]")
+            bool addNullableChar = this.IsNullable;
+
+            if (addNullableChar)
+            {
+                if (dataType == "System.String" ||
+                    dataType == "System.Object" ||
+                    dataType == "System.Byte[]")
+                {
+                    if (withNullableReferenceTypes)
+                        addNullableChar = true;         // Add '?' for C# 8.0 code
+                    else
+                        addNullableChar = false;        // Don't add '?' for String, Object or Byte[]
+                }
+            }
+
+            if (addNullableChar)
             {
                 return $"{type}?".Replace("System.", String.Empty);
             }

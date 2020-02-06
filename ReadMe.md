@@ -537,6 +537,11 @@ For example:
 
 * Fix bug when the SQL query (with anonymous converter) returns no data.
 
+### Version 4.0.3
+
+* Add, for the Generator, an argument NullableRefTypes to use the new C# 8.0 nullable reference types.
+* Add, for the Generator, an argument SortProperties to sort alphabetically all classes and all class properties.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

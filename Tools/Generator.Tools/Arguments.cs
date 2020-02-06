@@ -32,6 +32,8 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.Output = cmdLine.GetValue("Output", "o");
             this.Language = cmdLine.GetValue("Language", "l") ?? "CSharp";
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
+            this.NullableRefTypes = cmdLine.ContainsKey("NullableRefTypes", "nrt");
+            this.SortProperties = cmdLine.ContainsKey("SortProperties", "sp");
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
             this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
             this.OnlySchema = cmdLine.GetValue("OnlySchema", "os");
@@ -89,9 +91,11 @@ namespace Apps72.Dev.Data.Generator.Tools
         public ArgumentCommand Command { get; private set; }
         public string ConnectionString { get; private set; }
         public string Provider { get; private set; }
+        public bool SortProperties { get; set; }
         public string Output { get; private set; }
         public string Language { get; private set; }
         public string Namespace { get; private set; }
+        public bool NullableRefTypes { get; set; }
         public string ClassFormat { get; private set; }
         public string ColumnAttribute { get; private set; }
         public string OnlySchema { get; private set; }

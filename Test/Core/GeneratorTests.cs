@@ -119,6 +119,10 @@ namespace Data.Core.Tests
 
             Assert.AreEqual("int?", table.Columns.First(c => c.ColumnName == "MGR").CSharpTypeNullable);
             Assert.AreEqual("Int32?", table.Columns.First(c => c.ColumnName == "MGR").DotNetTypeNullable);
+
+            Assert.AreEqual("int?", table.Columns.First(c => c.ColumnName == "MGR").CSharp8TypeNullable);
+            Assert.AreEqual("string?", table.Columns.First(c => c.ColumnName == "ENAME").CSharp8TypeNullable);
+
         }
 
         [TestMethod]
