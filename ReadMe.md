@@ -541,6 +541,7 @@ For example:
 
 * Add, for the Generator, an argument NullableRefTypes to use the new C# 8.0 nullable reference types.
 * Add, for the Generator, an argument SortProperties to sort alphabetically all classes and all class properties.
+* Fix, for the Generator, the TIME Sql data type converted to C# DateTime data type.
 
 ### [RoadMap]
 

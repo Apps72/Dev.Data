@@ -67,6 +67,7 @@ namespace Apps72.Dev.Data.Convertor
             if (type == typeof(UInt16) || type == typeof(UInt16?)) return "ushort";
             if (type == typeof(String)) return "string";
             if (type == typeof(DateTime) || type == typeof(DateTime?)) return "DateTime";
+            if (type == typeof(TimeSpan) || type == typeof(TimeSpan?)) return "TimeSpan";
             if (type == typeof(Guid) || type == typeof(Guid?)) return "Guid";
             if (type.ToString() == "System.Byte[]") return "byte[]";
             return "object";
