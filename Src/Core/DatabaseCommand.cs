@@ -307,6 +307,21 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Execute the query and return a <see cref="System.Data.DataSet"/> object filled with data table results.
+        /// </summary>
+        /// <returns>Classic <see cref="System.Data.DataSet"/> object.</returns>
+        public virtual System.Data.DataSet ExecuteDataSet()
+        {
+            return ExecuteInternalCommand(() =>
+            {
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
+                {
+                    return DataReaderConvertor.ToSystemDataSet(dr);
+                }
+            });
+        }
+
+        /// <summary>
         /// Execute the query and return a list or array of new instances of typed results filled with data table results.
         /// </summary>
         /// <typeparam name="T">Object type for first table</typeparam>
@@ -1014,7 +1029,8 @@ namespace Apps72.Dev.Data
                 T result = action.Invoke();
 
                 // Action After Execution
-                if (this.ActionAfterExecution != null)
+                if (this.ActionAfterExecution != null &&
+                    typeof(T) != typeof(System.Data.DataSet))
                 {
                     var tables = DataTableConvertor.ToDataTable(result);
                     this.ActionAfterExecution.Invoke(this, tables);

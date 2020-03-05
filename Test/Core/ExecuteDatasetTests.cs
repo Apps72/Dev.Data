@@ -38,6 +38,89 @@ namespace Data.Core.Tests
         #endregion
 
         [TestMethod]
+        public void ExecuteSystemDataSet_TwoTables_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP ");
+                cmd.CommandText.AppendLine(" SELECT * FROM DEPT ");
+
+                var dataset = cmd.ExecuteDataSet();
+                var smith = dataset.Tables[0].Rows[0];
+                var accounting = dataset.Tables[1].Rows[0];
+
+                Assert.AreEqual(EMP.Smith.EmpNo, smith["EmpNo"]);
+                Assert.AreEqual(EMP.Smith.EName, smith["EName"]);
+                Assert.AreEqual(DEPT.Accounting.DName, accounting["DName"]);
+                Assert.AreEqual(DEPT.Accounting.Loc, accounting["Loc"]);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteSystemDataSet_TableNames_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO  FROM EMP ");                     // With rows
+                cmd.CommandText.AppendLine(" SELECT DEPTNO FROM DEPT WHERE DEPTNO = 0 ");   // No rows
+
+                var dataset = cmd.ExecuteDataSet();
+
+                Assert.AreEqual("EMP", dataset.Tables[0].TableName);
+                Assert.AreEqual("DEPT", dataset.Tables[1].TableName);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteSystemDataSet_OneTable_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText.AppendLine(" SELECT EMPNO, ENAME FROM EMP ");
+
+                var dataset = cmd.ExecuteDataSet();
+                var smith = dataset.Tables[0].Rows[0];
+
+                Assert.AreEqual(EMP.Smith.EmpNo, smith["EmpNo"]);
+                Assert.AreEqual(EMP.Smith.EName, smith["EName"]);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteSystemDataSet_JoinForTableName_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @" SELECT EMP.ENAME, 
+                                            DEPT.DNAME
+                                       FROM EMP 
+                                      INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO ";
+
+                var dataset = cmd.ExecuteDataSet();
+
+                Assert.AreEqual("Table1", dataset.Tables[0].TableName);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteSystemDataSet_CountForTableName_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @" SELECT DEPTNO, COUNT(*) FROM EMP GROUP BY DEPTNO ";
+
+                var dataset = cmd.ExecuteDataSet();
+
+                Assert.AreEqual("EMP", dataset.Tables[0].TableName);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteDataSetTyped_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))

@@ -220,6 +220,12 @@ namespace Apps72.Dev.Data
         Tuple<IEnumerable<T>, IEnumerable<U>> ExecuteDataSet<T, U>();
 
         /// <summary>
+        /// Execute the query and return a <see cref="System.Data.DataSet"/> object filled with data table results.
+        /// </summary>
+        /// <returns>Classic <see cref="System.Data.DataSet"/> object.</returns>
+        System.Data.DataSet ExecuteDataSet();
+
+        /// <summary>
         /// Execute the query and return an array of new instances of typed results filled with data table result.
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
