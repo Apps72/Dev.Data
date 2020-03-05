@@ -543,6 +543,11 @@ For example:
 * Add, for the Generator, an argument SortProperties to sort alphabetically all classes and all class properties.
 * Fix, for the Generator, the TIME Sql data type converted to C# DateTime data type.
 
+### Version 4.1.0
+
+* Add a method `ExecuteDataSet` to return a `System.Data.DataSet` object filled with data table results.
+
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
