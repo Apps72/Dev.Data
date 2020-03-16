@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Apps72.Dev.Data.Convertor;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Apps72.Dev.Data.Convertor;
 
 namespace Apps72.Dev.Data
 {
@@ -985,21 +985,40 @@ namespace Apps72.Dev.Data
             }
         }
 
+        private bool _disposed;
+
+        /// <summary>
+        /// Dispose the object and free ressources
+        /// </summary>
+        /// <param name="fromGC"></param>
+        protected virtual void Cleanup(bool fromGC)
+        {
+            if (_disposed) return;
+
+            try
+            {
+                // Release unmanaged resources (natives).
+                // ...
+
+                if (fromGC) return;
+
+                // Dispose managed resources.
+                this.Command?.Dispose();
+            }
+            finally
+            {
+                _disposed = true;
+                if (!fromGC) GC.SuppressFinalize(this);
+            }
+        }
+
+
         /// <summary>
         /// Dispose the object and free ressources
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        /// <summary>
-        /// Dispose the object and free ressources
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
-        {
-            this.Command?.Dispose();
+            this.Cleanup(fromGC: false);
         }
 
         #endregion
@@ -1023,10 +1042,12 @@ namespace Apps72.Dev.Data
 
                 // Log
                 if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
+                    this.Log.Invoke(this.Command?.CommandText);
 
                 // Send the request to the Database server
-                T result = action.Invoke();
+                T result = default(T);
+                if (this.Command != null)
+                    result = action.Invoke();
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null &&
@@ -1080,10 +1101,13 @@ namespace Apps72.Dev.Data
         {
             string sql = GetCommandTextWithTags();
 
-            if (String.CompareOrdinal(sql, this.Command.CommandText) != 0)
+            if (String.CompareOrdinal(sql, this.Command.CommandText) != 0 &&
+                this.Command != null)
+            {
                 this.Command.CommandText = sql;
+            }
 
-            return this.Command.CommandText;
+            return this.Command?.CommandText;
         }
 
         /// <summary>
