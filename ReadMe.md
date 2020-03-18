@@ -9,7 +9,7 @@ Last build status: [![Build status](https://dev.azure.com/dvoituron/Apps72.Dev.D
 ## Introduction
 
 This C# library simplify SQL Queries to external databases, using the standard class **DbConnection** and [**DotNetCore**](https://dotnet.github.io).
-Many implementations are compiled for **SQL Server**, **Oracle Server** or **SQLite**.
+You can use this library to retrieve data from **SQL Server**, **Oracle Server**, **SQLite**, ...
 
 First, create a SqlConnection or an other DbConnection. 
 
@@ -547,6 +547,9 @@ For example:
 
 * Add a method `ExecuteDataSet` to return a `System.Data.DataSet` object filled with data table results.
 
+### Version 4.1.1
+
+* Fix the ExecuteTable(converter) method to avoid a Command disposed.
 
 ### [RoadMap]
 

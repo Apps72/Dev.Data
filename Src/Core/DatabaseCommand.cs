@@ -637,13 +637,10 @@ namespace Apps72.Dev.Data
                 }
             });
 
-            if (table.Rows != null)
-            {
-                foreach (var row in table.Rows)
-                {
-                    yield return converter.Invoke(row);
-                }
-            }
+            if (table != null && table.Rows != null)
+                return table.Rows.Select(row => converter.Invoke(row));
+            else
+                return new T[] { };
         }
 
         /// <summary>
@@ -938,7 +935,6 @@ namespace Apps72.Dev.Data
             return this;
         }
 
-
         /// <summary>
         /// Adds a value to the end of the <see cref="DatabaseCommand.Parameters"/> property.
         /// </summary>
@@ -1042,12 +1038,10 @@ namespace Apps72.Dev.Data
 
                 // Log
                 if (this.Log != null)
-                    this.Log.Invoke(this.Command?.CommandText);
+                    this.Log.Invoke(this.Command.CommandText);
 
                 // Send the request to the Database server
-                T result = default(T);
-                if (this.Command != null)
-                    result = action.Invoke();
+                T result = action.Invoke();
 
                 // Action After Execution
                 if (this.ActionAfterExecution != null &&
@@ -1101,13 +1095,12 @@ namespace Apps72.Dev.Data
         {
             string sql = GetCommandTextWithTags();
 
-            if (String.CompareOrdinal(sql, this.Command.CommandText) != 0 &&
-                this.Command != null)
+            if (String.CompareOrdinal(sql, this.Command.CommandText) != 0)
             {
                 this.Command.CommandText = sql;
             }
 
-            return this.Command?.CommandText;
+            return this.Command.CommandText;
         }
 
         /// <summary>

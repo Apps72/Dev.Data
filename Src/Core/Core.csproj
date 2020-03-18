@@ -13,7 +13,7 @@
     <PackageId>Apps72.Dev.Data</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Apps72/Dev.Data</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/Apps72/Dev.Data/master/Logo.png</PackageIconUrl>
+    <PackageIcon>Logo.png</PackageIcon>
     <RepositoryUrl>https://github.com/Apps72/Dev.Data</RepositoryUrl>
     <PackageReleaseNotes>https://github.com/Apps72/Dev.Data#ReleaseNotes</PackageReleaseNotes>
     <PackageTags>Data Database SQL DatabaseCommand DotNetCore Oracle SQLite SqlServer Dapper</PackageTags>
@@ -37,6 +37,10 @@
   <!--NET Standard 2.0-->
   <ItemGroup Condition=" $(TargetFramework) =='netstandard2.0' ">
     <PackageReference Include="System.Data.Common" Version=" 4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Logo.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
