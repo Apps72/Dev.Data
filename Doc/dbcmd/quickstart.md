@@ -58,4 +58,4 @@ public string EmployeeName { get; set;}
 
 Watch this video to see a complete sample to retrieve data from SQL Server.
 
-[![Samples](http://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](http://www.youtube.com/watch?v=DRfM15Paw8k)
+[![Samples](https://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](https://www.youtube.com/watch?v=DRfM15Paw8k)
