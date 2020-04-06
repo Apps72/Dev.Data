@@ -27,3 +27,6 @@
   href: action-before-after.md
 - name: Retry queries
   href: retry.md
+- name: Best practice (DatabaseService.cs)
+  href: databaseservice.md  
+  
