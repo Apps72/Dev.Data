@@ -1,6 +1,7 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Data.Core.Tests
@@ -68,6 +69,35 @@ namespace Data.Core.Tests
                 object data = cmd.ExecuteScalar();
 
                 Assert.AreEqual("SMITH", data);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteScalarWithPrepare_Test()
+        {
+            var sample = new Dictionary<int, string>()
+            {
+                { 7369, "SMITH"},
+                { 7499, "ALLEN"}
+            };
+
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @"SELECT ENAME
+                                      FROM EMP
+                                     WHERE EMPNO = @EmpNo ";
+
+                cmd.AddParameter("@EMPNO", 0, System.Data.DbType.Int32);
+                cmd.Prepare();
+
+                foreach (var item in sample)
+                {
+                    cmd.Parameters["@EMPNO"].Value = item.Key;
+                    var ename = cmd.ExecuteScalar<string>();
+
+                    Assert.AreEqual(item.Value, ename);
+                }
             }
         }
 
