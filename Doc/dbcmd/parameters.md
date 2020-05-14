@@ -39,6 +39,8 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
+> If a parameter value is set to `null`, DatabaseCommand will convert it automatically to `DBNull.Value`.
+
 ### AddParameter with name, value, DbType and size
 
 You can add a parameter using `AddParameter(string name, object value, DbType type, int? size)`.

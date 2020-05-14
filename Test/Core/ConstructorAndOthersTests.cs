@@ -1,8 +1,8 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data;
-using System.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace Data.Core.Tests
 {
@@ -170,7 +170,7 @@ namespace Data.Core.Tests
                 Assert.AreEqual(System.Data.CommandType.StoredProcedure, cmd.CommandType);
             }
         }
-        
+
         [TestMethod]
         public void Extension_ConvertToDBNull_Test()
         {
@@ -178,6 +178,17 @@ namespace Data.Core.Tests
             parameter.ConvertToDBNull();
 
             Assert.AreEqual(DBNull.Value, parameter.Value);
+        }
+
+        [TestMethod]
+        public void Extension_ParameterNullable_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.AddParameter("@MyParam", null);
+
+                Assert.AreEqual(DBNull.Value, cmd.Parameters[0].Value);
+            }
         }
     }
 }
