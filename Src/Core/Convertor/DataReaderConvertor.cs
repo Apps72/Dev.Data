@@ -63,7 +63,8 @@ namespace Apps72.Dev.Data.Convertor
                     PropertyInfo property = item.Value;
 
                     object value = reader.GetValue(column.Ordinal);
-                    property.SetValue(newItem, value == DBNull.Value ? null : value, null);
+                    
+                    SetPropertyWithNullMapping(newItem, property, value);
                 }
                 rows.Add(newItem);
             } while (reader.Read());
@@ -166,7 +167,8 @@ namespace Apps72.Dev.Data.Convertor
                 {
                     PropertyInfo property = properties[i];
                     object value = reader.GetValue(i);
-                    property.SetValue(newItem, value == DBNull.Value ? null : value, null);
+                    
+                    SetPropertyWithNullMapping(newItem, property, value);
                 }
                 rows.Add(newItem);
             } while (reader.Read());
@@ -318,6 +320,45 @@ namespace Apps72.Dev.Data.Convertor
             return properties.FirstOrDefault(prop => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(prop), columnName, StringComparison.InvariantCultureIgnoreCase) == 0 && prop.CanWrite)
                    ??
                    properties.FirstOrDefault(prop => String.Compare(prop.Name, columnName, StringComparison.InvariantCultureIgnoreCase) == 0);
+        }
+
+        private static void SetPropertyWithNullMapping<T>(T newItem, PropertyInfo property, object value)
+        {
+            if (value == DBNull.Value)
+            {
+                if (property.PropertyType == typeof(float))
+                {
+                    property.SetValue(newItem, float.NaN, null);
+                }
+                else if (property.PropertyType == typeof(double))
+                {
+                    property.SetValue(newItem, double.NaN, null);
+                }
+                else if (property.PropertyType == typeof(decimal))
+                {
+                    property.SetValue(newItem, decimal.MinValue, null);
+                }
+                else if (property.PropertyType == typeof(short))
+                {
+                    property.SetValue(newItem, short.MinValue, null);
+                }
+                else if (property.PropertyType == typeof(int))
+                {
+                    property.SetValue(newItem, int.MinValue, null);
+                }
+                else if(property.PropertyType == typeof(long))
+                {
+                    property.SetValue(newItem, long.MinValue, null);
+                }
+                else
+                {
+                    property.SetValue(newItem, null, null);
+                }
+            }
+            else
+            {
+                property.SetValue(newItem, value, null);
+            }
         }
     }
 
