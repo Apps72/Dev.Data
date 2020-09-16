@@ -551,6 +551,10 @@ For example:
 
 * Fix the ExecuteTable(converter) method to avoid a Command disposed.
 
+### Version 4.1.2
+
+* Fix Bug #32: "Sequence contains no matching element" using Tool GenerateEntities on Oracle DB.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

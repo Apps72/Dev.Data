@@ -80,5 +80,13 @@ namespace Apps72.Dev.Data.Convertor
 
             return table;
         }
+
+        public static string RemoveExtraChars(string name)
+        {
+            if (String.IsNullOrEmpty(name)) 
+                return name;
+            else
+                return TypeExtension.RemoveExtraChars(name);
+        }
     }
 }

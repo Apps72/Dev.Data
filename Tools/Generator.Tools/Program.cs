@@ -16,7 +16,9 @@ namespace Apps72.Dev.Data.Generator.Tools
                 return;
             }
 
+#if !DEBUG
             try
+#endif
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
                 var arguments = new Arguments(args);
@@ -48,6 +50,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                         return;
                 }
             }
+#if !DEBUG
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -57,6 +60,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                 Console.ResetColor();
                 Environment.Exit(-1);
             }
+#endif
         }
 
         private static Version GetAssemblyVersion()

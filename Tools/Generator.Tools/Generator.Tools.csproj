@@ -10,7 +10,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>DbCmd</ToolCommandName>
     <PackageOutputPath>bin/nupkgs</PackageOutputPath>
-    <Version>4.0.3.1</Version>
+    <Version>4.1.2.0</Version>
     <Company>Denis Voituron</Company>
     <Authors>Denis Voituron</Authors>
     <Description>DbCmd is a command line tools to generate entities (class) from existing databases (SQL Server, Oracle or SQLite), to merge script files into a single file or to execute scripts. This tool is also an assembly usable by your .NET project to retrieve tables and columns, and to generate C# or TypeScript code.
@@ -23,13 +23,13 @@
     <PackageTags>SQL SqlDatabaseCommand Entity DbCmd Generator</PackageTags>
     <Copyright>Copyright 2020 Denis Voituron</Copyright>
     <PackageReleaseNotes>See https://github.com/Apps72/Dev.Data</PackageReleaseNotes>
-    <AssemblyVersion>4.0.3.1</AssemblyVersion>
+    <AssemblyVersion>4.1.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.2.2" />
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.18.3" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="3.1.8" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.90" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
   <ItemGroup>

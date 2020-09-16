@@ -42,25 +42,63 @@ public partial class EMP
 Use `DbCmd --Help` to display all commands and options (see below).
 
 ```Shell
-Usage: DbCmd GenerateEntities [options]
+ Usage: DbCmd <command> [options]
 
-Options:
-  --ConnectionString | -cs    Required. Connection string to the database server.
-                              See https://www.connectionstrings.com
-  --Attribute        | -a     Include the Column attribute if necessary.
-                              If value is empty, the Apps72 Column attribute is added.
-                              You can set the full qualified name of attribute to add 
-                              in addition of Apps72.
-                              Ex: -a="System.ComponentModel.DataAnnotations.Schema.Column"
-  --ClassFormat      | -cf    Format of class: NameOnly or SchemaAndName.
-  --CodeAnalysis     | -ca    Exception codes to add in top of file to avoid Code Analysis 
-                              warning. Code separator is ','. Ex: AV1706, AV1507).
-  --Language         | -l     Target format: CSharp (only this one at this moment).
-  --Namespace        | -ns    Name of the namespace to generate.
-  --Output           | -o     File name where class will be written.
-  --OnlySchema       | -os    Only for the specified schema.
-  --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.
+ Commands:
+   GenerateEntities   | ge     Generate a file (see --Output) with all entities
+                               extracted from tables and view of specified database.
+   Merge              | mg     Merge all script files to a single global file.
 
-    By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp
-                Namespace=[Empty], ClassFormat=NameOnly
+   Run                | rn     Run all script files into the database specified by --ConnectionString.
+
+ 'GenerateEntities' options:
+   --ConnectionString | -cs    Required. Connection string to the database server.
+                               See https://www.connectionstrings.com
+   --Attribute        | -a     Include the Column attribute if necessary.
+                               If value is empty, the Apps72 Column attribute is added.
+                               You can set the full qualified name of attribute to add
+                               in addition of Apps72.
+                               Ex: -a="System.ComponentModel.DataAnnotations.Schema.Column"
+   --ClassFormat      | -cf    Format of class: NameOnly or SchemaAndName.
+   --CodeAnalysis     | -ca    Exception codes to add in top of file to avoid Code Analysis
+                               warning. Code separator is ','. Ex: AV1706, AV1507).
+   --Language         | -l     Target format: CSharp (only this one at this moment).
+   --Namespace        | -ns    Name of the namespace to generate.
+   --NullableRefTypes | -nrt   Use the C# 8.0 nullable reference types.
+                               See https://docs.microsoft.com/dotnet/csharp/nullable-references
+   --Output           | -o     File name where class will be written.
+   --OnlySchema       | -os    Only for the specified schema.
+   --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.
+   --SortProperties   | -sp    Sort generated properties alphabetically.
+
+     By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp
+                 Namespace=[Empty], ClassFormat=NameOnly
+
+ 'Merge' options:
+   --Source           | -s     Source directory pattern containing all files to merged.
+                               Default is "*.sql" in current directory.
+   --Output           | -o     File name where all files will be merged.
+                               If not set, the merged file will be written to the console.
+   --Separator        | -sp    Add this separator between each merged files.
+                               Ex: -sp=GO
+
+ 'Run' options:
+   --ConnectionString | -cs    Required. Connection string to the database server.
+                               See https://www.connectionstrings.com
+   --Source           | -s     Source directory pattern containing all files to merged.
+                               Default is "*.sql" in current directory.
+   --Separator        | -sp    Split script using this separator, to execute part of script
+                               and not a global script. Set -sp=GO for SQL Server.
+   --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.
+   --DbConfigAfter    | -ca    Query to get the last file executed (without extension);
+                               And run only files with name greater than this value.
+                               Ex: -ca="SELECT [Value] FROM [Configuration] WHERE [Key] = 'DbVer'"
+   --DbConfigUpdate   | -cu    Query to update the last file executed.
+                               The variable @Filename will be replace with the SQL file name (without extension).
+                               Ex: -cu="UPDATE [Configuration] SET [Value] = @Filename WHERE [Key] = 'DbVer'"
+
+Example:
+  DbCmd GenerateEntities -cs="Server=localhost;Database=Scott;" -p=SqlServer -a
+  DbCmd Merge --source="C:\Temp\*.sql" --output=allScripts.sql
+  DbCmd Run --source="C:\Temp\*.sql" -cs="Server=localhost;Database=Scott;"
 ```

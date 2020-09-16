@@ -15,7 +15,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                 conn.ConnectionString = Arguments.ConnectionString;
                 conn.Open();
 
-                this.AllEntities = new EntityGenerator(conn);
+                this.AllEntities = new EntityGenerator(conn, this.Arguments.OnlySchema);
 
                 var generator = new GeneratorCSharp(this.AllEntities, Arguments);
                 this.Code = generator.Code;

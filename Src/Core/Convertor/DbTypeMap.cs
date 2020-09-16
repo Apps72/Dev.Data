@@ -39,7 +39,11 @@ namespace Apps72.Dev.Data.Convertor
                                                                Convert.ToString(row["DataType"])));
                 }
 
-                DEFAULT_ENTRY = _dbProviderTypeList.First(i => String.Compare(i.SqlTypeName, "VARCHAR", ignoreCase: true) == 0);
+                DEFAULT_ENTRY = _dbProviderTypeList.FirstOrDefault(i => String.Compare(i.SqlTypeName, "VARCHAR", ignoreCase: true) == 0 ||
+                                                                        String.Compare(i.SqlTypeName, "VARCHAR2", ignoreCase: true) == 0);
+
+                if (DEFAULT_ENTRY == null)
+                    DEFAULT_ENTRY = _dbProviderTypeList.First();
             }
         }
 

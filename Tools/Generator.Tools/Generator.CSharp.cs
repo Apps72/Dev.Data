@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Apps72.Dev.Data.Convertor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,10 +54,11 @@ namespace Apps72.Dev.Data.Generator.Tools
                 allTables = allTables.OrderBy(i => i.SchemaAndName);
 
             // Entities
+            string onlySchema = Apps72.Dev.Data.Convertor.DataTableConvertor.RemoveExtraChars(_arguments.OnlySchema);
             foreach (var entity in allTables)
             {
-                if (String.IsNullOrEmpty(_arguments.OnlySchema) ||
-                    entity.Schema.IsEqualTo(_arguments.OnlySchema))
+                if (String.IsNullOrEmpty(onlySchema) ||
+                    entity.Schema.IsEqualTo(onlySchema))
                 {
                     tables.Add(entity);
 

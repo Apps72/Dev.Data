@@ -19,9 +19,9 @@ namespace Apps72.Dev.Data.Generator
         /// Initializes a new instance of EntitiesGenerator
         /// </summary>
         /// <param name="connection">Connection to retrieve all tables and columns</param>
-        public EntityGenerator(DbConnection connection)
+        public EntityGenerator(DbConnection connection, string onlySchema = null)
         {
-            SearchAndFill(connection);
+            SearchAndFill(connection, onlySchema);
         }
 
         #endregion
@@ -67,7 +67,8 @@ namespace Apps72.Dev.Data.Generator
         /// Search all columns definitions
         /// </summary>
         /// <param name="connection"></param>
-        protected virtual void SearchAndFill(DbConnection connection)
+        /// <param name="onlySchema"></param>
+        protected virtual void SearchAndFill(DbConnection connection, string onlySchema = null)
         {
             // Initializes
             this.Connection = connection ?? throw new ArgumentException("The connection must be defined.");
@@ -80,7 +81,7 @@ namespace Apps72.Dev.Data.Generator
             this.ProductVersion = Convert.ToString(information["DataSourceProductVersion"]);
 
             // Gets all columns and convert to DataTables
-            IEnumerable<TableAndColumn> allColumns = GetTablesDescription();
+            IEnumerable<TableAndColumn> allColumns = GetTablesDescription(onlySchema);
             this.TablesAndViews = ConvertDescriptionsToTables(allColumns);
         }
 
@@ -90,13 +91,31 @@ namespace Apps72.Dev.Data.Generator
         /// <remarks>
         /// See https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/getschema-and-schema-collections
         /// </remarks>
-        protected virtual IEnumerable<TableAndColumn> GetTablesDescription()
+        protected virtual IEnumerable<TableAndColumn> GetTablesDescription(string onlySchema = null)
         {
             List<TableAndColumn> tableAndColumns = new List<TableAndColumn>();
             var fields = new SchemaColumnsFields(ProductName);
 
             // Columns
-            DataTable allColumns = Connection.GetSchema(fields.NAME);
+            DataTable allColumns;
+
+            if (String.IsNullOrEmpty(onlySchema))
+            {
+                // All schema
+                allColumns = Connection.GetSchema(fields.NAME);
+            }
+            else
+            {
+                // Only for a schema (for Oracle or SQL Server)
+                string[] restrictionsValues;
+
+                if (fields.DatabaseFamily == DatabaseFamily.Oracle)
+                    restrictionsValues = new string[] { onlySchema, null, null };
+                else
+                    restrictionsValues = new string[] { null, onlySchema, null };
+
+                allColumns = Connection.GetSchema(fields.NAME, restrictionsValues);
+            }
 
             // Tables et columns
             foreach (DataRow row in allColumns.Rows)
