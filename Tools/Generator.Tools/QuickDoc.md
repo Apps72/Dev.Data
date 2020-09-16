@@ -3,7 +3,7 @@
 
 Example: 
 
-- This command **gets all tables/columns** and generates an Output.cs file with all equivalent classes.
+- This command **gets all tables/columns** and generates an Entities.cs file with all equivalent classes.
 `DbCmd GenerateEntities -cs=Server=localhost;Database=Scott; --provider=SqlServer`
 
 - This command **merges all sql files**, of the current directory, to a new one.
@@ -18,4 +18,4 @@ Example:
 
 **More details**:
 Use `DbCmd --Help` to display all commands and options.
-
+Go to [https://apps72.com](https://apps72.com) for the documentation.

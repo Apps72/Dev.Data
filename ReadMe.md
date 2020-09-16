@@ -32,7 +32,7 @@ Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications,
 
 ## Basic Samples (video)
 
-[![Samples](http://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](http://www.youtube.com/watch?v=DRfM15Paw8k)
+[![Samples](https://img.youtube.com/vi/DRfM15Paw8k/0.jpg)](http://www.youtube.com/watch?v=DRfM15Paw8k)
 
 ## <a name="Performances"></a> Performances
 
