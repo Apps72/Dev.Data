@@ -294,20 +294,33 @@ namespace Data.Core.Tests
                                       FROM EMP 
                                      INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO
                                      WHERE EMPNO = 7369";
-                var smith = cmd.ExecuteRow(row => new 
-                { 
-                    Employee = row.MapTo<EMP>(),
-                    Department = row.MapTo<DEPT>()
+
+
+
+                var smith = cmd.ExecuteRow(row => 
+                {
+                    MyEmployee emp = row.MapTo<MyEmployee>();
+                    emp.Department = row.MapTo<MyDepartment>();
+                    return emp;
                 });
 
-                Assert.AreEqual(7369, smith.Employee.EmpNo);
-                Assert.AreEqual("SMITH", smith.Employee.EName);
-                Assert.AreEqual(null, smith.Employee.Salary);
-                Assert.AreEqual(null, smith.Employee.SAL);
-                
+                Assert.AreEqual(7369, smith.EmpNo);
+                Assert.AreEqual("SMITH", smith.EName);
+                Assert.AreEqual(null, smith.Salary);
+                Assert.AreEqual(null, smith.SAL);
+
                 Assert.AreEqual(0, smith.Department.DeptNo);
                 Assert.AreEqual("RESEARCH", smith.Department.DName);
             }
+
         }
+
+        class MyEmployee : EMP 
+        {
+            public MyDepartment Department { get; set; }
+        };
+
+        class MyDepartment : DEPT { };
+
     }
 }
