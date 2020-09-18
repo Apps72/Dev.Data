@@ -555,6 +555,10 @@ For example:
 
 * Fix Bug #32: "Sequence contains no matching element" using Tool GenerateEntities on Oracle DB.
 
+### Version 4.2
+
+* Add a method `DataRow.MapTo<T>()` to convert columns of this DataRow to associated properties of `T`.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

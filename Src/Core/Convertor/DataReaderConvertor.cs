@@ -313,7 +313,7 @@ namespace Apps72.Dev.Data.Convertor
             }
         }
 
-        private static PropertyInfo GetFirstOrDefaultWithAttributeOrName(this PropertyInfo[] properties, string columnName)
+        internal static PropertyInfo GetFirstOrDefaultWithAttributeOrName(this PropertyInfo[] properties, string columnName)
         {
             return properties.FirstOrDefault(prop => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(prop), columnName, StringComparison.InvariantCultureIgnoreCase) == 0 && prop.CanWrite)
                    ??

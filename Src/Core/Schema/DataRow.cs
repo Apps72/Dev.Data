@@ -97,5 +97,15 @@ namespace Apps72.Dev.Data.Schema
         {
             return (T)this[columnIndex];
         }
+
+        /// <summary>
+        /// Maps all properies of <typeparamref name="T"/> corresponding to column of this DataRow.
+        /// </summary>
+        /// <typeparam name="T">Target type</typeparam>
+        /// <returns></returns>
+        public T MapTo<T>()
+        {
+            return Convertor.DataRowConvertor.ToType<T>(this);
+        }
     }
 }

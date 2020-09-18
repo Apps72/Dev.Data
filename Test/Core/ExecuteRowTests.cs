@@ -281,5 +281,33 @@ namespace Data.Core.Tests
                 Assert.AreEqual(null, emp);
             }
         }
+
+        [TestMethod]
+        public void ExecuteRow_DataRowCast_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @"SELECT EMP.EMPNO,
+                                           EMP.ENAME,                                         
+                                           DEPT.DNAME
+                                      FROM EMP 
+                                     INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO
+                                     WHERE EMPNO = 7369";
+                var smith = cmd.ExecuteRow(row => new 
+                { 
+                    Employee = row.MapTo<EMP>(),
+                    Department = row.MapTo<DEPT>()
+                });
+
+                Assert.AreEqual(7369, smith.Employee.EmpNo);
+                Assert.AreEqual("SMITH", smith.Employee.EName);
+                Assert.AreEqual(null, smith.Employee.Salary);
+                Assert.AreEqual(null, smith.Employee.SAL);
+                
+                Assert.AreEqual(0, smith.Department.DeptNo);
+                Assert.AreEqual("RESEARCH", smith.Department.DName);
+            }
+        }
     }
 }
