@@ -559,6 +559,10 @@ For example:
 
 * Add a method `DataRow.MapTo<T>()` to convert columns of this DataRow to associated properties of `T`.
 
+### Version 4.2.1
+
+* Fix the method `AddParameter<T>(T values)` using nullable properties.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

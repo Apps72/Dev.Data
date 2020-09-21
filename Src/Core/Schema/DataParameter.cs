@@ -69,8 +69,11 @@ namespace Apps72.Dev.Data.Schema
                                                 command.CreateParameter() : 
                                                 Activator.CreateInstance(typeof(U)) as DbParameter;
                         parameter.Value = typeof(T).GetProperty(property.Name).GetValue(value, null);
-                        parameter.IsNullable = TypeExtension.IsNullable(propType);
+                        parameter.IsNullable = TypeExtension.IsNullable(property.PropertyType);
                         parameter.DbType = DbTypeMap.FirstDbType(propType);
+
+                        if (parameter.IsNullable && parameter.Value == null)
+                            parameter.Value = DBNull.Value;
 
                         // Parameter name
                         string attribute = Apps72.Dev.Data.Annotations.ColumnAttribute.GetColumnAttributeName(property);

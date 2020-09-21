@@ -219,6 +219,26 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteScalarWithNullableObjectParameter_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+
+                // Add manual parameter
+                cmd.AddParameter(new 
+                { 
+                    EmpNo = 7369,
+                    DeptNo = default(int?)
+                });
+
+
+                Assert.AreEqual(7369, cmd.Parameters["@EmpNo"].Value);
+                Assert.AreEqual(DBNull.Value, cmd.Parameters["@DeptNo"].Value);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteScalarWithDbParameter_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
