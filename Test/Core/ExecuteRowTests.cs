@@ -283,7 +283,7 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
-        public void ExecuteRow_DataRowCast_Test()
+        public void ExecuteRow_DataRowMapTo_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
             {
@@ -311,6 +311,29 @@ namespace Data.Core.Tests
 
                 Assert.AreEqual(0, smith.Department.DeptNo);
                 Assert.AreEqual("RESEARCH", smith.Department.DName);
+            }
+        }
+
+        [TestMethod]
+        public void ExecuteRow_CastPrivateProperties_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @"SELECT EMPNO, 
+                                           ENAME,
+                                           'BlaBla' AS ColumnPrivate,
+                                           'BlaBla' AS ColumnGetOnly
+                                      FROM EMP 
+                                     WHERE EMPNO = 7369";
+
+                
+                var smith = cmd.ExecuteRow<EMP>();
+
+                Assert.AreEqual(7369, smith.EmpNo);
+                Assert.AreEqual("SMITH", smith.EName);
+                Assert.AreEqual("7369 SMITH", smith.ColumnGetOnly);
+                Assert.AreEqual(null, smith.ColumnNotUse);
             }
 
         }

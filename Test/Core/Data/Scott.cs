@@ -27,6 +27,10 @@ namespace Data.Core.Tests
 
         public string ColumnNotUse { get; set; }
 
+        private string ColumnPrivate { get; set; }
+
+        public string ColumnGetOnly => $"{EmpNo} {EName}";
+
         public static EMP Smith
         {
             get

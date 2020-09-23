@@ -563,6 +563,10 @@ For example:
 
 * Fix the method `AddParameter<T>(T values)` using nullable properties.
 
+### Version 4.2.2
+
+* Fix the object serialisation, to use only 'Public Settable' properties (and not properties with only a 'getter').
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

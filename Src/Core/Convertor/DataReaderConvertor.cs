@@ -24,7 +24,8 @@ namespace Apps72.Dev.Data.Convertor
             }
 
             // Class Properties
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                      .Where(p => p.CanWrite);
 
             // DataTable Columns 
             var names = Enumerable.Range(0, reader.FieldCount)
@@ -313,7 +314,7 @@ namespace Apps72.Dev.Data.Convertor
             }
         }
 
-        internal static PropertyInfo GetFirstOrDefaultWithAttributeOrName(this PropertyInfo[] properties, string columnName)
+        internal static PropertyInfo GetFirstOrDefaultWithAttributeOrName(this IEnumerable<PropertyInfo> properties, string columnName)
         {
             return properties.FirstOrDefault(prop => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(prop), columnName, StringComparison.InvariantCultureIgnoreCase) == 0 && prop.CanWrite)
                    ??
