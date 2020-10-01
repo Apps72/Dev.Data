@@ -567,6 +567,10 @@ For example:
 
 * Fix the object serialisation, to use only 'Public Settable' properties (and not properties with only a 'getter').
 
+### Version 4.2.3
+
+* Fix the null value in parameters, must be replaced by DBNull value.
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.

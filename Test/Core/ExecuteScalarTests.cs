@@ -122,6 +122,27 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteScalarWithUndefinedParameter_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @"SET ANSI_NULLS OFF 
+                                     SELECT COUNT(*) 
+                                      FROM EMP 
+                                     WHERE COMM = @Comm 
+                                    SET ANSI_NULLS ON";
+
+                cmd.AddParameter("@Comm", default(int?));
+                cmd.Parameters["@Comm"].Value = null;
+
+                int count = cmd.ExecuteScalar<int>();
+
+                Assert.AreEqual(10, count);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteScalarWithAnonymousParameters_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))

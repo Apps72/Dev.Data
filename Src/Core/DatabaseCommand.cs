@@ -805,6 +805,9 @@ namespace Apps72.Dev.Data
                     Update_CommandDotCommandText_If_CommandText_IsNew();
                 }
 
+                // Replace null parameters by DBNull value.
+                this.Replace_ParametersNull_By_DBNull();
+
                 // Log
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
@@ -860,6 +863,9 @@ namespace Apps72.Dev.Data
                     this.ActionBeforeExecution.Invoke(this);
                     Update_CommandDotCommandText_If_CommandText_IsNew();
                 }
+
+                // Replace null parameters by DBNull value.
+                this.Replace_ParametersNull_By_DBNull();
 
                 // Log
                 if (this.Log != null)
@@ -1036,6 +1042,9 @@ namespace Apps72.Dev.Data
                     Update_CommandDotCommandText_If_CommandText_IsNew();
                 }
 
+                // Replace null parameters by DBNull value.
+                this.Replace_ParametersNull_By_DBNull();
+
                 // Log
                 if (this.Log != null)
                     this.Log.Invoke(this.Command.CommandText);
@@ -1101,6 +1110,19 @@ namespace Apps72.Dev.Data
             }
 
             return this.Command.CommandText;
+        }
+
+        /// <summary>
+        /// Check if the this.CommandText is different of Command.CommandText and updated it.
+        /// </summary>
+        /// <returns></returns>
+        private void Replace_ParametersNull_By_DBNull()
+        {
+            foreach (DbParameter parameter in this.Command.Parameters)
+            {
+                if (parameter.Value == null)
+                    parameter.Value = DBNull.Value;
+            }
         }
 
         /// <summary>
