@@ -279,6 +279,19 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Begin a transaction into the database, using an <paramref name="isolationLevel"/>.
+        /// </summary>
+        /// <returns>Transaction</returns>
+        public virtual DbTransaction TransactionBegin(System.Data.IsolationLevel isolationLevel)
+        {
+            if (this.Log != null)
+                this.Log.Invoke($"BEGIN TRANSACTION    -- Isolation {isolationLevel}");
+
+            this.Command.Transaction = this.Command.Connection.BeginTransaction(isolationLevel);
+            return this.Command.Transaction;
+        }
+
+        /// <summary>
         /// Commit the current transaction to the database
         /// </summary>
         public virtual void TransactionCommit()
