@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp2.0;netstandard2.0</TargetFrameworks>
     <AssemblyName>Apps72.Dev.Data</AssemblyName>
     <RootNamespace>Apps72.Dev.Data</RootNamespace>
     <Version>4.2.3.0</Version>
@@ -24,8 +24,8 @@
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
-  <!--NET 4.0-->
-  <ItemGroup Condition=" $(TargetFramework) =='net40' ">
+  <!--NET 4.5-->
+  <ItemGroup Condition=" $(TargetFramework) =='net45' ">
 
   </ItemGroup>
 
