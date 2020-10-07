@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Apps72.Dev.Data.Generator.Tools;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,12 +18,44 @@ namespace Tools.Generator.Tests
             {
                 Id = 1,
                 LastName = "Smith",
-                Age = 50
+                Age = 25
             };
 
             var errors = Validate(smith);
 
             Assert.AreEqual(false, errors.Any());
+        }
+
+        [TestMethod]
+        public void Validation_DecimalAttribute_Test()
+        {
+            var args = new[]
+            {
+                $"GenerateEntities",
+                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"Validations",
+            };
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
+            var code = generator.Code;
+
+            Assert.IsTrue(code.Contains("[Range(-999999999999999999.0d, 999999999999999999.0d)]"));
+            Assert.IsTrue(code.Contains("public virtual decimal? SAL { get; set; }"));
+        }
+
+        [TestMethod]
+        public void Validation_StringAttribute_Test()
+        {
+            var args = new[]
+            {
+                $"GenerateEntities",
+                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"Validations",
+            };
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
+            var code = generator.Code;
+
+            Assert.IsTrue(code.Contains("[StringLength(10)]"));
+            Assert.IsTrue(code.Contains("public virtual string ENAME { get; set; }"));
         }
 
         private IEnumerable<ValidationResult> Validate(object value)
@@ -42,7 +75,7 @@ namespace Tools.Generator.Tests
             [StringLength(50)]
             public string LastName { get; set; }
 
-            [Range(0, 100)]
+            [Range(0d, 100d)]
             public int Age { get; set; }
         }
     }

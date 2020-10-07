@@ -46,6 +46,10 @@ namespace Apps72.Dev.Data.Generator.Tools
 
             // Namespace
             code.AppendLine($"    using System;");
+            if (_arguments.ValidationAttributes)
+            {
+                code.AppendLine($"    using System.ComponentModel.DataAnnotations;");
+            }
             code.AppendLine();
 
             // All tables
@@ -84,6 +88,26 @@ namespace Apps72.Dev.Data.Generator.Tools
 
                         string csharpType = _arguments.NullableRefTypes ? column.CSharp8TypeNullable : column.CSharpTypeNullable;
                         string defaultValue = _arguments.NullableRefTypes && csharpType == "string" ? " = string.Empty;" : String.Empty;
+
+                        // Validation
+                        if (_arguments.ValidationAttributes)
+                        {
+                            // [StringLength(...)]
+                            if (column.DataType == typeof(String) &&
+                                column.Size > 0)
+                            {
+                                code.AppendLine($"        [StringLength({column.Size})]");
+                            }
+
+                            // [Range(..., ...)]
+                            if (column.DataType == typeof(Decimal) ||
+                                column.DataType == typeof(Double) ||
+                                column.DataType == typeof(Single))
+                            {
+                                var minMax = column.GetMinMax();
+                                code.AppendLine($"        [Range({minMax.Item1}d, {minMax.Item2}d)]");
+                            }
+                        }
 
                         code.AppendLine($"        public virtual {csharpType} {column.DotNetColumnName} {{ get; set; }}{defaultValue}");
                     }

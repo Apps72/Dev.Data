@@ -169,7 +169,10 @@ namespace Apps72.Dev.Data.Generator
                                                    columnName: c.ColumnName,
                                                    sqlType: c.ColumnType,
                                                    dataType: c.GetDataType(),
-                                                   isNullable: c.IsColumnNullable
+                                                   isNullable: c.IsColumnNullable,
+                                                   size: c.ColumnSize,
+                                                   precision: c.NumericPrecision,
+                                                   scale: c.NumericScale
                                                ))
                                                .ToArray();
             }
