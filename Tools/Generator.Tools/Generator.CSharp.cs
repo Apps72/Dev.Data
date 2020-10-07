@@ -46,7 +46,7 @@ namespace Apps72.Dev.Data.Generator.Tools
 
             // Namespace
             code.AppendLine($"    using System;");
-            if (_arguments.ValidationAttributes)
+            if (_arguments.ValidationAttributes?.Any() == true)
             {
                 code.AppendLine($"    using System.ComponentModel.DataAnnotations;");
             }
@@ -90,19 +90,21 @@ namespace Apps72.Dev.Data.Generator.Tools
                         string defaultValue = _arguments.NullableRefTypes && csharpType == "string" ? " = string.Empty;" : String.Empty;
 
                         // Validation
-                        if (_arguments.ValidationAttributes)
+                        if (_arguments.ValidationAttributes?.Any() == true)
                         {
                             // [StringLength(...)]
-                            if (column.DataType == typeof(String) &&
+                            if (_arguments.ValidationAttributes.Contains("stringlength") &&
+                                column.DataType == typeof(String) &&
                                 column.Size > 0)
                             {
                                 code.AppendLine($"        [StringLength({column.Size})]");
                             }
 
                             // [Range(..., ...)]
-                            if (column.DataType == typeof(Decimal) ||
+                            if (_arguments.ValidationAttributes.Contains("range") && (
+                                column.DataType == typeof(Decimal) ||
                                 column.DataType == typeof(Double) ||
-                                column.DataType == typeof(Single))
+                                column.DataType == typeof(Single)))
                             {
                                 var minMax = column.GetMinMax();
                                 code.AppendLine($"        [Range({minMax.Item1}d, {minMax.Item2}d)]");

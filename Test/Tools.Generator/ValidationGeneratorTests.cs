@@ -27,7 +27,7 @@ namespace Tools.Generator.Tests
         }
 
         [TestMethod]
-        public void Validation_DecimalAttribute_Test()
+        public void Validation_NullAttribute_Test()
         {
             var args = new[]
             {
@@ -38,8 +38,40 @@ namespace Tools.Generator.Tests
             var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
             var code = generator.Code;
 
+            Assert.IsFalse(code.Contains("[Range"));
+            Assert.IsFalse(code.Contains("[StringLength"));
+        }
+
+        [TestMethod]
+        public void Validation_RangeAttribute_Test()
+        {
+            var args = new[]
+            {
+                $"GenerateEntities",
+                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"Validations=Range",
+            };
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
+            var code = generator.Code;
+
             Assert.IsTrue(code.Contains("[Range(-999999999999999999.0d, 999999999999999999.0d)]"));
             Assert.IsTrue(code.Contains("public virtual decimal? SAL { get; set; }"));
+        }
+
+        [TestMethod]
+        public void Validation_RangeStringAttribute_Test()
+        {
+            var args = new[]
+            {
+                $"GenerateEntities",
+                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"Validations=Range;StringLength",
+            };
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
+            var code = generator.Code;
+
+            Assert.IsTrue(code.Contains("[Range(-999999999999999999.0d, 999999999999999999.0d)]"));
+            Assert.IsTrue(code.Contains("[StringLength(10)]"));
         }
 
         [TestMethod]
@@ -49,7 +81,7 @@ namespace Tools.Generator.Tests
             {
                 $"GenerateEntities",
                 $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
-                $"Validations",
+                $"Validations=StringLength",
             };
             var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
             var code = generator.Code;
