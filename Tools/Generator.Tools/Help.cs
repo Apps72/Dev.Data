@@ -34,6 +34,8 @@ namespace Apps72.Dev.Data.Generator.Tools
             Console.WriteLine("   --OnlySchema       | -os    Only for the specified schema.");
             Console.WriteLine("   --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.");
             Console.WriteLine("   --SortProperties   | -sp    Sort generated properties alphabetically.");
+            Console.WriteLine("   --Validations      | -val   Include DataAnnotations attributes [StringLength], [Range].");
+            Console.WriteLine("                               Ex. --Validations=Range;StringLength");
             Console.WriteLine();
             Console.WriteLine("     By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp");
             Console.WriteLine("                 Namespace=[Empty], ClassFormat=NameOnly");
