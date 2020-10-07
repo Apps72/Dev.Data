@@ -28,6 +28,14 @@ namespace Apps72.Dev.Data.Schema
             Size = size;
             Precision = precision;
             Scale = scale;
+
+            // If unicode, size is divided by 2
+            if (sqlType.StartsWith("NCHAR", StringComparison.OrdinalIgnoreCase) ||
+                sqlType.StartsWith("NVARCHAR", StringComparison.OrdinalIgnoreCase) ||
+                sqlType.StartsWith("NTEXT", StringComparison.OrdinalIgnoreCase))
+            { 
+                Size = size / 2;
+            }
         }
 
         /// <summary>
