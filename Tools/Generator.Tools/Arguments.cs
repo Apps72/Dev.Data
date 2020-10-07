@@ -33,7 +33,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.Language = cmdLine.GetValue("Language", "l") ?? "CSharp";
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
             this.NullableRefTypes = cmdLine.ContainsKey("NullableRefTypes", "nrt");
-            this.ValidationAttributes = cmdLine.GetValue("Validations", "val").Split(new[] {',', ';' })?.Select(i => i.Trim().ToLower())?.ToArray();
+            this.ValidationAttributes = cmdLine.GetValue("Validations", "val")?.Split(new[] {',', ';' })?.Select(i => i.Trim().ToLower())?.ToArray();
             this.SortProperties = cmdLine.ContainsKey("SortProperties", "sp");
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
             this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
