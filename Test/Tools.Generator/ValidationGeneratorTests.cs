@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Tools.Generator.Tests
@@ -16,14 +17,14 @@ namespace Tools.Generator.Tests
         {
             var smith = new Person()
             {
-                Id = 1,
+                Id = 2,
                 LastName = "Smith",
-                Age = 25
+                Age = 50
             };
 
-            var errors = Validate(smith);
+            var errors = smith.Validate();
 
-            Assert.AreEqual(false, errors.Any());
+            Assert.AreEqual(false, errors.Any(), String.Join(" ; ", errors.Select(i => i.ErrorMessage)));
         }
 
         [TestMethod]
@@ -90,15 +91,23 @@ namespace Tools.Generator.Tests
             Assert.IsTrue(code.Contains("public virtual string ENAME { get; set; }"));
         }
 
-        private IEnumerable<ValidationResult> Validate(object value)
+        [TestMethod]
+        public void Validation_ValidateMethod_Test()
         {
-            var context = new ValidationContext(value, serviceProvider: null, items: null);
-            var results = new List<ValidationResult>();
-            Validator.TryValidateObject(value, context, results, validateAllProperties: true);
-            return results;
+            var args = new[]
+            {
+                $"GenerateEntities",
+                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"Validations=ValidateMethod",
+            };
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
+            var code = generator.Code;
+
+            Assert.IsTrue(code.Contains("private static class __DataAnnotationValidator"));
+            Assert.IsTrue(code.Contains("Validate() =>"));
         }
 
-        public class Person
+        public class Person : IValidatableObject
         {
             [Key()]
             public int Id { get; set; }
@@ -109,6 +118,41 @@ namespace Tools.Generator.Tests
 
             [Range(0d, 100d)]
             public int Age { get; set; }
+
+            public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+            {
+                if (Id % 2 != 0)
+                    yield return new ValidationResult("Id must be an Odd number");
+            }
+
+            /// <summary />
+            public IEnumerable<ValidationResult> Validate() => __DataAnnotationValidator.ValidateObject(this);
+            
         }
+
+        /// <summary />
+        private static class __DataAnnotationValidator
+        {
+            /// <summary />
+            public static IEnumerable<ValidationResult> ValidateObject(object value)
+            {
+                var context = new ValidationContext(value, serviceProvider: null, items: null);
+                var results = new List<ValidationResult>();
+                Validator.TryValidateObject(value, context, results, validateAllProperties: true);
+
+                // By default, IValidatableObject.Validate is not called if errors are already found.
+                // https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject
+                if (value is IValidatableObject && results.Any())
+                {
+                    var otherResults = ((IValidatableObject)value).Validate(context).ToArray();
+                    return results.Union(otherResults);
+                }
+                else
+                {
+                    return results;
+                }
+            }
+        }
+
     }
 }
