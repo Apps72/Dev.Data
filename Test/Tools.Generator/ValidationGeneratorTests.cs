@@ -103,7 +103,7 @@ namespace Tools.Generator.Tests
             var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
             var code = generator.Code;
 
-            Assert.IsTrue(code.Contains("private static class __DataAnnotationValidator"));
+            Assert.IsTrue(code.Contains("internal static class __DataAnnotationValidator"));
             Assert.IsTrue(code.Contains("Validate() =>"));
         }
 

@@ -49,6 +49,9 @@ namespace Apps72.Dev.Data.Generator.Tools
             if (_arguments.ValidationAttributes.Length > 0)
             {
                 code.AppendLine($"    using System.ComponentModel.DataAnnotations;");
+                code.AppendLine($"    using System.Collections.Generic;");
+                code.AppendLine($"    using System.Linq;");
+
             }
             code.AppendLine();
 
@@ -120,13 +123,12 @@ namespace Apps72.Dev.Data.Generator.Tools
                     code.AppendLine($"    }}");
                 }
             }
-            code.AppendLine($"}}");
 
             // Include DataAnnotationValidator
             if (_arguments.ValidationAttributes.Contains("validatemethod"))
             {
                 code.AppendLine("    /// <summary /> ");
-                code.AppendLine("    private static class __DataAnnotationValidator ");
+                code.AppendLine("    internal static class __DataAnnotationValidator ");
                 code.AppendLine("    { ");
                 code.AppendLine("        /// <summary /> ");
                 code.AppendLine("        public static IEnumerable<ValidationResult> ValidateObject(object value) ");
@@ -149,6 +151,8 @@ namespace Apps72.Dev.Data.Generator.Tools
                 code.AppendLine("        } ");
                 code.AppendLine("    }");
             }
+
+            code.AppendLine($"}}");
 
             // Pragma       
             if (!String.IsNullOrEmpty(_arguments.CodeAnalysis))
