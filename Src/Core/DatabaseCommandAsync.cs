@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data
@@ -284,7 +285,55 @@ namespace Apps72.Dev.Data
         /// <returns>Count of modified rows</returns>
         public async virtual Task<int> ExecuteNonQueryAsync()
         {
-            throw new NotImplementedException();
+            ResetException();
+
+            try
+            {
+                Update_CommandDotCommandText_If_CommandText_IsNew();
+
+                // Action Before Execution
+                if (this.ActionBeforeExecution != null)
+                {
+                    this.ActionBeforeExecution.Invoke(this);
+                    Update_CommandDotCommandText_If_CommandText_IsNew();
+                }
+
+                // Replace null parameters by DBNull value.
+                this.Replace_ParametersNull_By_DBNull();
+
+                // Log
+                if (this.Log != null)
+                    this.Log.Invoke(this.Command.CommandText);
+
+                // Send the request to the Database server
+                int rowsAffected = 0;
+
+                if (this.Command.CommandText.Length > 0)
+                {
+                    if (Retry.IsActivated())
+                        rowsAffected = await Retry.ExecuteCommandOrRetryIfErrorOccuredAsync(async () => await this.Command.ExecuteNonQueryAsync());
+                    else
+                        rowsAffected = await this.Command.ExecuteNonQueryAsync();
+                }
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null)
+                {
+                    var tables = new Schema.DataTable[]
+                    {
+                        new Schema.DataTable("ExecuteNonQuery", "Result", rowsAffected)
+                    };
+                    this.ActionAfterExecution.Invoke(this, tables);
+                    int? newValue = tables[0].Rows[0][0] as int?;
+                    rowsAffected = newValue.HasValue ? newValue.Value : 0;
+                }
+
+                return rowsAffected;
+            }
+            catch (DbException ex)
+            {
+                return ThrowSqlExceptionOrDefaultValue<int>(ex);
+            }
         }
 
         /// <summary>

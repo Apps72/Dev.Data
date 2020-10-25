@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data
 {
@@ -170,6 +171,55 @@ namespace Apps72.Dev.Data
             else
             {
                 return action.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Execute the specified method (ExecuteTable, ExecuteNonQuery or ExecuteScalar)
+        /// And retry x times if asked by RetryIfExceptionsOccured property.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        internal async virtual Task<T> ExecuteCommandOrRetryIfErrorOccuredAsync<T>(Func<Task<T>> action)
+        {
+            if (this.IsActivated())
+            {
+                bool toRetry = false;
+                DbException lastException = null;
+
+                do
+                {
+                    try
+                    {
+                        // Execute the query
+                        return await action.Invoke();
+                    }
+                    catch (DbException ex)
+                    {
+                        lastException = ex;
+
+                        // Check if a unknown Exception
+                        if (this.IsNotAnExceptionToRetry(ex))
+                            throw;
+
+                        // Need to execute this command (action) again
+                        toRetry = this.WaitBeforeRetry();
+
+                        // If exeed the number of retries... So, throw this last exception
+                        if (!toRetry)
+                            throw;
+
+                        // Trace the error occured
+                        _command.Log?.Invoke($"Retry activated. SqlException #{_retryCount} was: \"{ex.Message}\".");
+                    }
+                } while (toRetry);
+
+                throw lastException;
+            }
+            else
+            {
+                return await action.Invoke();
             }
         }
     }
