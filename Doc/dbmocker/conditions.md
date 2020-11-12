@@ -78,6 +78,9 @@ conn.Mocks.LoadTagsFromResources("SampleTable1", "SampleTable2");
 After this method, the Mocks contains 2 conditions with 2 tags (SampleTable1 and SampleTable2) 
 and 2 associated MockTable with these typed data.
 
+You can define multiple resource file for the same Tab Name. Use the `MockResourceOptions.TagSeparator` (by default '-') character 
+to separate a file identifier from the TagName. Ex. "01-MyTag.txt" and "02-MyTag.txt" will be linked to the same tag (MyTag).
+
 ## Checking order
 
 DbMocker uses the condition encoding order to return the correct table.
