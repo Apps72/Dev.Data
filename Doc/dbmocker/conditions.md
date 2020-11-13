@@ -49,37 +49,9 @@ conn.Mocks
 ## LoadTagsFromResources
 
 To avoid creating dozens of `.WhenTag().ReturnsTable()`, you can use the method `LoadTagsFromResources`.
-This method search all text files embedded in your projects (whatever folder it is in)
-and use the name as the Tag Name.
-The embedded file is a fixed formatted file and must respect this format:
+This method search all text files embedded in your projects and use the name as the Tag Name.
 
-  - First row contains **column names**, and define the position of other rows.
-  - Second row contains **data types** (C# types) associated to these columns.
-  - Other rows contain data. Empty rows or row started with a hashtag (#) are omited. 
-
-Example of file **SampleTable1**: 
-
-```
-Id      Name            Birthdate
-(int)   (string)        (DateTime?)
-123     Denis           2020-01-12
-456     Anne            NULL
-```
-
-> To embed a file in Visual Studio, add a new text file in a folder, display the file Properties (F4)
-> and the **Build Action to Embedded resource**.
-
-```CSharp
-// Search all .txt embedded files with these names: 
-// SampleTable1.txt and SampleTable2.txt
-conn.Mocks.LoadTagsFromResources("SampleTable1", "SampleTable2");
-```
-
-After this method, the Mocks contains 2 conditions with 2 tags (SampleTable1 and SampleTable2) 
-and 2 associated MockTable with these typed data.
-
-You can define multiple resource file for the same Tab Name. Use the `MockResourceOptions.TagSeparator` (by default '-') character 
-to separate a file identifier from the TagName. Ex. "01-MyTag.txt" and "02-MyTag.txt" will be linked to the same tag (MyTag).
+See [LoadTagsFromResources](returns-table-import.md)
 
 ## Checking order
 
