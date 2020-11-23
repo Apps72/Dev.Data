@@ -3,7 +3,7 @@
 You can create a MockTable, using a fixed formatted string. This string must respect this format:
 
   - First row contains **column names**, and define the position of other rows.
-  - Second row contains **data types** (C# types) associated to these columns.
+  - Second row contains **data types** (C# types) associated to these columns (see below).
   - Other rows contain data. 
 
 > Empty rows or row started with a hashtag (#) are omited.
@@ -25,6 +25,27 @@ conn.Mocks
     .WhenTag("MyTag")
     .ReturnsTable(MockTable.FromFixed(data));
 ```
+
+The second row contains **data types** associated to these columns. These types are mapped like that:
+
+|Fixed format type|Converted to C# type|Example|
+|---|---|---|
+|(datetime)<br/>(smalldatetime)<br/>(date)    | **DateTime**    | `2020-01-15`                  |
+|(time)<br/>(timespan)                        | **TimeSpan**    | `01:02:03` ; `01:02:03.123` |
+|(decimal)                                    | **decimal**     | `123.45`                      |
+|(double)                                     | **double**      | `123.45`                      |
+|(single)<br/>(float)                         | **float**       | `123.45`                      |
+|(string)<br/>(varchar)<br/>(nvarchar)        | **string**      | `abc` ; `"ab cd"`             |
+|(char)<br/>(nchar)                           | **char**        | `a`                           |
+|(bool)<br/>(boolean)                         | **bool**        | `true` ; `false`              |
+|(byte)                                       | **byte**        |                               |
+|(sbyte)                                      | **sbyte**       |                               |
+|(int16)<br/>(short)                          | **short**       | `123`                         |
+|(uint16)<br/>(ushort)                        | **ushort**      | `123`                         |
+|(int32)<br/>(int)                            | **int**         | `123`                         |
+|(uint32)<br/>(uint)                          | **uint**        | `123`                         |
+|(int64)<br/>(long)                           | **long**        | `123`                         |
+|(uint64)<br/>(ulong)                         | **ulong**       | `123`                         |
 
 # ReturnsTable from a CSV
 
