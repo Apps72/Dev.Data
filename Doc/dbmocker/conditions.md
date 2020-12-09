@@ -46,6 +46,13 @@ conn.Mocks
     .ReturnsTable(...);
 ```
 
+## LoadTagsFromResources
+
+To avoid creating dozens of `.WhenTag().ReturnsTable()`, you can use the method `LoadTagsFromResources`.
+This method search all text files embedded in your projects and use the name as the Tag Name.
+
+See [LoadTagsFromResources](returns-table-import.md)
+
 ## Checking order
 
 DbMocker uses the condition encoding order to return the correct table.

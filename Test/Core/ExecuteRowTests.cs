@@ -289,11 +289,11 @@ namespace Data.Core.Tests
             {
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText = @"SELECT EMP.EMPNO,
-                                           EMP.ENAME,                                         
-                                           DEPT.DNAME
-                                      FROM EMP 
-                                     INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO
-                                     WHERE EMPNO = 7369";
+                                            EMP.ENAME,                                         
+                                            DEPT.DNAME
+                                        FROM EMP 
+                                        INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO
+                                        WHERE EMPNO = 7369";
 
 
 

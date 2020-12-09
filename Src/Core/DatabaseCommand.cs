@@ -17,6 +17,12 @@ namespace Apps72.Dev.Data
     {
         private DatabaseRetry _retry = null;
 
+        /// <summary>
+        /// Gets or sets True to always dispose the internal DbCommand.
+        /// When False, dispose only when the Garbage Collector is available.
+        /// </summary>
+        public static bool AlwaysDispose = false;
+
         #region EVENTS
 
         /// <summary>
@@ -1008,22 +1014,29 @@ namespace Apps72.Dev.Data
         /// <param name="fromGC"></param>
         protected virtual void Cleanup(bool fromGC)
         {
-            if (_disposed) return;
-
-            try
+            if (DatabaseCommand.AlwaysDispose)
             {
-                // Release unmanaged resources (natives).
-                // ...
-
-                if (fromGC) return;
-
-                // Dispose managed resources.
                 this.Command?.Dispose();
             }
-            finally
+            else
             {
-                _disposed = true;
-                if (!fromGC) GC.SuppressFinalize(this);
+                if (_disposed) return;
+
+                try
+                {
+                    // Release unmanaged resources (natives).
+                    // ...
+
+                    if (fromGC) return;
+
+                    // Dispose managed resources.
+                    this.Command?.Dispose();
+                }
+                finally
+                {
+                    _disposed = true;
+                    if (!fromGC) GC.SuppressFinalize(this);
+                }
             }
         }
 

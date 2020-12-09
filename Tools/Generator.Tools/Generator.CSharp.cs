@@ -46,6 +46,13 @@ namespace Apps72.Dev.Data.Generator.Tools
 
             // Namespace
             code.AppendLine($"    using System;");
+            if (_arguments.ValidationAttributes.Length > 0)
+            {
+                code.AppendLine($"    using System.ComponentModel.DataAnnotations;");
+                code.AppendLine($"    using System.Collections.Generic;");
+                code.AppendLine($"    using System.Linq;");
+
+            }
             code.AppendLine();
 
             // All tables
@@ -85,12 +92,66 @@ namespace Apps72.Dev.Data.Generator.Tools
                         string csharpType = _arguments.NullableRefTypes ? column.CSharp8TypeNullable : column.CSharpTypeNullable;
                         string defaultValue = _arguments.NullableRefTypes && csharpType == "string" ? " = string.Empty;" : String.Empty;
 
+                        // [StringLength(...)]
+                        if (_arguments.ValidationAttributes.Contains("stringlength") &&
+                            column.DataType == typeof(String) &&
+                            column.Size > 0)
+                        {
+                            code.AppendLine($"        [StringLength({column.Size})]");
+                        }
+
+                        // [Range(..., ...)]
+                        if (_arguments.ValidationAttributes.Contains("range") && (
+                            column.DataType == typeof(Decimal) ||
+                            column.DataType == typeof(Double) ||
+                            column.DataType == typeof(Single)))
+                        {
+                            var minMax = column.GetMinMax();
+                            code.AppendLine($"        [Range({minMax.Item1}d, {minMax.Item2}d)]");
+                        }
+
                         code.AppendLine($"        public virtual {csharpType} {column.DotNetColumnName} {{ get; set; }}{defaultValue}");
+                    }
+
+                    // Include DataAnnotationValidator
+                    if (_arguments.ValidationAttributes.Contains("validatemethod"))
+                    {
+                        code.AppendLine("        /// <summary />");
+                        code.AppendLine("        public IEnumerable<ValidationResult> Validate() => __DataAnnotationValidator.ValidateObject(this); ");
                     }
 
                     code.AppendLine($"    }}");
                 }
             }
+
+            // Include DataAnnotationValidator
+            if (_arguments.ValidationAttributes.Contains("validatemethod"))
+            {
+                code.AppendLine("    /// <summary /> ");
+                code.AppendLine("    internal static class __DataAnnotationValidator ");
+                code.AppendLine("    { ");
+                code.AppendLine("        /// <summary /> ");
+                code.AppendLine("        public static IEnumerable<ValidationResult> ValidateObject(object value) ");
+                code.AppendLine("        { ");
+                code.AppendLine("            var context = new ValidationContext(value, serviceProvider: null, items: null); ");
+                code.AppendLine("            var results = new List<ValidationResult>(); ");
+                code.AppendLine("            Validator.TryValidateObject(value, context, results, validateAllProperties: true); ");
+                code.AppendLine();
+                code.AppendLine("            // By default, IValidatableObject.Validate is not called if errors are already found. ");
+                code.AppendLine("            // https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject ");
+                code.AppendLine("            if (value is IValidatableObject && results.Any()) ");
+                code.AppendLine("            { ");
+                code.AppendLine("                var otherResults = ((IValidatableObject)value).Validate(context).ToArray(); ");
+                code.AppendLine("                return results.Union(otherResults); ");
+                code.AppendLine("            } ");
+                code.AppendLine("            else ");
+                code.AppendLine("            { ");
+                code.AppendLine("                return results; ");
+                code.AppendLine("            } ");
+                code.AppendLine("        } ");
+                code.AppendLine("    }");
+            }
+
             code.AppendLine($"}}");
 
             // Pragma       

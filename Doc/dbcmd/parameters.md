@@ -6,6 +6,8 @@ In SQL Server or SQLite, a parameter is set via the `@` symbol; and in Oracle Se
 Parameters automatically handle data types: a `@MyText` parameter of type string will be replaced by its value, surrounded by the apostrophes necessary for the SQL language `'Value of variable'`.
 The same applies to dates, Booleans and other numerical values.
 
+> If a parameter value is set to `null`, DatabaseCommand will convert it automatically to `DBNull.Value`.
+
 ### AddParameter with name and value
 
 You can add a parameter using `AddParameter(string name, object value)`.
@@ -39,8 +41,6 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
-> If a parameter value is set to `null`, DatabaseCommand will convert it automatically to `DBNull.Value`.
-
 ### AddParameter with name, value, DbType and size
 
 You can add a parameter using `AddParameter(string name, object value, DbType type, int? size)`.
@@ -72,7 +72,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
     cmd.AddParameter(new 
     {
         EmpNo = 7369,
-        HireDate = new DateTime(1980, 12, 17),
+        HireDate = new DateTime(1980, 12, 17)
     });
 }
 ```
@@ -81,3 +81,22 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 
 All parameters added are listed in the property `Parameters`.
 You can add, remove or change parameters using this property.
+
+```CSharp
+using (var cmd = new DatabaseCommand(mySqlConnection))
+{
+    cmd.CommandText = @" UPDATE EMP 
+                            SET HIREDATE = @HireDate 
+                          WHERE EMPNO = @EmpNo";
+
+    cmd.AddParameter(new 
+    {
+        EmpNo = default(int),
+        HireDate = default(DateTime)
+    });
+
+    // Set parameters values
+    cmd.Parameters["@HireDate"].Value = DateTime.Now;
+    cmd.Parameters["@EmpNo"].Value = 123;
+}
+```

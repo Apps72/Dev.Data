@@ -70,6 +70,8 @@ Use `DbCmd --Help` to display all commands and options (see below).
    --OnlySchema       | -os    Only for the specified schema.
    --Provider         | -p     Type of server: SqlServer, Oracle or SqLite.
    --SortProperties   | -sp    Sort generated properties alphabetically.
+   --Validations      | -val   Include DataAnnotations attributes [StringLength] and/or [Range].
+                               Ex. --Validations=Range;StringLength
 
      By default, Provider=SqlServer, Output=Entities.cs, Language=CSharp
                  Namespace=[Empty], ClassFormat=NameOnly

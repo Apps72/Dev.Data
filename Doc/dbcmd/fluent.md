@@ -31,3 +31,5 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
                         });
 }
 ```
+
+> All features are not available in Fluent queries. For example, `ExecuteDataset` is not yet implemented.

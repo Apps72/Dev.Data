@@ -33,6 +33,7 @@ namespace Apps72.Dev.Data.Generator.Tools
             this.Language = cmdLine.GetValue("Language", "l") ?? "CSharp";
             this.Namespace = cmdLine.GetValue("Namespace", "ns") ?? "Entities";
             this.NullableRefTypes = cmdLine.ContainsKey("NullableRefTypes", "nrt");
+            this.ValidationAttributes = cmdLine.GetValue("Validations", "val")?.Split(new[] {',', ';' })?.Select(i => i.Trim().ToLower())?.ToArray() ?? Array.Empty<string>();
             this.SortProperties = cmdLine.ContainsKey("SortProperties", "sp");
             this.ClassFormat = cmdLine.GetValue("ClassFormat", "cf") ?? "NameOnly";
             this.ColumnAttribute = cmdLine.GetValue("Attribute", "a");
@@ -96,6 +97,7 @@ namespace Apps72.Dev.Data.Generator.Tools
         public string Language { get; private set; }
         public string Namespace { get; private set; }
         public bool NullableRefTypes { get; set; }
+        public string[] ValidationAttributes { get; set; }
         public string ClassFormat { get; private set; }
         public string ColumnAttribute { get; private set; }
         public string OnlySchema { get; private set; }

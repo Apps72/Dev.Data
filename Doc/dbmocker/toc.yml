@@ -9,8 +9,8 @@
   items:
   - name: ReturnsTable
     href: returns-table.md
-  - name: ReturnsTable from a CSV
-    href: returns-table-csv.md
+  - name: ReturnsTable from string
+    href: returns-table-import.md
   - name: ReturnsRow
     href: returns-row.md
   - name: ReturnsScalar

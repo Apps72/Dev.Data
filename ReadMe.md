@@ -571,7 +571,11 @@ For example:
 
 * Fix the null value in parameters, must be replaced by DBNull value.
 
+### Version 4.2.4
+
+* Add a static field `DatabaseCommand.AlwaysDispose` to always dispose the internal DbCommand (if `true` this command will be disposed when the GC is available).
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
-* Include Asynchronous methods.
+* In Progress - Include Asynchronous methods.

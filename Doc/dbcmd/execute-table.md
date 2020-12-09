@@ -59,3 +59,41 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
     // emps is a IEnumerable of a new object { Id, Name, HireYear }
 }
 ```
+
+### MapTo for partial mapping
+
+Some C# objects contains extra complex properties. 
+For example, MyEmployee contains a property Department of type MyDepartment.
+
+```CSharp
+class MyEmployee
+{
+    public int EmpNo { get; set; }
+    public string EName { get; set; }
+    public MyDepartment Department { get; set; }
+}
+class MyDepartment
+{
+    public string DName { get; set; }
+}
+```
+
+You can use the `MapTo<T>` method to automatically map all MyEmployee properties and, next, all MyDepartment properties to a final object.
+
+```CSharp
+using (var cmd = new DatabaseCommand(mySqlConnection))
+{
+    cmd.CommandText = @"SELECT EMP.EMPNO,
+                               EMP.ENAME,                                         
+                               DEPT.DNAME
+                          FROM EMP 
+                         INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO
+                         WHERE EMPNO = 7369";
+
+    var emps = cmd.ExecuteTable(row => 
+    {
+        MyEmployee emp = row.MapTo<MyEmployee>();
+        emp.Department = row.MapTo<MyDepartment>();
+        return emp;
+    });}
+```
