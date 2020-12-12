@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Apps72.Dev.Data.Convertor;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data
@@ -242,7 +244,31 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<T> ExecuteRowAsync<T>()
         {
-            throw new NotImplementedException();
+            // Primitive type: Executable<string>()
+            if (TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return await this.ExecuteScalarAsync<T>();
+            }
+            else
+            {
+                // Get DataTable
+                var rows = await ExecuteInternalCommand(async () =>
+                {
+                    using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
+                    {
+                        // Dynamic type: Executable<dynamic>()
+                        if (DynamicConvertor.IsDynamic(typeof(T)))
+                            return DataReaderConvertor.ToDynamic<T>(dr);
+
+                        // Object type: Executable<Employee>()
+                        else
+                            return DataReaderConvertor.ToType<T>(dr).Rows;
+                    }
+                });
+
+                // Return
+                return rows?.Any() == true ? rows.First() : default(T);
+            }
         }
 
         /// <summary>
@@ -265,7 +291,24 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<T> ExecuteRowAsync<T>(T itemOftype)
         {
-            throw new NotImplementedException();
+            if (TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return await this.ExecuteScalarAsync<T>();
+            }
+            else
+            {
+                // Get DataTable
+                var rows = await ExecuteInternalCommand(async () =>
+                {
+                    using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                    }
+                });
+
+                // Return
+                return rows?.Any() == true ? rows.First() : default(T);
+            }
         }
 
         /// <summary>
@@ -276,7 +319,54 @@ namespace Apps72.Dev.Data
         /// <returns>First row of results</returns>
         public async virtual Task<T> ExecuteRowAsync<T>(Func<Schema.DataRow, T> converter)
         {
-            throw new NotImplementedException();
+            if (TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return await this.ExecuteScalarAsync<T>();
+            }
+            else
+            {
+                // Get DataRow
+                var table = await ExecuteInternalCommand(async () =>
+                {
+                    using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToDataTable(dr);
+                    }
+                });
+                var row = table?.Rows?.FirstOrDefault();
+
+                // Return
+                return row != null ? converter.Invoke(row) : default(T);
+            }
+        }
+
+        /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter"></param>
+        /// <returns>First row of results</returns>
+        public async virtual Task<T> ExecuteRowAsync<T>(Func<Schema.DataRow, Task<T>> converter)
+        {
+            if (TypeExtension.IsPrimitive(typeof(T)))
+            {
+                return await this.ExecuteScalarAsync<T>();
+            }
+            else
+            {
+                // Get DataRow
+                var table = await ExecuteInternalCommand(async () =>
+                {
+                    using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
+                    {
+                        return DataReaderConvertor.ToDataTable(dr);
+                    }
+                });
+                var row = table?.Rows?.FirstOrDefault();
+
+                // Return
+                return row != null ? await converter.Invoke(row) : default(T);
+            }
         }
 
         /// <summary>
@@ -329,7 +419,41 @@ namespace Apps72.Dev.Data
         /// <returns>Object - Result</returns>
         public async virtual Task<object> ExecuteScalarAsync()
         {
-            throw new NotImplementedException();
+            ResetException();
+
+            try
+            {
+                // Commom operations before execution
+                this.OperationsBeforeExecution();
+
+                // Send the request to the Database server
+                object result = null;
+
+                if (this.Command.CommandText.Length > 0)
+                {
+                    if (Retry.IsActivated())
+                        result = Retry.ExecuteCommandOrRetryIfErrorOccured(async () => await this.Command.ExecuteScalarAsync());
+                    else
+                        result = await this.Command.ExecuteScalarAsync();
+                }
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null)
+                {
+                    var tables = new Schema.DataTable[]
+                    {
+                        new Schema.DataTable("ExecuteScalar", "Result", result)
+                    };
+                    this.ActionAfterExecution.Invoke(this, tables);
+                    result = tables[0].Rows[0][0];
+                }
+
+                return result;
+            }
+            catch (DbException ex)
+            {
+                return ThrowSqlExceptionOrDefaultValue<object>(ex);
+            }
         }
 
         /// <summary>

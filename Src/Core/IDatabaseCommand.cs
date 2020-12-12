@@ -531,6 +531,14 @@ namespace Apps72.Dev.Data
         /// <returns>First row of results</returns>
         Task<T> ExecuteRowAsync<T>(Func<Schema.DataRow, T> converter);
 
+        /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter">Conversion function to customize the transformation of a DataRow to an object of <typeparamref name="T"/> </param>
+        /// <returns>First row of results</returns>
+        Task<T> ExecuteRowAsync<T>(Func<Schema.DataRow, Task<T>> converter);
+
         #endregion
 
         /// <summary>
