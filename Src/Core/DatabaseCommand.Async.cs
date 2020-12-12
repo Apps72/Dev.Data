@@ -171,7 +171,22 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>> ExecuteDataSetAsync<T, U, V, W, X>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4, X typeOfItem5)
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, X>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4,
+                datasets.Item5
+            );
         }
 
         /// <summary>
@@ -197,15 +212,15 @@ namespace Apps72.Dev.Data
                 {
                     // Primitive type: Executable<string>()
                     if (TypeExtension.IsPrimitive(typeof(T)))
-                        return DataReaderConvertor.ToPrimitives<T>(dr);
+                        return await DataReaderConvertor.ToPrimitivesAsync<T>(dr);
 
                     // Dynamic type: Executable<dynamic>()
                     else if (DynamicConvertor.IsDynamic(typeof(T)))
-                        return DataReaderConvertor.ToDynamic<T>(dr);
+                        return await  DataReaderConvertor.ToDynamicAsync<T>(dr);
 
                     // Object type: Executable<Employee>()
                     else
-                        return DataReaderConvertor.ToType<T>(dr).Rows;
+                        return (await DataReaderConvertor.ToTypeAsync<T>(dr)).Rows;
                 }
             });
         }
@@ -222,7 +237,7 @@ namespace Apps72.Dev.Data
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
-                    return DataReaderConvertor.ToDataTable(dr);
+                    return await DataReaderConvertor.ToDataTableAsync(dr);
                 }
             });
 
@@ -244,7 +259,7 @@ namespace Apps72.Dev.Data
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
-                    return DataReaderConvertor.ToDataTable(dr);
+                    return await DataReaderConvertor.ToDataTableAsync(dr);
                 }
             });
 
@@ -278,9 +293,9 @@ namespace Apps72.Dev.Data
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
                     if (TypeExtension.IsPrimitive(typeof(T)))
-                        return DataReaderConvertor.ToPrimitives<T>(dr);
+                        return await DataReaderConvertor.ToPrimitivesAsync<T>(dr);
                     else
-                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                        return await DataReaderConvertor.ToAnonymousAsync<T>(dr);
                 }
             });
         }
@@ -316,11 +331,11 @@ namespace Apps72.Dev.Data
                     {
                         // Dynamic type: Executable<dynamic>()
                         if (DynamicConvertor.IsDynamic(typeof(T)))
-                            return DataReaderConvertor.ToDynamic<T>(dr);
+                            return await DataReaderConvertor.ToDynamicAsync<T>(dr);
 
                         // Object type: Executable<Employee>()
                         else
-                            return DataReaderConvertor.ToType<T>(dr).Rows;
+                            return (await DataReaderConvertor.ToTypeAsync<T>(dr)).Rows;
                     }
                 });
 
@@ -360,7 +375,7 @@ namespace Apps72.Dev.Data
                 {
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
-                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                        return await DataReaderConvertor.ToAnonymousAsync<T>(dr);
                     }
                 });
 
@@ -388,7 +403,7 @@ namespace Apps72.Dev.Data
                 {
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
-                        return DataReaderConvertor.ToDataTable(dr);
+                        return await DataReaderConvertor.ToDataTableAsync(dr);
                     }
                 });
                 var row = table?.Rows?.FirstOrDefault();
@@ -417,7 +432,7 @@ namespace Apps72.Dev.Data
                 {
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
-                        return DataReaderConvertor.ToDataTable(dr);
+                        return await DataReaderConvertor.ToDataTableAsync(dr);
                     }
                 });
                 var row = table?.Rows?.FirstOrDefault();

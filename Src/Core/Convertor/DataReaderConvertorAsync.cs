@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data.Convertor
 {
     internal static partial class DataReaderConvertor
     {
-        internal static ColumnsAndRows<T> ToType<T>(DbDataReader reader)
+        internal static async Task<ColumnsAndRows<T>> ToTypeAsync<T>(DbDataReader reader)
         {
-            var hasRow = reader.Read();
+            var hasRow = await reader.ReadAsync();
 
             // No data
             if (!hasRow)
@@ -46,7 +47,7 @@ namespace Apps72.Dev.Data.Convertor
                                         columnName: names[i],
                                         sqlType: reader.GetDataTypeName(i),
                                         dataType: reader.GetFieldType(i),
-                                        isNullable: reader.IsDBNull(i)
+                                        isNullable: await reader.IsDBNullAsync(i)
                                      );
 
                     columns.Add(column, property);
@@ -67,7 +68,7 @@ namespace Apps72.Dev.Data.Convertor
                     property.SetValue(newItem, value == DBNull.Value ? null : value, null);
                 }
                 rows.Add(newItem);
-            } while (reader.Read());
+            } while (await reader.ReadAsync());
 
             // Return
             return new ColumnsAndRows<T>()
@@ -77,9 +78,9 @@ namespace Apps72.Dev.Data.Convertor
             };
         }
 
-        internal static IEnumerable<T> ToAnonymous<T>(DbDataReader reader)
+        internal static async Task<IEnumerable<T>> ToAnonymousAsync<T>(DbDataReader reader)
         {
-            bool hasRow = reader.Read();
+            bool hasRow = await reader.ReadAsync();
 
             // No data
             if (!hasRow)
@@ -100,7 +101,7 @@ namespace Apps72.Dev.Data.Convertor
                     RemoveDBNullValues(data, fieldCount);
                     var row = (T)Activator.CreateInstance(typeof(T), data);
                     rows.Add(row);
-                } while (reader.Read());
+                } while (await reader.ReadAsync());
             }
             catch (MissingMethodException ex)
             {
@@ -111,9 +112,9 @@ namespace Apps72.Dev.Data.Convertor
             return rows;
         }
 
-        internal static IEnumerable<T> ToPrimitives<T>(DbDataReader reader)
+        internal static async Task<IEnumerable<T>> ToPrimitivesAsync<T>(DbDataReader reader)
         {
-            bool hasRow = reader.Read();
+            bool hasRow = await reader.ReadAsync();
 
             // No data
             if (!hasRow)
@@ -129,15 +130,15 @@ namespace Apps72.Dev.Data.Convertor
                 var data = reader.GetValue(0);
                 data = data == DBNull.Value ? null : data;
                 rows.Add((T)data);
-            } while (reader.Read());
+            } while (await reader.ReadAsync());
 
             // Return
             return rows;
         }
 
-        internal static IEnumerable<T> ToDynamic<T>(DbDataReader reader)
+        internal static async Task<IEnumerable<T>> ToDynamicAsync<T>(DbDataReader reader)
         {
-            bool hasRow = reader.Read();
+            bool hasRow = await reader.ReadAsync();
 
             // No data
             if (!hasRow)
@@ -147,10 +148,10 @@ namespace Apps72.Dev.Data.Convertor
 
             // DataTable Columns 
             var columns = Enumerable.Range(0, reader.FieldCount)
-                                     .ToDictionary(i => reader.GetName(i),
-                                                   i => reader.IsDBNull(i)
-                                                           ? typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i))
-                                                           : reader.GetFieldType(i));
+                                    .ToDictionary(i => reader.GetName(i),
+                                                  i => reader.IsDBNull(i)
+                                                          ? typeof(Nullable<>).MakeGenericType(reader.GetFieldType(i))
+                                                          : reader.GetFieldType(i));
 
             // Get Type
             var type = DynamicConvertor.GetDynamicType(DynamicConvertor.DYNAMIC_CLASS_NAME, columns);
@@ -170,18 +171,18 @@ namespace Apps72.Dev.Data.Convertor
                     property.SetValue(newItem, value == DBNull.Value ? null : value, null);
                 }
                 rows.Add(newItem);
-            } while (reader.Read());
+            } while (await reader.ReadAsync());
 
             // Return
             return rows.Cast<T>();
         }
 
-        internal static DataTable ToDataTable(DbDataReader reader)
+        internal static async Task<DataTable> ToDataTableAsync(DbDataReader reader)
         {
             int fieldCount = reader.FieldCount;
             var table = new DataTable();
 
-            bool hasRow = reader.Read();
+            bool hasRow = await reader.ReadAsync();
 
             // No data
             if (!hasRow)
@@ -191,7 +192,7 @@ namespace Apps72.Dev.Data.Convertor
 
             // DataTable Columns 
             table.Columns = Enumerable.Range(0, fieldCount)
-                                       .Select(i => new DataColumn
+                                      .Select(i => new DataColumn
                                           (
                                              ordinal: i,
                                              columnName: reader.GetName(i),
@@ -199,7 +200,7 @@ namespace Apps72.Dev.Data.Convertor
                                              dataType: reader.GetFieldType(i),
                                              isNullable: reader.IsDBNull(i)
                                           ))
-                                       .ToArray();
+                                      .ToArray();
             // DataTable Rows
             var data = new object[fieldCount];
             var rows = new List<DataRow>();
@@ -208,34 +209,34 @@ namespace Apps72.Dev.Data.Convertor
                 reader.GetValues(data);
                 rows.Add(new DataRow(table, data));
 
-            } while (reader.Read());
+            } while (await reader.ReadAsync());
             table.Rows = rows.ToArray();
 
             // Return
             return table;
         }
 
-        internal static Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>> ToMultipleTypes<T, U, V, W, X>(DbDataReader dr, bool forAnonymousTypes = false)
+        internal static async  Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>> ToMultipleTypesAsync<T, U, V, W, X>(DbDataReader dr, bool forAnonymousTypes = false)
         {
             // Dataset #0 for type T
-            var dataset0 = ToPrimitiveOrTypeOrDynamic<T>(dr);
-            var hasNextResult0 = dr.NextResult();
+            var dataset0 = await ToPrimitiveOrTypeOrDynamicAsync<T>(dr);
+            var hasNextResult0 = await dr.NextResultAsync();
 
             // Dataset #1 for type U
-            var dataset1 = hasNextResult0 ? ToPrimitiveOrTypeOrDynamic<U>(dr) : null;
-            var hasNextResult1 = hasNextResult0 ? dr.NextResult() : false;
+            var dataset1 = hasNextResult0 ? await ToPrimitiveOrTypeOrDynamicAsync<U>(dr) : null;
+            var hasNextResult1 = hasNextResult0 ? await dr.NextResultAsync() : false;
 
             // Dataset #2 for type V
-            var dataset2 = hasNextResult1 ? ToPrimitiveOrTypeOrDynamic<V>(dr) : null;
-            var hasNextResult2 = hasNextResult1 ? dr.NextResult() : false;
+            var dataset2 = hasNextResult1 ? await ToPrimitiveOrTypeOrDynamicAsync<V>(dr) : null;
+            var hasNextResult2 = hasNextResult1 ? await dr.NextResultAsync() : false;
 
             // Dataset #3 for type W
-            var dataset3 = hasNextResult2 ? ToPrimitiveOrTypeOrDynamic<W>(dr) : null;
-            var hasNextResult3 = hasNextResult2 ? dr.NextResult() : false;
+            var dataset3 = hasNextResult2 ? await ToPrimitiveOrTypeOrDynamicAsync<W>(dr) : null;
+            var hasNextResult3 = hasNextResult2 ? await dr.NextResultAsync() : false;
 
             // Dataset #4 for type X
-            var dataset4 = hasNextResult3 ? ToPrimitiveOrTypeOrDynamic<X>(dr) : null;
-            var hasNextResult4 = hasNextResult3 ? dr.NextResult() : false;
+            var dataset4 = hasNextResult3 ? await ToPrimitiveOrTypeOrDynamicAsync<X>(dr) : null;
+            var hasNextResult4 = hasNextResult3 ? await dr.NextResultAsync() : false;
 
             // Return
             return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
@@ -248,27 +249,27 @@ namespace Apps72.Dev.Data.Convertor
                 );
 
             // Depending of type of T, gets the Primitive, Dynamic or Typed data.
-            IEnumerable<MyType> ToPrimitiveOrTypeOrDynamic<MyType>(DbDataReader datareader)
+            async Task<IEnumerable<MyType>> ToPrimitiveOrTypeOrDynamicAsync<MyType>(DbDataReader datareader)
             {
                 // Primitive type: Executable<string>()
                 if (TypeExtension.IsPrimitive(typeof(MyType)))
-                    return DataReaderConvertor.ToPrimitives<MyType>(datareader);
+                    return await DataReaderConvertor.ToPrimitivesAsync<MyType>(datareader);
 
                 // Dynamic type: Executable<dynamic>()
                 else if (DynamicConvertor.IsDynamic(typeof(MyType)))
-                    return DataReaderConvertor.ToDynamic<MyType>(datareader);
+                    return await DataReaderConvertor.ToDynamicAsync<MyType>(datareader);
 
                 // Anonymous type: Executable(new { Name = "" })
                 else if (forAnonymousTypes == true)
-                    return DataReaderConvertor.ToAnonymous<MyType>(datareader);
+                    return await DataReaderConvertor.ToAnonymousAsync<MyType>(datareader);
 
                 // Object type: Executable<Employee>()
                 else
-                    return DataReaderConvertor.ToType<MyType>(datareader).Rows;
+                    return (await DataReaderConvertor.ToTypeAsync<MyType>(datareader)).Rows;
             }
         }
 
-        internal static System.Data.DataSet ToSystemDataSet(DbDataReader dr)
+        internal static System.Data.DataSet ToSystemDataSetAsync(DbDataReader dr)
         {
             var dataset = new System.Data.DataSet();
             bool hasNextResult = false;
@@ -305,26 +306,5 @@ namespace Apps72.Dev.Data.Convertor
                 return String.Empty;
             }
         }
-
-        private static void RemoveDBNullValues(object[] data, int fieldCount)
-        {
-            for (int i = 0; i < fieldCount; i++)
-            {
-                if (data[i] == DBNull.Value) data[i] = null;
-            }
-        }
-
-        internal static PropertyInfo GetFirstOrDefaultWithAttributeOrName(this IEnumerable<PropertyInfo> properties, string columnName)
-        {
-            return properties.FirstOrDefault(prop => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(prop), columnName, StringComparison.InvariantCultureIgnoreCase) == 0 && prop.CanWrite)
-                   ??
-                   properties.FirstOrDefault(prop => String.Compare(prop.Name, columnName, StringComparison.InvariantCultureIgnoreCase) == 0);
-        }
-    }
-
-    internal class ColumnsAndRows<T>
-    {
-        public IEnumerable<DataColumn> Columns { get; set; }
-        public IEnumerable<T> Rows { get; set; }
     }
 }
