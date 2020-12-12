@@ -1120,36 +1120,7 @@ namespace Apps72.Dev.Data
             }
 
             return default(T);
-        }
-
-        /// <summary>
-        /// Check if the this.CommandText is different of Command.CommandText and updated it.
-        /// </summary>
-        /// <returns></returns>
-        private string Update_CommandDotCommandText_If_CommandText_IsNew()
-        {
-            string sql = GetCommandTextWithTags();
-
-            if (String.CompareOrdinal(sql, this.Command.CommandText) != 0)
-            {
-                this.Command.CommandText = sql;
-            }
-
-            return this.Command.CommandText;
-        }
-
-        /// <summary>
-        /// Check if the this.CommandText is different of Command.CommandText and updated it.
-        /// </summary>
-        /// <returns></returns>
-        private void Replace_ParametersNull_By_DBNull()
-        {
-            foreach (DbParameter parameter in this.Command.Parameters)
-            {
-                if (parameter.Value == null)
-                    parameter.Value = DBNull.Value;
-            }
-        }
+        }        
 
         /// <summary>
         /// Returns the complete CommandText, including Tags in comments.
