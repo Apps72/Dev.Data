@@ -575,7 +575,11 @@ For example:
 
 * Add a static field `DatabaseCommand.AlwaysDispose` to always dispose the internal DbCommand (if `true` this command will be disposed when the GC is available).
 
+### Version 5.0
+
+* Add Async methods: ExecuteDataSetAsync, ExecuteTableAsync, ExecuteRowAsync, ExecuteNonQueryAsync, ExecuteScalarAsync.
+
+
 ### [RoadMap]
 
 * Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
-* In Progress - Include Asynchronous methods.

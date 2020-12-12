@@ -4,6 +4,7 @@ using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Data.Core.Tests
 {
@@ -151,6 +152,20 @@ namespace Data.Core.Tests
             }
         }
 
+
+        [TestMethod]
+        public async Task ExecuteScalarAsync_Simple_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                int count = await cmd.Query("SELECT COUNT(*) FROM EMP")
+                                     .ExecuteScalarAsync<int>();
+
+                Assert.AreEqual(14, count);
+            }
+        }
+
         [TestMethod]
         public void ExecuteRow_Simple_Test()
         {
@@ -165,6 +180,19 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public async Task ExecuteRowAsync_Simple_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var emp = await cmd.Query("SELECT * FROM EMP WHERE EMPNO = 7369")
+                                   .ExecuteRowAsync<EMP>();
+
+                Assert.AreEqual("SMITH", emp.EName);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteRow_Lambda_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
@@ -172,6 +200,19 @@ namespace Data.Core.Tests
                 cmd.Log = Console.WriteLine;
                 var emp = cmd.Query("SELECT EName FROM EMP WHERE EMPNO = 7369")
                              .ExecuteRow(new { EName = String.Empty });
+
+                Assert.AreEqual("SMITH", emp.EName);
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteRowAsync_Lambda_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var emp = await cmd.Query("SELECT EName FROM EMP WHERE EMPNO = 7369")
+                                   .ExecuteRowAsync(new { EName = String.Empty });
 
                 Assert.AreEqual("SMITH", emp.EName);
             }
@@ -192,6 +233,20 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public async Task ExecuteTableAsync_Simple_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var employees = await cmd.Query("SELECT * FROM EMP ")
+                                         .ExecuteTableAsync<EMP>();
+                var emp = employees.First(i => i.EmpNo == 7369);
+
+                Assert.AreEqual("SMITH", emp.EName);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteTable_Lambda_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
@@ -199,6 +254,21 @@ namespace Data.Core.Tests
                 cmd.Log = Console.WriteLine;
                 var employees = cmd.Query("SELECT EMPNO, ENAME FROM EMP")
                                    .ExecuteTable(new { EmpNo = 0, EName = String.Empty });
+                var emp = employees.First(i => i.EmpNo == 7369);
+
+                Assert.AreEqual("SMITH", emp.EName);
+            }
+        }
+
+
+        [TestMethod]
+        public async Task ExecuteTableAsync_Lambda_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                var employees = await cmd.Query("SELECT EMPNO, ENAME FROM EMP")
+                                         .ExecuteTableAsync(new { EmpNo = 0, EName = String.Empty });
                 var emp = employees.First(i => i.EmpNo == 7369);
 
                 Assert.AreEqual("SMITH", emp.EName);
