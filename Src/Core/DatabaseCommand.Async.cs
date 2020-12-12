@@ -289,21 +289,8 @@ namespace Apps72.Dev.Data
 
             try
             {
-                Update_CommandDotCommandText_If_CommandText_IsNew();
-
-                // Action Before Execution
-                if (this.ActionBeforeExecution != null)
-                {
-                    this.ActionBeforeExecution.Invoke(this);
-                    Update_CommandDotCommandText_If_CommandText_IsNew();
-                }
-
-                // Replace null parameters by DBNull value.
-                this.Replace_ParametersNull_By_DBNull();
-
-                // Log
-                if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
+                // Commom operations before execution
+                this.OperationsBeforeExecution();
 
                 // Send the request to the Database server
                 int rowsAffected = 0;

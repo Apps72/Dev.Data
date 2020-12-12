@@ -1,10 +1,41 @@
-﻿using System;
+﻿using Apps72.Dev.Data.Convertor;
+using System;
 using System.Data.Common;
 
 namespace Apps72.Dev.Data
 {
     public partial class DatabaseCommand
     {
+        /// <summary />
+        private T ExecuteInternalCommand<T>(Func<T> action)
+        {
+            ResetException();
+
+            try
+            {
+                // Commom operations before execution
+                this.OperationsBeforeExecution();
+
+                // Send the request to the Database server
+                T result = action.Invoke();
+
+                // Action After Execution
+                if (this.ActionAfterExecution != null &&
+                    typeof(T) != typeof(System.Data.DataSet))
+                {
+                    var tables = DataTableConvertor.ToDataTable(result);
+                    this.ActionAfterExecution.Invoke(this, tables);
+                }
+
+                return result;
+            }
+            catch (DbException ex)
+            {
+                return ThrowSqlExceptionOrDefaultValue<T>(ex);
+            }
+        }
+
+        /// <summary />
         private void OperationsBeforeExecution()
         {
             Update_CommandDotCommandText_If_CommandText_IsNew();

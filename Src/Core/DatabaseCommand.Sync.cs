@@ -815,21 +815,8 @@ namespace Apps72.Dev.Data
 
             try
             {
-                Update_CommandDotCommandText_If_CommandText_IsNew();
-
-                // Action Before Execution
-                if (this.ActionBeforeExecution != null)
-                {
-                    this.ActionBeforeExecution.Invoke(this);
-                    Update_CommandDotCommandText_If_CommandText_IsNew();
-                }
-
-                // Replace null parameters by DBNull value.
-                this.Replace_ParametersNull_By_DBNull();
-
-                // Log
-                if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
+                // Commom operations before execution
+                this.OperationsBeforeExecution();
 
                 // Send the request to the Database server
                 int rowsAffected = 0;
@@ -873,22 +860,8 @@ namespace Apps72.Dev.Data
 
             try
             {
-
-                Update_CommandDotCommandText_If_CommandText_IsNew();
-
-                // Action Before Execution
-                if (this.ActionBeforeExecution != null)
-                {
-                    this.ActionBeforeExecution.Invoke(this);
-                    Update_CommandDotCommandText_If_CommandText_IsNew();
-                }
-
-                // Replace null parameters by DBNull value.
-                this.Replace_ParametersNull_By_DBNull();
-
-                // Log
-                if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
+                // Commom operations before execution
+                this.OperationsBeforeExecution();
 
                 // Send the request to the Database server
                 object result = null;
@@ -1052,47 +1025,6 @@ namespace Apps72.Dev.Data
         #endregion
 
         #region PRIVATE
-
-        private T ExecuteInternalCommand<T>(Func<T> action)
-        {
-            ResetException();
-
-            try
-            {
-                Update_CommandDotCommandText_If_CommandText_IsNew();
-
-                // Action Before Execution
-                if (this.ActionBeforeExecution != null)
-                {
-                    this.ActionBeforeExecution.Invoke(this);
-                    Update_CommandDotCommandText_If_CommandText_IsNew();
-                }
-
-                // Replace null parameters by DBNull value.
-                this.Replace_ParametersNull_By_DBNull();
-
-                // Log
-                if (this.Log != null)
-                    this.Log.Invoke(this.Command.CommandText);
-
-                // Send the request to the Database server
-                T result = action.Invoke();
-
-                // Action After Execution
-                if (this.ActionAfterExecution != null &&
-                    typeof(T) != typeof(System.Data.DataSet))
-                {
-                    var tables = DataTableConvertor.ToDataTable(result);
-                    this.ActionAfterExecution.Invoke(this, tables);
-                }
-
-                return result;
-            }
-            catch (DbException ex)
-            {
-                return ThrowSqlExceptionOrDefaultValue<T>(ex);
-            }
-        }
 
         /// <summary>
         /// Set the last raised exception to null
