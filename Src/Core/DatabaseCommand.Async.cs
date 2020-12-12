@@ -15,7 +15,13 @@ namespace Apps72.Dev.Data
         /// <returns>Classic <see cref="System.Data.DataSet"/> object.</returns>
         public async virtual Task<System.Data.DataSet> ExecuteDataSetAsync()
         {
-            throw new NotImplementedException();
+            return await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
+                {
+                    return DataReaderConvertor.ToSystemDataSet(dr);
+                }
+            });
         }
 
         /// <summary>
@@ -33,7 +39,19 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>>> ExecuteDataSetAsync<T, U>()
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, NoType, NoType, NoType>(dr);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>>
+            (
+                datasets.Item1,
+                datasets.Item2
+            );
         }
 
         /// <summary>
@@ -51,7 +69,19 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>>> ExecuteDataSetAsync<T, U>(T typeOfItem1, U typeOfItem2)
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, NoType, NoType, NoType>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>>
+            (
+                datasets.Item1,
+                datasets.Item2
+            );
         }
 
         /// <summary>
@@ -70,7 +100,20 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>> ExecuteDataSetAsync<T, U, V>()
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, NoType, NoType>(dr);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3
+            );
         }
 
         /// <summary>
@@ -89,7 +132,20 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>> ExecuteDataSetAsync<T, U, V>(T typeOfItem1, U typeOfItem2, V typeOfItem3)
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, NoType, NoType>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3
+            );
         }
 
         /// <summary>
@@ -109,7 +165,21 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>> ExecuteDataSetAsync<T, U, V, W>()
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, NoType>(dr);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4
+            );
         }
 
         // <summary>
@@ -129,7 +199,21 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>> ExecuteDataSetAsync<T, U, V, W>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4)
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, NoType>(dr, forAnonymousTypes: true);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4
+            );
         }
 
         /// <summary>
@@ -150,7 +234,22 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>> ExecuteDataSetAsync<T, U, V, W, X>()
         {
-            throw new NotImplementedException();
+            var datasets = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, X>(dr);
+                }
+            });
+
+            return new Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>
+            (
+                datasets.Item1,
+                datasets.Item2,
+                datasets.Item3,
+                datasets.Item4,
+                datasets.Item5
+            );
         }
 
         /// <summary>

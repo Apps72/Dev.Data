@@ -267,44 +267,6 @@ namespace Apps72.Dev.Data.Convertor
                 else
                     return (await DataReaderConvertor.ToTypeAsync<MyType>(datareader)).Rows;
             }
-        }
-
-        internal static System.Data.DataSet ToSystemDataSetAsync(DbDataReader dr)
-        {
-            var dataset = new System.Data.DataSet();
-            bool hasNextResult = false;
-
-            do
-            {
-                var tableName = GetTableName(dr);
-                var table = new System.Data.DataTable(tableName);
-                table.Load(dr);
-                dataset.Tables.Add(table);
-
-                hasNextResult = !dr.IsClosed;
-            } while (hasNextResult);
-
-            return dataset;
-
-            // Get the Table Name
-            string GetTableName(DbDataReader dataReader)
-            {
-                var schema = dataReader.GetSchemaTable();
-                if (schema.Rows.Count > 0 && schema.Columns.Contains("BaseTableName"))
-                {
-                    string tableName = Convert.ToString(schema.Rows[0]["BaseTableName"]);
-
-                    // All columns must be set from the same table
-                    foreach (System.Data.DataRow row in schema.Rows)
-                    {
-                        if (Convert.ToString(row["BaseTableName"]) != tableName)
-                            return string.Empty;
-                    }
-
-                    return tableName;
-                }
-                return String.Empty;
-            }
-        }
+        }       
     }
 }

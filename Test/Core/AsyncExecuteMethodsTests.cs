@@ -304,5 +304,7 @@ namespace Data.Core.Tests
                 Assert.AreEqual(14, data.Count());
             }
         }
+
+        // DataSetAsync tests are in AsyncExecuteDatasetTests.cs
     }
 }
