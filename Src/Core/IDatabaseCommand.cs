@@ -469,6 +469,14 @@ namespace Apps72.Dev.Data
         Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, T> converter);
 
         /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter">Conversion function to customize the transformation of a DataRow to an object of <typeparamref name="T"/> </param>
+        /// <returns>Array of typed results</returns>    
+        Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, Task<T>> converter);
+
+        /// <summary>
         /// Execute the query and return the count of modified rows
         /// </summary>
         /// <returns>Count of modified rows</returns>

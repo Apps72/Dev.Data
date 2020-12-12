@@ -191,7 +191,23 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>()
         {
-            throw new NotImplementedException();
+            return await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    // Primitive type: Executable<string>()
+                    if (TypeExtension.IsPrimitive(typeof(T)))
+                        return DataReaderConvertor.ToPrimitives<T>(dr);
+
+                    // Dynamic type: Executable<dynamic>()
+                    else if (DynamicConvertor.IsDynamic(typeof(T)))
+                        return DataReaderConvertor.ToDynamic<T>(dr);
+
+                    // Object type: Executable<Employee>()
+                    else
+                        return DataReaderConvertor.ToType<T>(dr).Rows;
+                }
+            });
         }
 
         /// <summary>
@@ -202,7 +218,40 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, T> converter)
         {
-            throw new NotImplementedException();
+            var table = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return DataReaderConvertor.ToDataTable(dr);
+                }
+            });
+
+            if (table != null && table.Rows != null)
+                return table.Rows.Select(row => converter.Invoke(row));
+            else
+                return new T[] { };
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="converter"></param>
+        /// <returns>Array of typed results</returns>
+        public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, Task<T>> converter)
+        {
+            var table = await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    return DataReaderConvertor.ToDataTable(dr);
+                }
+            });
+
+            if (table != null && table.Rows != null)
+                return table.Rows.Select(async row => await converter.Invoke(row)).Select(i => i.GetAwaiter().GetResult());
+            else
+                return new T[] { };
         }
 
         /// <summary>
@@ -224,7 +273,16 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>(T itemOftype)
         {
-            throw new NotImplementedException();
+            return await ExecuteInternalCommand(async () =>
+            {
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                {
+                    if (TypeExtension.IsPrimitive(typeof(T)))
+                        return DataReaderConvertor.ToPrimitives<T>(dr);
+                    else
+                        return DataReaderConvertor.ToAnonymous<T>(dr);
+                }
+            });
         }
 
 

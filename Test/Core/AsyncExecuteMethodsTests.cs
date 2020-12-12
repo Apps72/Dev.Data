@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Data.Core.Tests
 {
@@ -190,6 +191,117 @@ namespace Data.Core.Tests
                 });
 
                 Assert.AreEqual(7369, emp.Empno);
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTableAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT * FROM EMP";
+                var data = await cmd.ExecuteTableAsync<EMP>();
+
+                Assert.AreEqual(14, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTablePrimitiveAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT EName FROM EMP";
+                var data = await cmd.ExecuteTableAsync<string>();
+
+                Assert.AreEqual(14, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTableDynamicAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT * FROM EMP";
+                var data = await cmd.ExecuteTableAsync<dynamic>();
+
+                Assert.AreEqual(14, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTableAnonymousAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT EName, Empno FROM EMP";
+                var data = await cmd.ExecuteTableAsync(new
+                {
+                    EName = default(string),
+                    Empno = default(int)
+                });
+
+                Assert.AreEqual(14, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTablePrimitiveAnonymousAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT EName FROM EMP";
+                var data = await cmd.ExecuteTableAsync(default(string));
+
+                Assert.AreEqual(14, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTableFunctionAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT Empno FROM EMP";
+                var data = await cmd.ExecuteTableAsync(row =>
+                {
+                    return new
+                    {
+                        Empno = row.Field<int>("Empno")
+                    };
+                });
+
+                Assert.AreEqual(14, data.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task ExecuteTableAsyncFunctionAsync_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = "SELECT Empno FROM EMP";
+                var data = await cmd.ExecuteTableAsync(async row =>
+                {
+                    return await Task.Run(() =>
+                    {
+                        return new
+                        {
+                            Empno = row.Field<int>("Empno")
+                        };
+                    });
+
+                });
+
+                Assert.AreEqual(14, data.Count());
             }
         }
     }
