@@ -48,10 +48,11 @@ namespace Data.Core.Tests
 
                 cmd.TransactionBegin();
 
-                cmd.ExecuteNonQuery();
+                int count = cmd.ExecuteNonQuery();
                 cmd.TransactionRollback();
 
-                Assert.AreEqual(EMP.GetEmployeesCount(_connection), 14);
+                Assert.AreEqual(14, count);
+                Assert.AreEqual(14, EMP.GetEmployeesCount(_connection));
             }
         }
 

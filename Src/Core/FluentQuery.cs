@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data
 {
@@ -107,6 +108,15 @@ namespace Apps72.Dev.Data
             return _databaseCommand.ExecuteNonQuery();
         }
 
+        // <summary>
+        /// Execute the query and return the count of modified rows
+        /// </summary>
+        /// <returns>Count of modified rows</returns>
+        public virtual async Task<int> ExecuteNonQueryAsync()
+        {
+            return await _databaseCommand.ExecuteNonQueryAsync();
+        }
+
         /// <summary>
         /// Execute the query and return a new instance of T with the first row of results
         /// </summary>
@@ -121,6 +131,22 @@ namespace Apps72.Dev.Data
         public virtual T ExecuteRow<T>()
         {
             return _databaseCommand.ExecuteRow<T>();
+        }
+
+        /// <summary>
+        /// Execute the query and return a new instance of T with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <returns>First row of results</returns>
+        /// <example>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual async Task<T> ExecuteRowAsync<T>()
+        {
+            return await _databaseCommand.ExecuteRowAsync<T>();
         }
 
         /// <summary>
@@ -141,6 +167,23 @@ namespace Apps72.Dev.Data
         }
 
         /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="itemOftype"></param>
+        /// <returns>First row of results</returns>
+        /// <example>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual async Task<T> ExecuteRowAsync<T>(T itemOftype)
+        {
+            return await _databaseCommand.ExecuteRowAsync<T>(itemOftype);
+        }
+
+        /// <summary>
         /// Execute the query and return the first column of the first row of results
         /// </summary>
         /// <returns>Object - Result</returns>
@@ -152,11 +195,30 @@ namespace Apps72.Dev.Data
         /// <summary>
         /// Execute the query and return the first column of the first row of results
         /// </summary>
+        /// <returns>Object - Result</returns>
+        public virtual async Task<object> ExecuteScalarAsync()
+        {
+            return await _databaseCommand.ExecuteScalarAsync();
+        }
+
+        /// <summary>
+        /// Execute the query and return the first column of the first row of results
+        /// </summary>
         /// <typeparam name="T">Return type</typeparam>
         /// <returns>Result</returns>
         public virtual T ExecuteScalar<T>()
         {
             return _databaseCommand.ExecuteScalar<T>();
+        }
+
+        /// <summary>
+        /// Execute the query and return the first column of the first row of results
+        /// </summary>
+        /// <typeparam name="T">Return type</typeparam>
+        /// <returns>Result</returns>
+        public virtual async Task<T> ExecuteScalarAsync<T>()
+        {
+            return await _databaseCommand.ExecuteScalarAsync<T>();
         }
 
         /// <summary>
@@ -179,6 +241,22 @@ namespace Apps72.Dev.Data
         /// Execute the query and return an array of new instances of typed results filled with data table result.
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
+        /// <returns>Array of typed results</returns>
+        /// <example>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual async Task<IEnumerable<T>> ExecuteTableAsync<T>()
+        {
+            return await _databaseCommand.ExecuteTableAsync<T>();
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
         /// <param name="itemOftype"></param>
         /// <returns>Array of typed results</returns>
         /// <example>
@@ -190,6 +268,23 @@ namespace Apps72.Dev.Data
         public virtual IEnumerable<T> ExecuteTable<T>(T itemOftype)
         {
             return _databaseCommand.ExecuteTable<T>(itemOftype);
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="itemOftype"></param>
+        /// <returns>Array of typed results</returns>
+        /// <example>
+        /// <remarks>
+        ///   Result object property (ex. Employee.Name) may be tagged with the ColumnAttribute 
+        ///   to set which column name (ex. [Column("Name")] must be associated to this property.
+        /// </remarks>
+        /// </example>
+        public virtual async Task<IEnumerable<T>> ExecuteTableAsync<T>(T itemOftype)
+        {
+            return await _databaseCommand.ExecuteTableAsync<T>(itemOftype);
         }
     }
 }
