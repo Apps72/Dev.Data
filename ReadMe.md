@@ -28,7 +28,7 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 }
 ```
 
-Requirements: Microsoft Framework 4.0 (Client Profile) for desktop applications, or SQL Server 2008 R2 for SQL CLR Stored procedures, or .NET Standard 2.0 for .NET Core library.
+Requirements: Microsoft Framework 4.5 (Client Profile) for desktop applications, or SQL Server 2008 R2 for SQL CLR Stored procedures, or .NET Standard 2.0 for .NET Core library.
 
 ## Basic Samples (video)
 

@@ -30,22 +30,23 @@ The second row contains **data types** associated to these columns. These types 
 
 |Fixed format type|Converted to C# type|Example|
 |---|---|---|
-|(datetime)<br/>(smalldatetime)<br/>(date)    | **DateTime**    | `2020-01-15`                  |
-|(time)<br/>(timespan)                        | **TimeSpan**    | `01:02:03` ; `01:02:03.123` |
-|(decimal)                                    | **decimal**     | `123.45`                      |
-|(double)                                     | **double**      | `123.45`                      |
-|(single)<br/>(float)                         | **float**       | `123.45`                      |
-|(string)<br/>(varchar)<br/>(nvarchar)        | **string**      | `abc` ; `"ab cd"`             |
-|(char)<br/>(nchar)                           | **char**        | `a`                           |
-|(bool)<br/>(boolean)                         | **bool**        | `true` ; `false`              |
-|(byte)                                       | **byte**        |                               |
-|(sbyte)                                      | **sbyte**       |                               |
-|(int16)<br/>(short)                          | **short**       | `123`                         |
-|(uint16)<br/>(ushort)                        | **ushort**      | `123`                         |
-|(int32)<br/>(int)                            | **int**         | `123`                         |
-|(uint32)<br/>(uint)                          | **uint**        | `123`                         |
-|(int64)<br/>(long)                           | **long**        | `123`                         |
-|(uint64)<br/>(ulong)                         | **ulong**       | `123`                         |
+|(datetime)<br/>(smalldatetime)<br/>(date)    | **DateTime**    | `2020-01-15`                            |
+|(time)<br/>(timespan)                        | **TimeSpan**    | `01:02:03` ; `01:02:03.123`             |
+|(guid)<br/>(uniqueidentifier)<br/>(id)       | **Guid**        | `9918184d-3345-4ca7-9cc6-d67cd7660b09`  |
+|(decimal)                                    | **decimal**     | `123.45`                                |
+|(double)                                     | **double**      | `123.45`                                |
+|(single)<br/>(float)                         | **float**       | `123.45`                                |
+|(string)<br/>(varchar)<br/>(nvarchar)        | **string**      | `abc` ; `"ab cd"`                       |
+|(char)<br/>(nchar)                           | **char**        | `a`                                     |
+|(bool)<br/>(boolean)                         | **bool**        | `true` ; `false`                        |
+|(byte)                                       | **byte**        |                                         |
+|(sbyte)                                      | **sbyte**       |                                         |
+|(int16)<br/>(short)                          | **short**       | `123`                                   |
+|(uint16)<br/>(ushort)                        | **ushort**      | `123`                                   |
+|(int32)<br/>(int)                            | **int**         | `123`                                   |
+|(uint32)<br/>(uint)                          | **uint**        | `123`                                   |
+|(int64)<br/>(long)                           | **long**        | `123`                                   |
+|(uint64)<br/>(ulong)                         | **ulong**       | `123`                                   |
 
 # ReturnsTable from a CSV
 
