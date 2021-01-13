@@ -102,3 +102,32 @@ and 2 associated MockTable with these typed data.
 > You can define **multiple resource files** for the same Tab Name. Use the `MockResourceOptions.TagSeparator` (by default '-') character 
 > to separate a file identifier from the TagName. Ex. "01-MyTag.txt" and "02-MyTag.txt" will be linked to the same tag (MyTag).
 > Ex. `conn.Mocks.LoadTagsFromResources("001-MyTag")` will load the file "001-MyTag.txt" and will associated to the tag "MyTag".
+
+## Entity Framework Remarks
+
+EFCore sorts the columns of your model alphabetically, placing the keys at the beginning.
+
+For example, using the following model, EFCore generate this SQL query.
+```csharp
+class Employee
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public bool Male { get; set; }
+    public DateTime Birthdate { get; set; }
+}
+```
+
+```Sql
+SELECT [a].[Id], [a].[Birthdate], [a].[Male], [a].[Name]
+  FROM [dbo].[Employee] AS [a]
+```
+
+So, you have to create your example file in the same way: **the keys first (Id), then the columns sorted alphabetically (Birthdate, Male, Name)**.
+```
+Id      Birthdate     Name       Male
+(int)   (DateTime?)   (string)   (bool) 
+
+123     2020-01-12    Denis      true
+456     NULL          Anne       false 
+```
