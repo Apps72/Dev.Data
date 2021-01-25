@@ -579,6 +579,10 @@ For example:
 
 * Add Async methods: ExecuteDataSetAsync, ExecuteTableAsync, ExecuteRowAsync, ExecuteNonQueryAsync, ExecuteScalarAsync.
 
+### Version 5.0.1
+
+* Fix Generator tool when a Range attribute is linked to numeric(38,0).
+
 
 ### [RoadMap]
 
