@@ -1,5 +1,4 @@
-﻿using Apps72.Dev.Data.Convertor;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,14 +41,14 @@ namespace Apps72.Dev.Data.Generator.Tools
 
             // Pragma       
             if (!String.IsNullOrEmpty(_arguments.CodeAnalysis))
-                code.AppendLine($"    #pragma warning disable {_arguments.CodeAnalysis} ");
+                code.AppendLine($"    #pragma warning disable {_arguments.CodeAnalysis}");
 
             // Namespace
             code.AppendLine($"    using System;");
             if (_arguments.ValidationAttributes.Length > 0)
             {
-                code.AppendLine($"    using System.ComponentModel.DataAnnotations;");
                 code.AppendLine($"    using System.Collections.Generic;");
+                code.AppendLine($"    using System.ComponentModel.DataAnnotations;");
                 code.AppendLine($"    using System.Linq;");
 
             }
@@ -117,7 +116,7 @@ namespace Apps72.Dev.Data.Generator.Tools
                     if (_arguments.ValidationAttributes.Contains("validatemethod"))
                     {
                         code.AppendLine("        /// <summary />");
-                        code.AppendLine("        public IEnumerable<ValidationResult> Validate() => __DataAnnotationValidator.ValidateObject(this); ");
+                        code.AppendLine("        public IEnumerable<ValidationResult> Validate() => __DataAnnotationValidator.ValidateObject(this);");
                     }
 
                     code.AppendLine($"    }}");
@@ -127,28 +126,28 @@ namespace Apps72.Dev.Data.Generator.Tools
             // Include DataAnnotationValidator
             if (_arguments.ValidationAttributes.Contains("validatemethod"))
             {
-                code.AppendLine("    /// <summary /> ");
-                code.AppendLine("    internal static class __DataAnnotationValidator ");
-                code.AppendLine("    { ");
-                code.AppendLine("        /// <summary /> ");
-                code.AppendLine("        public static IEnumerable<ValidationResult> ValidateObject(object value) ");
-                code.AppendLine("        { ");
-                code.AppendLine("            var context = new ValidationContext(value, serviceProvider: null, items: null); ");
-                code.AppendLine("            var results = new List<ValidationResult>(); ");
-                code.AppendLine("            Validator.TryValidateObject(value, context, results, validateAllProperties: true); ");
+                code.AppendLine("    /// <summary />");
+                code.AppendLine("    internal static class __DataAnnotationValidator");
+                code.AppendLine("    {");
+                code.AppendLine("        /// <summary />");
+                code.AppendLine("        public static IEnumerable<ValidationResult> ValidateObject(object value)");
+                code.AppendLine("        {");
+                code.AppendLine("            var context = new ValidationContext(value, serviceProvider: null, items: null);");
+                code.AppendLine("            var results = new List<ValidationResult>();");
+                code.AppendLine("            Validator.TryValidateObject(value, context, results, validateAllProperties: true);");
                 code.AppendLine();
-                code.AppendLine("            // By default, IValidatableObject.Validate is not called if errors are already found. ");
-                code.AppendLine("            // https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject ");
-                code.AppendLine("            if (value is IValidatableObject && results.Any()) ");
-                code.AppendLine("            { ");
-                code.AppendLine("                var otherResults = ((IValidatableObject)value).Validate(context).ToArray(); ");
-                code.AppendLine("                return results.Union(otherResults); ");
-                code.AppendLine("            } ");
-                code.AppendLine("            else ");
-                code.AppendLine("            { ");
-                code.AppendLine("                return results; ");
-                code.AppendLine("            } ");
-                code.AppendLine("        } ");
+                code.AppendLine("            // By default, IValidatableObject.Validate is not called if errors are already found.");
+                code.AppendLine("            // https://stackoverflow.com/questions/3400542/how-do-i-use-ivalidatableobject");
+                code.AppendLine("            if (value is IValidatableObject && results.Any())");
+                code.AppendLine("            {");
+                code.AppendLine("                var otherResults = ((IValidatableObject)value).Validate(context).ToArray();");
+                code.AppendLine("                return results.Union(otherResults);");
+                code.AppendLine("            }");
+                code.AppendLine("            else");
+                code.AppendLine("            {");
+                code.AppendLine("                return results;");
+                code.AppendLine("            }");
+                code.AppendLine("        }");
                 code.AppendLine("    }");
             }
 
@@ -156,7 +155,7 @@ namespace Apps72.Dev.Data.Generator.Tools
 
             // Pragma       
             if (!String.IsNullOrEmpty(_arguments.CodeAnalysis))
-                code.AppendLine($"#pragma warning restore {_arguments.CodeAnalysis} ");
+                code.AppendLine($"#pragma warning restore {_arguments.CodeAnalysis}");
 
 
             this.Entities = tables;
