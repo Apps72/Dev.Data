@@ -124,8 +124,8 @@ namespace Apps72.Dev.Data.Schema
             const string NINES = "9999999999999999999999999999999999999999";
 
             if (Precision != null && Scale != null &&
-                Precision > 0 && Precision < 38 &&
-                Scale >= 0 && Scale < 38 &&
+                Precision > 0 && Precision <= 38 &&
+                Scale >= 0 && Scale <= 38 &&
                 Precision > Scale)
             {
                 string leftPart = NINES.Substring(0, Precision.Value - Scale.Value);
