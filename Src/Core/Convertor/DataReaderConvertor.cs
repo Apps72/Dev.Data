@@ -1,4 +1,5 @@
-﻿using Apps72.Dev.Data.Schema;
+﻿using Apps72.Dev.Data.Annotations;
+using Apps72.Dev.Data.Schema;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -319,6 +320,23 @@ namespace Apps72.Dev.Data.Convertor
             return properties.FirstOrDefault(prop => String.Compare(Annotations.ColumnAttribute.GetColumnAttributeName(prop), columnName, StringComparison.InvariantCultureIgnoreCase) == 0 && prop.CanWrite)
                    ??
                    properties.FirstOrDefault(prop => String.Compare(prop.Name, columnName, StringComparison.InvariantCultureIgnoreCase) == 0);
+        }
+
+        internal static IDictionary<string, PropertyInfo> ToDictionaryWithAttributeOrName(this IEnumerable<PropertyInfo> properties)
+        {
+            var props = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
+            var orderedProperties = properties.OrderBy(prop => prop.GetCustomAttributes(typeof(ColumnAttribute), false).Count() == 0); // Properties with attribute "ColumnAttribute" take priorities
+                                                                                                                                       // over other property with same name.
+            foreach (var property in orderedProperties)
+            {
+                var attributeName = Annotations.ColumnAttribute.GetColumnAttributeName(property);
+                var key = string.IsNullOrEmpty(attributeName) ? property.Name : attributeName;
+                if (!props.ContainsKey(key))
+                {
+                    props.Add(key, property);
+                }
+            }
+            return props;
         }
     }
 
