@@ -1,6 +1,6 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -181,6 +181,41 @@ namespace Data.Core.Tests
         }
 
         [TestMethod]
+        public void ExecuteTableWithMapTo_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @" SELECT EMPNO,
+                                            ENAME,
+                                            SAL,
+                                            HIREDATE,
+                                            COMM,
+                                            MGR,
+                                            DEPT.DNAME
+                                       FROM EMP
+                                  LEFT JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO";
+                var employees = cmd.ExecuteTable((row) =>
+                {
+                    var emp = row.MapTo<MyEmployee>();
+                    emp.Department = row.MapTo<MyDepartment>();
+                    return emp;
+                });
+
+                var smith = employees.First();
+
+                Assert.AreEqual(14, employees.Count());
+                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
+                Assert.AreEqual(EMP.Smith.EName, smith.EName);
+                Assert.AreEqual(EMP.Smith.Salary, smith.Salary);
+                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
+                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
+                Assert.AreEqual(EMP.Smith.Manager, smith.Manager);
+                Assert.AreEqual("RESEARCH", smith.Department.DName);
+            }
+        }
+
+        [TestMethod]
         public void ExecuteTablePrimitiveWithAnonymousConverter_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))
@@ -256,6 +291,13 @@ namespace Data.Core.Tests
                 Assert.AreEqual(1, data.Count());
             }
         }
+
+        class MyEmployee : EMP
+        {
+            public MyDepartment Department { get; set; }
+        };
+
+        class MyDepartment : DEPT { };
 
     }
 }
