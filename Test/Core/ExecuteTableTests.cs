@@ -205,12 +205,12 @@ namespace Data.Core.Tests
                 var smith = employees.First();
 
                 Assert.AreEqual(14, employees.Count());
-                Assert.AreEqual(EMP.Smith.EmpNo, smith.EmpNo);
-                Assert.AreEqual(EMP.Smith.EName, smith.EName);
-                Assert.AreEqual(EMP.Smith.Salary, smith.Salary);
-                Assert.AreEqual(EMP.Smith.HireDate, smith.HireDate);
-                Assert.AreEqual(EMP.Smith.Comm, smith.Comm);
-                Assert.AreEqual(EMP.Smith.Manager, smith.Manager);
+                Assert.AreEqual(7369, smith.EmpNo);
+                Assert.AreEqual("SMITH", smith.EName);
+                Assert.AreEqual(800, smith.Salary);
+                Assert.AreEqual(new DateTime(1980, 12, 17), smith.HireDate);
+                Assert.AreEqual(null, smith.Comm);
+                Assert.AreEqual(7902, smith.Manager);
                 Assert.AreEqual("RESEARCH", smith.Department.DName);
             }
         }
