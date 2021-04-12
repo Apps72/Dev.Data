@@ -21,8 +21,7 @@ namespace Apps72.Dev.Data
                 T result = action.Invoke();
 
                 // Action After Execution
-                if (this.ActionAfterExecution != null &&
-                    typeof(T) != typeof(System.Data.DataSet))
+                if (HasActionAfterExecutionToRaise<T>())
                 {
                     var tables = DataTableConvertor.ToDataTable(result);
                     this.ActionAfterExecution.Invoke(this, tables);
@@ -35,6 +34,38 @@ namespace Apps72.Dev.Data
                 return ThrowSqlExceptionOrDefaultValue<T>(ex);
             }
         }
+
+        /// <summary />
+        private async Task<T> ExecuteInternalCommandAsync<T>(Func<Task<T>> action)
+        {
+            ResetException();
+
+            try
+            {
+                // Commom operations before execution
+                this.OperationsBeforeExecution();
+
+                // Send the request to the Database server
+                T result = await action.Invoke();
+
+                // Action After Execution (not yet for Dataset)
+                if (HasActionAfterExecutionToRaise<T>())
+                {
+                    var tables = DataTableConvertor.ToDataTable(result);
+                    this.ActionAfterExecution.Invoke(this, tables);
+                }
+
+                return result;
+            }
+            catch (DbException ex)
+            {
+                return ThrowSqlExceptionOrDefaultValue<T>(ex);
+            }
+        }
+
+        /// <summary />
+        private bool HasActionAfterExecutionToRaise<T>() => this.ActionAfterExecution != null &&
+                                                            typeof(T) != typeof(System.Data.DataSet);
 
         /// <summary />
         private void OperationsBeforeExecution()

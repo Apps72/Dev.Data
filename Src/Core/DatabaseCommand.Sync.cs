@@ -648,18 +648,20 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
         {
-            var table = ExecuteInternalCommand(() =>
+            return ExecuteInternalCommand(() =>
             {
+                Schema.DataTable table;
+
                 using (DbDataReader dr = this.Command.ExecuteReader())
                 {
-                    return DataReaderConvertor.ToDataTable(dr);
+                    table = DataReaderConvertor.ToDataTable(dr);
                 }
-            });
 
-            if (table != null && table.Rows != null)
-                return table.Rows.Select(row => converter.Invoke(row));
-            else
-                return new T[] { };
+                if (table != null && table.Rows != null)
+                    return table.Rows.Select(row => converter.Invoke(row));
+                else
+                    return new T[] { };
+            });
         }
 
         /// <summary>
@@ -791,17 +793,20 @@ namespace Apps72.Dev.Data
             else
             {
                 // Get DataRow
-                var table = ExecuteInternalCommand(() =>
+                return ExecuteInternalCommand(() =>
                 {
+                    Schema.DataTable table;
+
                     using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.SingleRow))
                     {
-                        return DataReaderConvertor.ToDataTable(dr);
+                        table = DataReaderConvertor.ToDataTable(dr);
                     }
-                });
-                var row = table?.Rows?.FirstOrDefault();
 
-                // Return
-                return row != null ? converter.Invoke(row) : default(T);
+                    var row = table?.Rows?.FirstOrDefault();
+
+                    // Return
+                    return row != null ? converter.Invoke(row) : default(T);
+                });
             }
         }
 

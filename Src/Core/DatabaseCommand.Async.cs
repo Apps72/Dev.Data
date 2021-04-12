@@ -15,7 +15,7 @@ namespace Apps72.Dev.Data
         /// <returns>Classic <see cref="System.Data.DataSet"/> object.</returns>
         public async virtual Task<System.Data.DataSet> ExecuteDataSetAsync()
         {
-            return await ExecuteInternalCommand(async () =>
+            return await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
@@ -39,7 +39,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>>> ExecuteDataSetAsync<T, U>()
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -69,7 +69,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>>> ExecuteDataSetAsync<T, U>(T typeOfItem1, U typeOfItem2)
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -100,7 +100,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>> ExecuteDataSetAsync<T, U, V>()
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -132,7 +132,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>> ExecuteDataSetAsync<T, U, V>(T typeOfItem1, U typeOfItem2, V typeOfItem3)
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -165,7 +165,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>> ExecuteDataSetAsync<T, U, V, W>()
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -199,7 +199,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>>> ExecuteDataSetAsync<T, U, V, W>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4)
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -234,7 +234,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>> ExecuteDataSetAsync<T, U, V, W, X>()
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -270,7 +270,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<Tuple<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>, IEnumerable<W>, IEnumerable<X>>> ExecuteDataSetAsync<T, U, V, W, X>(T typeOfItem1, U typeOfItem2, V typeOfItem3, W typeOfItem4, X typeOfItem5)
         {
-            var datasets = await ExecuteInternalCommand(async () =>
+            var datasets = await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -305,7 +305,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>()
         {
-            return await ExecuteInternalCommand(async () =>
+            return await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -332,18 +332,21 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, T> converter)
         {
-            var table = await ExecuteInternalCommand(async () =>
+            return await ExecuteInternalCommandAsync(async () =>
             {
+                Schema.DataTable table;
+
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
-                    return await DataReaderConvertor.ToDataTableAsync(dr);
+                    table = await DataReaderConvertor.ToDataTableAsync(dr);
                 }
+
+                if (table != null && table.Rows != null)
+                    return table.Rows.Select(row => converter.Invoke(row));
+                else
+                    return new T[] { };
             });
 
-            if (table != null && table.Rows != null)
-                return table.Rows.Select(row => converter.Invoke(row));
-            else
-                return new T[] { };
         }
 
         /// <summary>
@@ -354,18 +357,20 @@ namespace Apps72.Dev.Data
         /// <returns>Array of typed results</returns>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, Task<T>> converter)
         {
-            var table = await ExecuteInternalCommand(async () =>
+            return await ExecuteInternalCommandAsync(async () =>
             {
+                Schema.DataTable table;
+
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
-                    return await DataReaderConvertor.ToDataTableAsync(dr);
+                    table = await DataReaderConvertor.ToDataTableAsync(dr);
                 }
-            });
 
-            if (table != null && table.Rows != null)
-                return table.Rows.Select(async row => await converter.Invoke(row)).Select(i => i.GetAwaiter().GetResult());
-            else
-                return new T[] { };
+                if (table != null && table.Rows != null)
+                    return table.Rows.Select(async row => await converter.Invoke(row)).Select(i => i.GetAwaiter().GetResult());
+                else
+                    return new T[] { };
+            });
         }
 
         /// <summary>
@@ -387,7 +392,7 @@ namespace Apps72.Dev.Data
         /// </example>
         public async virtual Task<IEnumerable<T>> ExecuteTableAsync<T>(T itemOftype)
         {
-            return await ExecuteInternalCommand(async () =>
+            return await ExecuteInternalCommandAsync(async () =>
             {
                 using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
                 {
@@ -424,7 +429,7 @@ namespace Apps72.Dev.Data
             else
             {
                 // Get DataTable
-                var rows = await ExecuteInternalCommand(async () =>
+                var rows = await ExecuteInternalCommandAsync(async () =>
                 {
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
@@ -470,7 +475,7 @@ namespace Apps72.Dev.Data
             else
             {
                 // Get DataTable
-                var rows = await ExecuteInternalCommand(async () =>
+                var rows = await ExecuteInternalCommandAsync(async () =>
                 {
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
@@ -498,17 +503,21 @@ namespace Apps72.Dev.Data
             else
             {
                 // Get DataRow
-                var table = await ExecuteInternalCommand(async () =>
+                return await ExecuteInternalCommandAsync(async () =>
                 {
+                    Schema.DataTable table;
+
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
-                        return await DataReaderConvertor.ToDataTableAsync(dr);
+                        table = await DataReaderConvertor.ToDataTableAsync(dr);
                     }
-                });
-                var row = table?.Rows?.FirstOrDefault();
 
-                // Return
-                return row != null ? converter.Invoke(row) : default(T);
+                    var row = table?.Rows?.FirstOrDefault();
+
+                    // Return
+                    return row != null ? converter.Invoke(row) : default(T);
+
+                });
             }
         }
 
@@ -527,17 +536,20 @@ namespace Apps72.Dev.Data
             else
             {
                 // Get DataRow
-                var table = await ExecuteInternalCommand(async () =>
+                return await ExecuteInternalCommandAsync(async () =>
                 {
+                    Schema.DataTable table;
+
                     using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
                     {
-                        return await DataReaderConvertor.ToDataTableAsync(dr);
+                        table = await DataReaderConvertor.ToDataTableAsync(dr);
                     }
-                });
-                var row = table?.Rows?.FirstOrDefault();
 
-                // Return
-                return row != null ? await converter.Invoke(row) : default(T);
+                    var row = table?.Rows?.FirstOrDefault();
+
+                    // Return
+                    return row != null ? await converter.Invoke(row) : default(T);
+                });
             }
         }
 

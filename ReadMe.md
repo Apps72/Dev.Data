@@ -445,6 +445,10 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.2
+
+* Fix `ActionAfterExecution` when called with async methods.
+
 ### Version 5.1
 
 * Optimization of `DataRow.MapTo<T>()`. Thanks to [Becold](https://github.com/Becold).
