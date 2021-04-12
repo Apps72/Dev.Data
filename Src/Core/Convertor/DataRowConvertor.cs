@@ -19,14 +19,15 @@ namespace Apps72.Dev.Data.Convertor
 
             // *** Class
             else
-            {                
-                var properties = rowType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            {
+                var properties = rowType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                        .ToDictionaryWithAttributeOrName();
                 var newItem = Activator.CreateInstance<T>();
 
                 foreach (var column in row.Table.Columns)
                 {
                     var name = column.ColumnName;
-                    var property = properties.GetFirstOrDefaultWithAttributeOrName(name);
+                    var property = properties.GetValueOrDefault(name);
                     if (property != null)
                     {
                         var value = row[name];

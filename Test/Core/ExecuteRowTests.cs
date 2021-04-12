@@ -1,6 +1,6 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Apps72.Dev.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Data.SqlClient;
 
 namespace Data.Core.Tests
@@ -290,14 +290,15 @@ namespace Data.Core.Tests
                 cmd.Log = Console.WriteLine;
                 cmd.CommandText = @"SELECT EMP.EMPNO,
                                             EMP.ENAME,                                         
-                                            DEPT.DNAME
+                                            DEPT.DNAME,
+                                            EMP.MGR
                                         FROM EMP 
                                         INNER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO
                                         WHERE EMPNO = 7369";
 
 
 
-                var smith = cmd.ExecuteRow(row => 
+                var smith = cmd.ExecuteRow(row =>
                 {
                     MyEmployee emp = row.MapTo<MyEmployee>();
                     emp.Department = row.MapTo<MyDepartment>();
@@ -308,6 +309,8 @@ namespace Data.Core.Tests
                 Assert.AreEqual("SMITH", smith.EName);
                 Assert.AreEqual(null, smith.Salary);
                 Assert.AreEqual(null, smith.SAL);
+                Assert.AreEqual(EMP.Smith.Manager, smith.Manager);
+                Assert.AreEqual(null, smith.MGR);       // Not used, because there are a Manager property tagged [Column("MGR")]
 
                 Assert.AreEqual(0, smith.Department.DeptNo);
                 Assert.AreEqual("RESEARCH", smith.Department.DName);
@@ -327,7 +330,7 @@ namespace Data.Core.Tests
                                       FROM EMP 
                                      WHERE EMPNO = 7369";
 
-                
+
                 var smith = cmd.ExecuteRow<EMP>();
 
                 Assert.AreEqual(7369, smith.EmpNo);
@@ -338,7 +341,7 @@ namespace Data.Core.Tests
 
         }
 
-        class MyEmployee : EMP 
+        class MyEmployee : EMP
         {
             public MyDepartment Department { get; set; }
         };
