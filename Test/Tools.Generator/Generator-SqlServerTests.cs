@@ -95,21 +95,6 @@ namespace Tools.Generator.Tests
         public virtual decimal? SAL { get; set; }
     }"));
 
-        }
-
-        [TestMethod]
-        public void SqlServer_ValidationRange_Test()
-        {
-            var args = new[]
-            {
-                $"GenerateEntities",
-                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
-                $"Validations=Range"
-            };
-            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args));
-            var code = generator.Code;
-
-            Assert.IsTrue(code.Contains("Range(-99999999999999999999999999999999999999.0d, 99999999999999999999999999999999999999.0d)]"));
-        }
+        }      
     }
 }

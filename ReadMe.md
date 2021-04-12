@@ -445,77 +445,67 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
-### Version 1.2
+### Version 5.1
 
-* Initial version with all basic features.
+* Optimization of `DataRow.MapTo<T>()`. Thanks to [Becold](https://github.com/Becold).
 
-### Version 1.3
+### Version 5.0.1
 
-* Add a extension method **SqlParameterCollection.AddValues** to simplify the creation of parameters.
+* Fix Generator tool when a Range attribute is linked to numeric(38,0).
 
-### Version 1.4
+### Version 5.0
 
-* Add an **EntitiesGenerator** class to generate all classes associated to an existing Database, via the file **Entities.tt**.
+* Add Async methods: ExecuteDataSetAsync, ExecuteTableAsync, ExecuteRowAsync, ExecuteNonQueryAsync, ExecuteScalarAsync.
 
-### Version 1.5
+### Version 4.2.4
 
-* All code reviewed and rebuilt with .NET Core framework (https://dotnet.github.io)
-* Fix the Numeric SQL type to Decimal C# type.
+* Add a static field `DatabaseCommand.AlwaysDispose` to always dispose the internal DbCommand (if `true` this command will be disposed when the GC is available).
 
-### Version 1.5.2
+### Version 4.2.3
 
-* Fix using a Transaction in constructors: the transaction will be not disposed with the DatabaseCommandBase.
+* Fix the null value in parameters, must be replaced by DBNull value.
 
-### Version 2.0
+### Version 4.2.2
 
-* Source code Refactoring.
-* Add the **ExecuteTableSet** method to get multiple tables, using multiple SELECT commands in one query.
-* Add OracleDatabaseCommand to manage Oracle Server databases (need the Oracle.ManagedDataAccess assembly).
+* Fix the object serialisation, to use only 'Public Settable' properties (and not properties with only a 'getter').
 
-### Version 2.1
+### Version 4.2.1
 
-* Fix using the constructor with ConnectionString and CommandText parameters (the CommandText was not correctly assigned).
+* Fix the method `AddParameter<T>(T values)` using nullable properties.
 
-### Version 2.2
+### Version 4.2
 
-* Add a **DotNetCore** version with features based on DbConnection.
-* Add the method **AddParameter** in DatabaseCommandBase, usable for all projects (SqlServer, Oracle, Sqlite, ...).
-* Remove DataInjection concept. That will be replaced by pre and post execution events.
+* Add a method `DataRow.MapTo<T>()` to convert columns of this DataRow to associated properties of `T`.
 
-### Version 2.3
+### Version 4.1.2
 
-* Fix using Dispose method with AutoDisconnect mode.
-* Fix when ThrowException = False: returns the default value and not an exception.
+* Fix Bug #32: "Sequence contains no matching element" using Tool GenerateEntities on Oracle DB.
 
-### Version 2.4
+### Version 4.1.1
 
-* Add **dynamic** return value. Example: *var emps = cmd.ExecuteTable&lt;**dynamic**&gt;();*
+* Fix the ExecuteTable(converter) method to avoid a Command disposed.
 
-### Version 2.5
+### Version 4.1.0
 
-* Add properties **ActionBeforeExecution** and **ActionAfterExecution** to inject code before and after SQL query executions.
+* Add a method `ExecuteDataSet` to return a `System.Data.DataSet` object filled with data table results.
 
-### Version 2.6
+### Version 4.0.3
 
-* Add a FluentQuery feature to create quickly new commands.
-  Example:  cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID", new { ID = 10 }).ExecuteScalar<int>();
-* Update SqlEntitiesGenerator to generate SQL Server, Oracle or SQLite entities.
-* Add a command line tool to generate entity classes.
+* Add, for the Generator, an argument NullableRefTypes to use the new C# 8.0 nullable reference types.
+* Add, for the Generator, an argument SortProperties to sort alphabetically all classes and all class properties.
+* Fix, for the Generator, the TIME Sql data type converted to C# DateTime data type.
 
-### Version 2.7
+### Version 4.0.2
 
-* Add DataRow converter when executing a command (ExecuteTable<T>(Func<DataRow, T> converter)).
-* Renamed IDatabaseCommandBase to IDatabaseCommand to simplify interface usage. IDatabaseCommandBase is always usable.
+* Fix bug when the SQL query (with anonymous converter) returns no data.
 
-### Version 2.7.5
+### Version 4.0.1
 
-* FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
-* FIX: For the Generator, set the correct type for SQL Server type TINYINT (System.Byte).
+* Fix bug when the SQL query returns no data.
 
-### Version 2.8
+### Version 4.0
 
-* FIX: Check if the argument of `AddParameter<T>(T values)` method is a DbParameter.
-* Add a new argument to `AddParameter` method, to define the parameter size.
+* Code optimisation. See [Performance section](#Performances).
 
 ### Version 3.0
 
@@ -525,65 +515,78 @@ For example:
 * Add `Formatted.CommandAsVariables` property to get the SQL query with parameters defined as SQL variables (to be executable in Query tool).
 * Add `Reply` property to automatically reply a query when an specified error occured (ex. for DeadLock).
 
-### Version 4.0
+### Version 2.8
 
-* Code optimisation. See [Performance section](#Performances).
+* FIX: Check if the argument of `AddParameter<T>(T values)` method is a DbParameter.
+* Add a new argument to `AddParameter` method, to define the parameter size.
 
-### Version 4.0.1
+### Version 2.7.5
 
-* Fix bug when the SQL query returns no data.
+* FIX: When the CommandText is empty, returns a empty value (zero array, null value or zero).
+* FIX: For the Generator, set the correct type for SQL Server type TINYINT (System.Byte).
 
-### Version 4.0.2
+### Version 2.7
 
-* Fix bug when the SQL query (with anonymous converter) returns no data.
+* Add DataRow converter when executing a command (ExecuteTable<T>(Func<DataRow, T> converter)).
+* Renamed IDatabaseCommandBase to IDatabaseCommand to simplify interface usage. IDatabaseCommandBase is always usable.
 
-### Version 4.0.3
+### Version 2.6
 
-* Add, for the Generator, an argument NullableRefTypes to use the new C# 8.0 nullable reference types.
-* Add, for the Generator, an argument SortProperties to sort alphabetically all classes and all class properties.
-* Fix, for the Generator, the TIME Sql data type converted to C# DateTime data type.
+* Add a FluentQuery feature to create quickly new commands.
+  Example:  cmd.Query("SELECT COUNT(*) FROM EMP WHERE EMPNO > @ID", new { ID = 10 }).ExecuteScalar<int>();
+* Update SqlEntitiesGenerator to generate SQL Server, Oracle or SQLite entities.
+* Add a command line tool to generate entity classes.
 
-### Version 4.1.0
+### Version 2.5
 
-* Add a method `ExecuteDataSet` to return a `System.Data.DataSet` object filled with data table results.
+* Add properties **ActionBeforeExecution** and **ActionAfterExecution** to inject code before and after SQL query executions.
 
-### Version 4.1.1
+### Version 2.4
 
-* Fix the ExecuteTable(converter) method to avoid a Command disposed.
+* Add **dynamic** return value. Example: *var emps = cmd.ExecuteTable&lt;**dynamic**&gt;();*
 
-### Version 4.1.2
+### Version 2.3
 
-* Fix Bug #32: "Sequence contains no matching element" using Tool GenerateEntities on Oracle DB.
+* Fix using Dispose method with AutoDisconnect mode.
+* Fix when ThrowException = False: returns the default value and not an exception.
 
-### Version 4.2
+### Version 2.2
 
-* Add a method `DataRow.MapTo<T>()` to convert columns of this DataRow to associated properties of `T`.
+* Add a **DotNetCore** version with features based on DbConnection.
+* Add the method **AddParameter** in DatabaseCommandBase, usable for all projects (SqlServer, Oracle, Sqlite, ...).
+* Remove DataInjection concept. That will be replaced by pre and post execution events.
 
-### Version 4.2.1
+### Version 2.1
 
-* Fix the method `AddParameter<T>(T values)` using nullable properties.
+* Fix using the constructor with ConnectionString and CommandText parameters (the CommandText was not correctly assigned).
 
-### Version 4.2.2
+### Version 2.0
 
-* Fix the object serialisation, to use only 'Public Settable' properties (and not properties with only a 'getter').
+* Source code Refactoring.
+* Add the **ExecuteTableSet** method to get multiple tables, using multiple SELECT commands in one query.
+* Add OracleDatabaseCommand to manage Oracle Server databases (need the Oracle.ManagedDataAccess assembly).
 
-### Version 4.2.3
+### Version 1.5.2
 
-* Fix the null value in parameters, must be replaced by DBNull value.
+* Fix using a Transaction in constructors: the transaction will be not disposed with the DatabaseCommandBase.
 
-### Version 4.2.4
+### Version 1.5
 
-* Add a static field `DatabaseCommand.AlwaysDispose` to always dispose the internal DbCommand (if `true` this command will be disposed when the GC is available).
+* All code reviewed and rebuilt with .NET Core framework (https://dotnet.github.io)
+* Fix the Numeric SQL type to Decimal C# type.
 
-### Version 5.0
+### Version 1.4
 
-* Add Async methods: ExecuteDataSetAsync, ExecuteTableAsync, ExecuteRowAsync, ExecuteNonQueryAsync, ExecuteScalarAsync.
+* Add an **EntitiesGenerator** class to generate all classes associated to an existing Database, via the file **Entities.tt**.
 
-### Version 5.0.1
+### Version 1.3
 
-* Fix Generator tool when a Range attribute is linked to numeric(38,0).
+* Add a extension method **SqlParameterCollection.AddValues** to simplify the creation of parameters.
 
+### Version 1.2
+
+* Initial version with all basic features.
 
 ### [RoadMap]
 
-* Include Insert, Delete, Update method to simplify the CRUD operations in one table of database.
+* Include Insert, Delete, Update templates to simplify the CRUD operations.
