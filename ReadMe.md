@@ -445,6 +445,13 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.3
+
+* Optimization of `DataRow.MapTo<T>()` using cache to store properties of `T`. 
+  See `DataRow.MAPTO_CACHED_CLASSES_MAXIMUM` constant to disable (set to 0) 
+  or change the cache size (default is 20).
+
+
 ### Version 5.2
 
 * Fix `ActionAfterExecution` when called with async methods.

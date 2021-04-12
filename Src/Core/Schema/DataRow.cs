@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 
 namespace Apps72.Dev.Data.Schema
 {
@@ -12,6 +11,22 @@ namespace Apps72.Dev.Data.Schema
     /// </summary>
     public class DataRow : IEnumerable
     {
+        /// <summary>
+        /// Number of classes to keep in cache when calling <see cref="MapTo{T}"/> method.
+        /// Default is 20. Set 0 to disable the cache.
+        /// </summary>
+        public static uint MAPTO_CACHED_CLASSES_MAXIMUM = 20;
+
+        /// <summary>
+        /// Returns a list with all <see cref="MapTo{T}"/> classes in cache.
+        /// </summary>
+        public static IEnumerable<string> MapToClassesInCache => Apps72.Dev.Data.Convertor.DataRowConvertor.GetCachedClassNames();
+
+        /// <summary>
+        /// Clean all <see cref="MapTo{T}"/> classes from cache.
+        /// </summary>
+        public static void MapToCleanCache() => Apps72.Dev.Data.Convertor.DataRowConvertor.CleanCache();
+
         /// <summary>
         /// Initializes a new instance of a DataRow with an array os simple item
         /// </summary>
