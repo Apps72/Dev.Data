@@ -238,8 +238,7 @@ namespace Apps72.Dev.Data
                     case System.Data.DbType.Date:
                     case System.Data.DbType.DateTime:
                     case System.Data.DbType.DateTime2:
-                    case System.Data.DbType.DateTimeOffset:
-                    case System.Data.DbType.Time:
+                    case System.Data.DbType.DateTimeOffset:                    
 
                         DateTime value = Convert.ToDateTime(parameter.Value);
 
@@ -258,6 +257,10 @@ namespace Apps72.Dev.Data
                                 return String.Format("'{0:yyyy-MM-dd HH:mm:ss.ffff}'", value);
                             }
                         }
+
+                    // Time
+                    case System.Data.DbType.Time:
+                        return String.Format("'{0:c}'", parameter.Value);
 
                     // GUID
                     case System.Data.DbType.Guid:

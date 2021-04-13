@@ -148,5 +148,17 @@ DECLARE @Comm AS VARCHAR(4000) = NULL
                 Assert.AreEqual(String.Empty, formatted);
             }
         }
+
+        [TestMethod]
+        public void GetFormattedAsText_TimeSpan_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.CommandText = " SELECT * FROM EMP WHERE MyCol > @MyTime ";
+                cmd.AddParameter("@MyTime", new TimeSpan(2, 30, 00));    // 2:30:00
+
+                Assert.AreEqual(" SELECT * FROM EMP WHERE MyCol > '02:30:00' ", cmd.Formatted.CommandAsText);
+            }
+        }
     }
 }
