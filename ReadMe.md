@@ -445,6 +445,10 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.3.1
+
+* Fix the `Formatted.CommandAsText` property when used with `TimeSpan` field.
+
 ### Version 5.3
 
 * Optimization of `DataRow.MapTo<T>()` using cache to store properties of `T`. 
