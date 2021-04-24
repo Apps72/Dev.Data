@@ -9,7 +9,7 @@ namespace Performances
     {
         public ScottFromSqlServer()
         {
-            Connection = new SqlConnection("Server=(localdb)\\ProjectsV14;Database=Scott;");
+            Connection = new SqlConnection("Server=(localdb)\\MyServer;Database=Scott;");
             Connection.Open();
         }
 

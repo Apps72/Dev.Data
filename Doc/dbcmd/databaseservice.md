@@ -33,7 +33,7 @@ using System.Data.SqlClient;
 /// <summary />
 public class DatabaseService : IDisposable
 {
-    private const string CONNECTION_STRING = @"server=(localdb)\ProjectsV14; Database=Scott;";
+    private const string CONNECTION_STRING = @"server=(localdb)\MyServer; Database=Scott;";
     private readonly object _dbOpeningLock = new object();
     private DbConnection? _connection;
 
