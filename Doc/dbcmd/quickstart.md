@@ -14,7 +14,7 @@ Your can use your favorites libraries for SQLServer, Oracle, SQLite, ...
 2. Create a `SqlConnection`, or other **database connection**, in your project, and call the `Open()` method.
 
 ```CSharp
-var mySqlConnection = new SqlConnection("server=.;Database=Scott;");
+var mySqlConnection = new SqlConnection("Server=MyServer;Database=Scott;");
 mySqlConnection.Open();
 ```
    
@@ -23,12 +23,13 @@ mySqlConnection.Open();
 ```CSharp
 using (var cmd = new DatabaseCommand(mySqlConnection))
 {
-    var count = cmd.Query("SELECT COUNT(*) FROM EMP")
-                   .ExecuteScalar<int>();
+    cmd.CommandText = "SELECT COUNT(*) FROM EMP";
+    int count = cmd.ExecuteScalar<int>();
 }
 ```
 
-*Requirements: Microsoft .NET Core 2.0 or Microsoft Framework 4.0 (Client Profile).*
+*Requirements: Microsoft .NET Core 2.0 or Microsoft .NET Standard 2.0 or Microsoft Framework 4.5 (Client Profile).*
+
 
 ## Execute methods
 

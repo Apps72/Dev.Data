@@ -1,5 +1,7 @@
 - name: Quickstart
   href: quickstart.md
+- name: Why to use?
+  href: why-to-use.md
 - name: Basic samples
   href: basic-samples.md
   items:
