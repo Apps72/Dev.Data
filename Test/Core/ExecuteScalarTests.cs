@@ -2,7 +2,6 @@ using Apps72.Dev.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace Data.Core.Tests
@@ -17,18 +16,23 @@ namespace Data.Core.Tests
     {
         #region INITIALIZATION
 
-        private DbConnection _connection;
+        private SqlConnection _connection;
 
         [TestInitialize]
         public void Initialization()
         {
-            _connection = new Data.ScottInMemory().Connection;
+            _connection = new SqlConnection(Configuration.CONNECTION_STRING);
+            _connection.Open();
         }
 
         [TestCleanup]
         public void Finalization()
         {
-            _connection.Dispose();
+            if (_connection != null)
+            {
+                _connection.Close();
+                _connection.Dispose();
+            }
         }
 
         #endregion
@@ -39,10 +43,10 @@ namespace Data.Core.Tests
             using (var cmd = new DatabaseCommand(_connection))
             {
                 cmd.Log = Console.WriteLine;
-                cmd.CommandText = "SELECT COUNT(*) FROM DEPT";
+                cmd.CommandText = "SELECT COUNT(*) FROM EMP";
                 object data = cmd.ExecuteScalar();
 
-                Assert.AreEqual(4L, data);
+                Assert.AreEqual(14, data);
             }
         }
 
