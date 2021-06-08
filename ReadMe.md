@@ -445,6 +445,11 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+
+### Version 5.4.0
+
+* Optimization of queries using the flag `System.Data.CommandBehavior`.
+
 ### Version 5.3.1
 
 * Fix the `Formatted.CommandAsText` property when used with `TimeSpan` field.

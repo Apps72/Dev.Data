@@ -41,7 +41,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, NoType, NoType, NoType>(dr);
                 }
@@ -71,7 +71,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, NoType, NoType, NoType>(dr, forAnonymousTypes: true);
                 }
@@ -102,7 +102,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, NoType, NoType>(dr);
                 }
@@ -134,7 +134,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, NoType, NoType>(dr, forAnonymousTypes: true);
                 }
@@ -167,7 +167,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, NoType>(dr);
                 }
@@ -201,7 +201,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, NoType>(dr, forAnonymousTypes: true);
                 }
@@ -236,7 +236,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, X>(dr);
                 }
@@ -272,7 +272,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     return await DataReaderConvertor.ToMultipleTypesAsync<T, U, V, W, X>(dr, forAnonymousTypes: true);
                 }
@@ -307,7 +307,7 @@ namespace Apps72.Dev.Data
         {
             return await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     // Primitive type: Executable<string>()
                     if (TypeExtension.IsPrimitive(typeof(T)))
@@ -336,7 +336,7 @@ namespace Apps72.Dev.Data
             {
                 Schema.DataTable table;
 
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     table = await DataReaderConvertor.ToDataTableAsync(dr);
                 }
@@ -361,7 +361,7 @@ namespace Apps72.Dev.Data
             {
                 Schema.DataTable table;
 
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     table = await DataReaderConvertor.ToDataTableAsync(dr);
                 }
@@ -394,7 +394,7 @@ namespace Apps72.Dev.Data
         {
             return await ExecuteInternalCommandAsync(async () =>
             {
-                using (DbDataReader dr = await this.Command.ExecuteReaderAsync())
+                using (DbDataReader dr = await this.Command.ExecuteReaderAsync(System.Data.CommandBehavior.KeyInfo))
                 {
                     if (TypeExtension.IsPrimitive(typeof(T)))
                         return await DataReaderConvertor.ToPrimitivesAsync<T>(dr);
