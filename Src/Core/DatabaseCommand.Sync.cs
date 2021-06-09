@@ -357,7 +357,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, NoType, NoType, NoType>(dr);
                 }
@@ -387,7 +387,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, NoType, NoType, NoType>(dr, forAnonymousTypes: true);
                 }
@@ -418,7 +418,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, V, NoType, NoType>(dr);
                 }
@@ -450,7 +450,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, V, NoType, NoType>(dr, forAnonymousTypes: true);
                 }
@@ -483,7 +483,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, V, W, NoType>(dr);
                 }
@@ -517,7 +517,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, V, W, NoType>(dr, forAnonymousTypes: true);
                 }
@@ -552,7 +552,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, V, W, X>(dr);
                 }
@@ -588,7 +588,7 @@ namespace Apps72.Dev.Data
         {
             var datasets = ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     return DataReaderConvertor.ToMultipleTypes<T, U, V, W, X>(dr, forAnonymousTypes: true);
                 }
@@ -623,7 +623,7 @@ namespace Apps72.Dev.Data
         {
             return ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     // Primitive type: Executable<string>()
                     if (TypeExtension.IsPrimitive(typeof(T)))
@@ -652,7 +652,7 @@ namespace Apps72.Dev.Data
             {
                 Schema.DataTable table;
 
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     table = DataReaderConvertor.ToDataTable(dr);
                 }
@@ -685,7 +685,7 @@ namespace Apps72.Dev.Data
         {
             return ExecuteInternalCommand(() =>
             {
-                using (DbDataReader dr = this.Command.ExecuteReader())
+                using (DbDataReader dr = this.Command.ExecuteReader(System.Data.CommandBehavior.KeyInfo))
                 {
                     if (TypeExtension.IsPrimitive(typeof(T)))
                         return DataReaderConvertor.ToPrimitives<T>(dr);

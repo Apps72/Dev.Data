@@ -445,10 +445,13 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.4.1
+
+* Fix the optimization of async queries (already in 5.4.0) and sync queries (5.4.1).
 
 ### Version 5.4.0
 
-* Optimization of queries using the flag `System.Data.CommandBehavior`.
+* Add optimization of queries using the flag `System.Data.CommandBehavior`.
 
 ### Version 5.3.1
 
