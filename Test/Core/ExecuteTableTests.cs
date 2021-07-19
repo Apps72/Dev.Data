@@ -292,6 +292,24 @@ namespace Data.Core.Tests
             }
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException))]
+        public void ExecuteTable_JoinWithSameId_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.Log = Console.WriteLine;
+                cmd.CommandText = @" SELECT [EMP].[ENAME]
+                                       FROM [EMP]
+                                      INNER JOIN [DEPT]
+                                         ON [DEPT].[DEPTNO] = [EMP].[DEPTNO]";
+                
+                var data = cmd.ExecuteTable<dynamic>();
+
+                Assert.AreEqual(7369, data.First().EMPNO);
+            }
+        }
+
         class MyEmployee : EMP
         {
             public MyDepartment Department { get; set; }

@@ -7,6 +7,8 @@ namespace Apps72.Dev.Data
 {
     public partial class DatabaseCommand
     {
+        internal static readonly System.Data.CommandBehavior QUERY_COMMAND_BEHAVIOR = System.Data.CommandBehavior.Default;
+
         /// <summary />
         private T ExecuteInternalCommand<T>(Func<T> action)
         {

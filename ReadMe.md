@@ -445,6 +445,10 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.4.2
+
+* Fix the optimization of async queries (included in 5.4.0).
+
 ### Version 5.4.1
 
 * Fix the optimization of async queries (already in 5.4.0) and sync queries (5.4.1).
