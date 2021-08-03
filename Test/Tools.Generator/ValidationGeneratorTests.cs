@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -57,6 +58,44 @@ namespace Tools.Generator.Tests
 
             Assert.IsTrue(code.Contains("[Range(-999999999999999999.0d, 999999999999999999.0d)]"));
             Assert.IsTrue(code.Contains("public virtual decimal? SAL { get; set; }"));
+        }
+
+        [TestMethod]
+        public void Validation_RangeDecimalOne_Test()
+        {
+            var args = new[]
+            {
+                $"GenerateEntities",
+                $"cs=\"{Configuration.SQLSERVER_CONNECTION_STRING}\"",
+                $"Validations=Range",
+            };
+
+            var generator = new Apps72.Dev.Data.Generator.Tools.Generator(new Arguments(args), (options) => 
+            {
+                options.PreCommand = (conn) => 
+                {
+                    // BEGIN TRANSACTION
+                    var cmd = conn.CreateCommand();
+                    cmd.CommandText = @" BEGIN TRANSACTION 
+                                         CREATE TABLE MySample
+                                         (
+                                            Col1 DECIMAL(1,1)
+                                         )";
+                    cmd.ExecuteNonQuery();
+                };
+                options.PostCommand = (conn) => 
+                {
+                    // ROLLBACK
+                    var cmd = conn.CreateCommand();
+                    cmd.CommandText = "ROLLBACK";
+                    cmd.ExecuteNonQuery();
+                };
+            });
+
+            var code = generator.Code;
+
+            Assert.IsTrue(code.Contains("[Range(-0.9d, 0.9d)]"));
+            Assert.IsTrue(code.Contains("public virtual decimal? Col1 { get; set; }"));
         }
 
         [TestMethod]

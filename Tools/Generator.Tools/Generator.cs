@@ -6,20 +6,27 @@ namespace Apps72.Dev.Data.Generator.Tools
 {
     public class Generator
     {
-        public Generator(Arguments args)
+        public Generator(Arguments args, Action<GeneratorOptions> options = null)
         {
             this.Arguments = args;
+
+            var config = new GeneratorOptions();
+            options?.Invoke(config);
 
             using (DbConnection conn = GetConnection())
             {
                 conn.ConnectionString = Arguments.ConnectionString;
                 conn.Open();
 
+                config.PreCommand?.Invoke(conn);
+
                 this.AllEntities = new EntityGenerator(conn, this.Arguments.OnlySchema);
 
                 var generator = new GeneratorCSharp(this.AllEntities, Arguments);
                 this.Code = generator.Code;
                 this.EntitiesGenerated = generator.Entities;
+
+                config.PostCommand?.Invoke(conn);
 
                 conn.Close();
             }

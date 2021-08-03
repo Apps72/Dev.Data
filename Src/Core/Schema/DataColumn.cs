@@ -126,9 +126,9 @@ namespace Apps72.Dev.Data.Schema
             if (Precision != null && Scale != null &&
                 Precision > 0 && Precision <= 38 &&
                 Scale >= 0 && Scale <= 38 &&
-                Precision > Scale)
+                Precision >= Scale)
             {
-                string leftPart = NINES.Substring(0, Precision.Value - Scale.Value);
+                string leftPart = Precision > Scale ? NINES.Substring(0, Precision.Value - Scale.Value) : "0";
                 string rightPart = Scale.Value > 0 ? NINES.Substring(0, Scale.Value) : "0";
                 return new Tuple<string, string>($"-{leftPart}.{rightPart}", $"{leftPart}.{rightPart}");
             }

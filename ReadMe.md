@@ -445,6 +445,10 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.4.3
+
+* Fix the Generator Tool bug #43: crash when generating entities with `DECIMAL(1,1)` SQL type.
+
 ### Version 5.4.2
 
 * Fix the optimization of async queries (included in 5.4.0).

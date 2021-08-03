@@ -106,7 +106,10 @@ namespace Apps72.Dev.Data.Generator.Tools
                             column.DataType == typeof(Single)))
                         {
                             var minMax = column.GetMinMax();
-                            code.AppendLine($"        [Range({minMax.Item1}d, {minMax.Item2}d)]");
+                            if (minMax != null)
+                            {
+                                code.AppendLine($"        [Range({minMax.Item1}d, {minMax.Item2}d)]");
+                            }
                         }
 
                         code.AppendLine($"        public virtual {csharpType} {column.DotNetColumnName} {{ get; set; }}{defaultValue}");
