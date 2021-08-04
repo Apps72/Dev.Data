@@ -137,6 +137,19 @@ DECLARE @Comm AS VARCHAR(4000) = NULL
         }
 
         [TestMethod]
+        public void GetFormattedAsVariables_TransactionPending_Test()
+        {
+            using (var cmd = new DatabaseCommand(_connection))
+            {
+                cmd.TransactionBegin();
+                string formatted = cmd.Formatted.CommandAsVariables;
+                cmd.TransactionRollback();
+
+                Assert.AreEqual("Not available when a transaction is pending.", formatted);
+            }
+        }
+
+        [TestMethod]
         public void GetFormatted_Unknown_Test()
         {
             using (var cmd = new DatabaseCommand(_connection))

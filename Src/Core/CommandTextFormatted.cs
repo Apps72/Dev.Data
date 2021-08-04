@@ -157,9 +157,12 @@ namespace Apps72.Dev.Data
         /// <returns></returns>
         protected virtual string GetQueryFormattedAsVariables(DatabaseCommand command)
         {
+            if (command.Transaction != null)
+                return "Not available when a transaction is pending.";
+
             string commentTags = command.GetTagsAsSqlComments();
             string commandText = command.CommandText.Value;
-
+            
             // Sort by ParameterName DESC to replace @abcdef before @abc.
             var declarations = new StringBuilder();
             Convertor.DbTypeMap.Initialize(command.GetInternalCommand().Connection);

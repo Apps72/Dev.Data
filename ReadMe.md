@@ -445,6 +445,10 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 5.4.4 (Not yet published)
+
+* Fix crash on `Formatted.CommandAsVariables` property, when a db transaction is pending.
+
 ### Version 5.4.3
 
 * Fix the Generator Tool bug #43: crash when generating entities with `DECIMAL(1,1)` SQL type.
