@@ -9,6 +9,8 @@
     href: db-scott.md
 - name: CommandText
   href: commandtext.md
+- name: ExecuteDataSet
+  href: execute-dataset.md
 - name: ExecuteTable
   href: execute-table.md
 - name: ExecuteRow
@@ -33,6 +35,8 @@
   href: action-before-after.md
 - name: Retry queries
   href: retry.md
+- name: Dispose
+  href: dispose.md
 - name: Best practice (DatabaseService.cs)
   href: databaseservice.md  
   
