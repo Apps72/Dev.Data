@@ -33,3 +33,4 @@ using (var transaction = mySqlConnection.BeginTransaction())
     // Use transaction.Commit() to persist all changes.
 }
 ```
+> All execution commands are available in synchronous and asynchronous (Async) mode.

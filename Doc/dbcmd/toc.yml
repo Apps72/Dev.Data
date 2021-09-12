@@ -19,6 +19,10 @@
   href: execute-nonquery.md
 - name: Parameters
   href: parameters.md
+- name: Transaction
+  href: transaction.md
+- name: Extension methods
+  href: extensions.md
 - name: Fluent queries
   href: fluent.md
 - name: Tracing and Logging

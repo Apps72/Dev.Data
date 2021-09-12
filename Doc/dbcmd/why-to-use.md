@@ -5,7 +5,7 @@ These criteria are based on years of experience in the development of applicatio
 
 ---
 
-" **DatabaseCommand** is a very lightweight command library that is based on SQL queries and never modifies these queries.
+**DatabaseCommand** is a very lightweight command library that is based on SQL queries and never modifies these queries.
 
 Software development often requires data to be stored in a relational database such as SQL Server or Oracle. It is very important that the performance is optimal. Solutions such as **Entity Framework** generate most of the queries for you, which often leads to slow data retrieval several months after the project is put into production.
 

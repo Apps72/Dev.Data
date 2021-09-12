@@ -12,3 +12,5 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
 ```
 
 > If no data are found, the result will be `null` (for a nullable type) or the default value of this type (0 in the previous example).
+
+> All execution commands are available in synchronous and asynchronous (Async) mode.

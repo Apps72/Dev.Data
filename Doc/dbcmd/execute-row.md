@@ -58,3 +58,5 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
     // smith is a anonymous object { Id, Name, HireYear }
 }
 ```
+
+> All execution commands are available in synchronous and asynchronous (Async) mode.

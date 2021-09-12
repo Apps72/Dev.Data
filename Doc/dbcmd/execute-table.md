@@ -97,3 +97,5 @@ using (var cmd = new DatabaseCommand(mySqlConnection))
         return emp;
     });}
 ```
+
+> All execution commands are available in synchronous and asynchronous (Async) mode.

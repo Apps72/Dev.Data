@@ -97,3 +97,16 @@ public class DatabaseService : IDisposable
     }
 }
 ```
+
+## Using a database transaction
+
+See the [GetTransaction](databaseservice.md) method, if you want to use an active transaction.
+If there are no transaction (`trans == null`), use the active conection, if not use this current transaction.
+
+```csharp
+var trans = DataExtensions.GetTransaction(_connection);
+
+var cmd = trans == null
+        ? new DatabaseCommand(_connection)
+        : new DatabaseCommand(trans);
+```
