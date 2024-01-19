@@ -11,3 +11,4 @@ If you already have installed Visual Studio 2017 or 2019, you can use the LocalD
    For example, from the **Test\Core** folder: `SqlCmd -S "(localdb)\MyServer" -i Data\Scott.sql`
 
 > Check the connection string included in the file `Configuration.cs`.
+
