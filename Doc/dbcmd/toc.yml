@@ -33,6 +33,8 @@
   href: tag.md
 - name: Actions before and after
   href: action-before-after.md
+- name: Exceptions
+  href: exception.md
 - name: Retry queries
   href: retry.md
 - name: Dispose
