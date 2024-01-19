@@ -16,7 +16,7 @@ namespace Apps72.Dev.Data.Convertor
         internal const string DYNAMIC_NAMESPACE = "Apps72.Dev.Data.Dynamic";
         internal const string DYNAMIC_CLASS_NAME = "AnonymousClass";
 
-#if NETCOREAPP2_0 || NET40
+#if NET6_0_OR_GREATER || NET45_OR_GREATER
 
         /// <summary>
         /// Returns True if the <paramref name="type"/> is dynamic.
@@ -52,7 +52,7 @@ namespace Apps72.Dev.Data.Convertor
         public static Type GetDynamicType(string className, IDictionary<string, Type> properties)
         {
 
-#if NETCOREAPP2_0
+#if NET6_0_OR_GREATER
             // Create the Builder (in .NET Core)
             AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(Guid.NewGuid().ToString()), AssemblyBuilderAccess.Run);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(DYNAMIC_NAMESPACE);

@@ -445,8 +445,9 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
-### Version 5.4.4 (Not yet published)
+### Version 6.0.1
 
+* Update target frameworks to `net45`, `net6.0` and `netcoreapp3.1` (or higher). Breaking change: `netcoreapp2.0` and `netstandard2.0` are not yet supported.
 * Fix crash on `Formatted.CommandAsVariables` property, when a db transaction is pending.
 
 ### Version 5.4.3

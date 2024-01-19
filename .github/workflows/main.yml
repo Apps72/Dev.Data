@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        frameworks: [net45,netcoreapp2.0,netstandard2.0]
+        frameworks: [net45,net6.0,netcoreapp3.1]
 
     runs-on: windows-latest 
     
@@ -28,7 +28,7 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '2.2.103'
+        dotnet-version: '6.0.418'
 
     - name: Execute dotnet build 
       run: dotnet build Src\Core\Core.csproj -c $env:Configuration -f $env:Framework
