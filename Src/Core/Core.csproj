@@ -22,6 +22,7 @@
     <AssemblyVersion>6.0.1.0</AssemblyVersion>
     <FileVersion>6.0.1.0</FileVersion>
     <DocumentationFile></DocumentationFile>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
   </PropertyGroup>
 
   <!--NET 4.5-->
@@ -40,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\ReadMe.md" Pack="true" PackagePath="\"/>
     <None Include="Logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 

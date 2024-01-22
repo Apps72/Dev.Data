@@ -24,6 +24,8 @@
     <Copyright>Copyright 2020 Denis Voituron</Copyright>
     <PackageReleaseNotes>See https://github.com/Apps72/Dev.Data</PackageReleaseNotes>
     <AssemblyVersion>6.0.1.0</AssemblyVersion>
+    <PackageReadmeFile>QuickDoc.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="QuickDoc.md" Pack="true" PackagePath="\"/>
     <ProjectReference Include="..\..\Src\Core\Core.csproj" />
   </ItemGroup>
 </Project>
