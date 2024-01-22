@@ -1,9 +1,10 @@
-﻿using Apps72.Dev.Data.Convertor;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using Apps72.Dev.Data.Annotations;
+using Apps72.Dev.Data.Convertor;
 
 namespace Apps72.Dev.Data.Schema
 {
@@ -59,6 +60,9 @@ namespace Apps72.Dev.Data.Schema
                 List<DbParameter> parameters = new List<DbParameter>();
                 foreach (PropertyInfo property in typeof(T).GetProperties())
                 {
+                    if (property.GetCustomAttribute<IgnoreAttribute>() != null)
+                        continue;
+
                     if (TypeExtension.IsPrimitive(property.PropertyType))
                     {
                         // Data type
@@ -76,15 +80,12 @@ namespace Apps72.Dev.Data.Schema
                             parameter.Value = DBNull.Value;
 
                         // Parameter name
+                        parameter.ParameterName = property.Name;
+                            
                         string attribute = Apps72.Dev.Data.Annotations.ColumnAttribute.GetColumnAttributeName(property);
-                        if (string.IsNullOrEmpty(attribute))
-                        {
-                            parameter.ParameterName = property.Name;
-                        }
-                        else
-                        {
+                        if (!string.IsNullOrEmpty(attribute))
                             parameter.ParameterName = attribute;
-                        }
+
 
                         parameters.Add(parameter);
                     }

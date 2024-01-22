@@ -40,7 +40,8 @@ namespace Apps72.Dev.Data.Convertor
                    type == typeof(UIntPtr) || type == typeof(Nullable<UIntPtr>) ||
                    type == typeof(Char) || type == typeof(Nullable<Char>) ||
                    type == typeof(Double) || type == typeof(Nullable<Double>) ||
-                   type == typeof(Single) || type == typeof(Nullable<Single>);
+                   type == typeof(Single) || type == typeof(Nullable<Single>) ||
+                   type == typeof(Guid) || type == typeof(Nullable<Guid>);
         }
 
         /// <summary>

@@ -1,10 +1,10 @@
-﻿using Apps72.Dev.Data.Annotations;
-using Apps72.Dev.Data.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using Apps72.Dev.Data.Annotations;
+using Apps72.Dev.Data.Schema;
 
 namespace Apps72.Dev.Data.Convertor
 {
@@ -17,8 +17,7 @@ namespace Apps72.Dev.Data.Convertor
             // No data
             if (!hasRow)
             {
-                return new ColumnsAndRows<T>
-                {
+                return new ColumnsAndRows<T> {
                     Columns = new DataColumn[0],
                     Rows = new T[0]
                 };
@@ -26,7 +25,7 @@ namespace Apps72.Dev.Data.Convertor
 
             // Class Properties
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                      .Where(p => p.CanWrite);
+                                      .Where(p => p.CanWrite && p.GetCustomAttribute<IgnoreAttribute>() is null);
 
             // DataTable Columns 
             var names = Enumerable.Range(0, reader.FieldCount)
@@ -71,8 +70,7 @@ namespace Apps72.Dev.Data.Convertor
             } while (reader.Read());
 
             // Return
-            return new ColumnsAndRows<T>()
-            {
+            return new ColumnsAndRows<T>() {
                 Columns = columns.Keys,
                 Rows = rows
             };
