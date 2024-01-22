@@ -449,6 +449,12 @@ For example:
 
 * Update target frameworks to `net45`, `net6.0` and `netcoreapp3.1` (or higher). Breaking change: `netcoreapp2.0` and `netstandard2.0` are not yet supported.
 * Fix crash on `Formatted.CommandAsVariables` property, when a db transaction is pending.
+* Provide a `FluentQuery.Execute` methods override allowing to use a `converter` function (as already available in the DatabaseCommand class).
+  Thanks [vpellichero](https://github.com/vpellichero).
+* Allows to ignore some properties marked by a `[Ignore]` attribute when mapping the POCO class to the query parameters.
+  Thanks [vpellichero](https://github.com/vpellichero).
+* Adds **GUID** to the list of known types
+  Thanks [vpellichero](https://github.com/vpellichero).
 
 ### Version 5.4.3
 
