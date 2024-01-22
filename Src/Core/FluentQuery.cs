@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Apps72.Dev.Data
@@ -166,6 +165,21 @@ namespace Apps72.Dev.Data
             return _databaseCommand.ExecuteRow<T>(itemOftype);
         }
 
+
+        /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter">The converter function to use for converting entity to POCO class.</param>
+        /// <seealso cref="DatabaseCommand.ExecuteRow{T}()"/>
+        /// <returns>
+        /// First row of results
+        /// </returns>
+        public virtual T ExecuteRow<T>(Func<Schema.DataRow, T> converter)
+        {
+            return _databaseCommand.ExecuteRow<T>(converter);
+        }
+
         /// <summary>
         /// Execute the query and fill the specified T object with the first row of results
         /// </summary>
@@ -182,6 +196,21 @@ namespace Apps72.Dev.Data
         {
             return await _databaseCommand.ExecuteRowAsync<T>(itemOftype);
         }
+
+        /// <summary>
+        /// Execute the query and fill the specified T object with the first row of results
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter">The converter function to use for converting entity to POCO class.</param>
+        /// <seealso cref="DatabaseCommand.ExecuteRowAsync{T}()"/>
+        /// <returns>
+        /// First row of results
+        /// </returns>
+        public virtual async Task<T> ExecuteRowAsync<T>(Func<Schema.DataRow, T> converter)
+        {
+            return await _databaseCommand.ExecuteRowAsync<T>(converter);
+        }
+
 
         /// <summary>
         /// Execute the query and return the first column of the first row of results
@@ -274,6 +303,20 @@ namespace Apps72.Dev.Data
         /// Execute the query and return an array of new instances of typed results filled with data table result.
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter">The converter function to use for converting entity to POCO class.</param>
+        /// <seealso cref="DatabaseCommand.ExecuteTable{T}()"/>
+        /// <returns>
+        /// Array of typed results
+        /// </returns>
+        public virtual IEnumerable<T> ExecuteTable<T>(Func<Schema.DataRow, T> converter)
+        {
+            return _databaseCommand.ExecuteTable<T>(converter);
+        }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
         /// <param name="itemOftype"></param>
         /// <returns>Array of typed results</returns>
         /// <example>
@@ -286,5 +329,20 @@ namespace Apps72.Dev.Data
         {
             return await _databaseCommand.ExecuteTableAsync<T>(itemOftype);
         }
+
+        /// <summary>
+        /// Execute the query and return an array of new instances of typed results filled with data table result.
+        /// </summary>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <param name="converter">The converter function to use for converting entity to POCO class.</param>
+        /// <seealso cref="DatabaseCommand.ExecuteTableAsync{T}()"/>
+        /// <returns>
+        /// Array of typed results
+        /// </returns>
+        public virtual async Task<IEnumerable<T>> ExecuteTableAsync<T>(Func<Schema.DataRow, T> converter)
+        {
+            return await _databaseCommand.ExecuteTableAsync<T>(converter);
+        }
+
     }
 }
