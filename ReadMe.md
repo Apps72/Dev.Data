@@ -445,6 +445,11 @@ For example:
 
 ## <a name="ReleaseNotes"></a>Release Notes
 
+### Version 6.0.2
+
+* Update target frameworks to `net48`, `net8.0` (or higher).
+
+
 ### Version 6.0.1
 
 * Update target frameworks to `net45`, `net6.0` and `netcoreapp3.1` (or higher). Breaking change: `netcoreapp2.0` and `netstandard2.0` are not yet supported.

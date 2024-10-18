@@ -204,7 +204,7 @@ namespace Data.Core.Tests
                 Assert.AreEqual(7369, emp.EMPNO);
                 Assert.AreEqual("SMITH", emp.ENAME);
                 Assert.AreEqual(new DateTime(1980, 12, 17), emp.HIREDATE);
-                Assert.AreEqual(null, emp.COMM);
+                Assert.IsNull(emp.COMM);
             }
         }
 
@@ -220,7 +220,7 @@ namespace Data.Core.Tests
                 Assert.AreEqual(7369, emp.EMPNO);
                 Assert.AreEqual("SMITH", emp.ENAME);
                 Assert.AreEqual(new DateTime(1980, 12, 17), emp.HIREDATE);
-                Assert.AreEqual(null, emp.COMM);
+                Assert.IsNull(emp.COMM);
             }
         }
 
@@ -240,7 +240,7 @@ namespace Data.Core.Tests
                 Assert.AreEqual(7369, emp1.EMPNO);
                 Assert.AreEqual("SMITH", emp1.ENAME);
                 Assert.AreEqual(new DateTime(1980, 12, 17), emp1.HIREDATE);
-                Assert.AreEqual(null, emp1.COMM);
+                Assert.IsNull(emp1.COMM);
 
                 Assert.AreEqual(7499, emp2.EMPNO);
                 Assert.AreEqual("ALLEN", emp2.ENAME);
