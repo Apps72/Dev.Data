@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Performances", "Test\Perfor
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Doc", "Doc\", "{99B76BAD-8D11-4513-8D24-580ED06134F4}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_8441"
 		Debug.AspNetCompiler.PhysicalPath = "Doc\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_8441\"

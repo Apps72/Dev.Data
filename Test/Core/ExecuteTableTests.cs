@@ -242,7 +242,7 @@ namespace Data.Core.Tests
                 Assert.AreEqual(14, emp.Count());
                 Assert.AreEqual("SMITH", emp.First().ENAME);
                 Assert.AreEqual(new DateTime(1980, 12, 17), emp.First().HIREDATE);
-                Assert.AreEqual(null, emp.First().COMM);
+                Assert.IsNull(emp.First().COMM);
             }
         }
 

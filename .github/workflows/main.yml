@@ -15,20 +15,18 @@ jobs:
     strategy:
       matrix:
         configuration: [Release]
-        frameworks: [net45,net6.0,netcoreapp3.1]
+        frameworks: [net45,net8.0]
 
     runs-on: windows-latest 
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      uses: actions/checkout@v4
 
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.418'
+        dotnet-version: '8.0.401'
 
     - name: Execute dotnet build 
       run: dotnet build Src\Core\Core.csproj -c $env:Configuration -f $env:Framework

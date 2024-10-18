@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net6.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net45;net8.0</TargetFrameworks>
     <AssemblyName>Apps72.Dev.Data</AssemblyName>
     <RootNamespace>Apps72.Dev.Data</RootNamespace>
-    <Version>6.0.1.0</Version>
+    <Version>6.0.2.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Denis Voituron</Authors>
     <Company>Denis Voituron</Company>
@@ -19,8 +19,8 @@
     <PackageTags>Data Database SQL DatabaseCommand DotNetCore Oracle SQLite SqlServer Dapper</PackageTags>
     <Copyright>Copyright 2020 Denis Voituron</Copyright>
     <Description>This DatabaseCommand is a set of components helping C# developers to execute SQL Queries and to retrieve data from SQL Server, Oracle, SQLite, ... It is a light and pragmatic framework that contains only the essential classes needed to create SQL query strings, define parameters and transaction, and execute it to retrieve all data converted in typed objects.</Description>
-    <AssemblyVersion>6.0.1.0</AssemblyVersion>
-    <FileVersion>6.0.1.0</FileVersion>
+    <AssemblyVersion>6.0.2.0</AssemblyVersion>
+    <FileVersion>6.0.2.0</FileVersion>
     <DocumentationFile></DocumentationFile>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
   </PropertyGroup>
@@ -28,11 +28,6 @@
   <!--NET 4.5-->
   <ItemGroup Condition=" $(TargetFramework) =='net45' ">
 
-  </ItemGroup>
-
-  <!--NET Core 6.0-->
-  <ItemGroup Condition=" $(TargetFramework) =='net6.0' ">
-    <PackageReference Include="System.Data.Common" Version=" 4.3.0" />
   </ItemGroup>
 
   <!--NET Standard 2.0-->
@@ -46,3 +41,4 @@
   </ItemGroup>
 
 </Project>
+
