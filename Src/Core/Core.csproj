@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net6.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net45;net6.0;netcoreapp3.1;net8.0</TargetFrameworks>
     <AssemblyName>Apps72.Dev.Data</AssemblyName>
     <RootNamespace>Apps72.Dev.Data</RootNamespace>
     <Version>6.0.1.0</Version>
@@ -24,16 +24,6 @@
     <DocumentationFile></DocumentationFile>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
   </PropertyGroup>
-
-  <!--NET 4.5-->
-  <ItemGroup Condition=" $(TargetFramework) =='net45' ">
-
-  </ItemGroup>
-
-  <!--NET Core 6.0-->
-  <ItemGroup Condition=" $(TargetFramework) =='net6.0' ">
-	  <PackageReference Include="System.Data.Common" Version=" 4.3.0" />
-  </ItemGroup>
 
   <!--NET Standard 2.0-->
   <ItemGroup Condition=" $(TargetFramework) =='netstandard2.0' ">
